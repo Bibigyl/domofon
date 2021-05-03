@@ -1,4 +1,10 @@
-import { makeAutoObservable, configure } from "mobx";
+import {
+  makeAutoObservable,
+  configure,
+  makeObservable,
+  observable,
+  flow,
+} from "mobx";
 import firebase from "firebase/app";
 
 import { userAPI, adminAPI } from "api";
@@ -17,7 +23,7 @@ class Store {
   addresses = [];
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {}, { autoBind: true });
     firebase.auth().onAuthStateChanged(this.handleAuthStateChange);
   }
 
@@ -35,16 +41,28 @@ class Store {
       this.user = userInfo;
       this.getAddresses();
     } else {
-
       this.isAdmin = false;
       this.user = null;
     }
     this.isGettingUser = false;
   };
 
+  editUser = async (newData) => {
+    this.isGettingUser = true;
+    const data = { ...newData };
+    delete data.id;
+
+    await userAPI.editUser(this.user.id, data);
+    // NOTE: editUser не успевает записать новые данные в базу
+    setTimeout(async () => {
+      this.user = await userAPI.getUserInfo(data.phone);
+      this.isGettingUser = false;
+    }, 300);
+  };
+
   getAddresses = async () => {
     this.addresses = await adminAPI.getAdrdesses();
-  }
+  };
 }
 
 const store = new Store();

@@ -1,62 +1,95 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { TextField, IconButton, Select, MenuItem } from "@material-ui/core";
+import { observer } from "mobx-react-lite";
+import { toJS } from "mobx";
+import {
+  TextField,
+  IconButton,
+  Tooltip,
+  Select,
+  MenuItem,
+  Grid,
+  Dialog,
+} from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
 
-import { authAPI } from "api/authAPI";
+import { store } from "store";
+import { userAPI } from "api";
 
-import { Field } from "./components";
+import { Field, Edit } from "./components";
 import cl from "./UserCabinet.module.scss";
 
-const textFields = [
-  { label: "Имя", field: "name" },
-  { label: "Фамилия", field: "surname" },
-  { label: "Email", field: "email" },
-  { label: "Телефон", field: "phone" },
-  { label: "Номер договора", field: "contractNumber" },
-];
+const UserCabinet = observer(() => {
+  const { user, editUser, addresses } = store;
+  const [showEdit, setShowEdit] = useState(false);
 
-const UserCabinet = ({ user, addresses }) => {
-  const [editingField, setEditingField] = useState(null);
+  console.log('user  UserCabinet', user?.name);
+
+  // const editUser = async (data) => {
+  //   updateUser(data);
+  // };
 
   return (
     <div className={cl.root}>
-      <div className={cl.fields}>
+      <Grid container spacing={8}>
+        <Grid item lg={4}>
+          <div className={cl.info}>
+            <h2>{`${user.name} ${user.surname}`}</h2>
+            <dl>
+              <dt>Телефон</dt>
+              <dd>{`${user.phone}`}</dd>
+              <dt>Email</dt>
+              <dd>{`${user.email}`}</dd>
+              <dt>Адрес</dt>
+              <dd>{`${addresses.find(ad => ad.id === user.addresses[0])?.fullAddress}`}</dd>
+              <dt>Номер договора</dt>
+              <dd>{`${user.contractNumber}`}</dd>
+            </dl>
+            <div className={cl.buttonEdit}>
+              <Tooltip title="Редактировать">
+                <IconButton
+                  onClick={() => {
+                    setShowEdit(true);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          </div>
+        </Grid>
 
-      <h2>{`${user.name} ${user.surname}`}</h2>
-      <dl>
-        <dt>Телефон</dt>
-        <dd>{`${user.phone}`}</dd>
-        <dt>Email</dt>
-        <dd>{`${user.email}`}</dd>
-        <dt>Номер договора</dt>
-        <dd>{`${user.contractNumber}`}</dd>
-      </dl>
+        <Grid item lg={8}>
+          <div className={cl.info}>
+            <h2>{`${user.name} ${user.surname}`}</h2>
+            <dl>
+              <dt>Телефон</dt>
+              <dd>{`${user.phone}`}</dd>
+              <dt>Email</dt>
+              <dd>{`${user.email}`}</dd>
+              <dt>Номер договора</dt>
+              <dd>{`${user.contractNumber}`}</dd>
+            </dl>
+            <div className={cl.buttonEdit}>
+              <Tooltip title="Редактировать">
+                <IconButton onClick={() => {}}>
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          </div>
+        </Grid>
+      </Grid>
 
-
-        {/* {textFields.map(({ label, field }) => (
-          <Field
-            key={field}
-            className={cl.field}
-            label={label}
-            value={user[field]}
-            isEditing={editingField === field}
-            onSave={() => {}}
-            onReset={() => {}}
-            onEdit={() => setEditingField(field)}
-          />
-        ))}
-        <Field
-          className={cl.field}
-          label="Адрес"
-          value={user.addresses[0]}
-          options={addresses.map(el => ({ id: el.id, value: el.fullAddress }))}
-          isEditing={editingField === "address"}
-          onSave={() => {}}
-          onReset={() => {}}
-          onEdit={() => setEditingField("address")}
-        /> */}
-      </div>
+      <Dialog maxWidth="md" open={showEdit} onClose={() => setShowEdit(false)}>
+        <Edit
+          data={user}
+          addresses={toJS(addresses)}
+          onSave={editUser}
+          onCancel={() => setShowEdit(false)}
+        />
+      </Dialog>
     </div>
   );
-};
+});
 
 export { UserCabinet };

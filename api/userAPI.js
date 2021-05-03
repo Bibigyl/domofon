@@ -20,9 +20,17 @@ class UserAPI {
       .collection("users")
       .add({ phone: phoneNumber })
       .then((docRef) => ({
-          id: docRef.id,
-          phone: phoneNumber,
-        }));
+        id: docRef.id,
+        phone: phoneNumber,
+      }));
+
+  editUser = async (id, data) => {
+    db.collection("users")
+      .doc(id)
+      .set(data)
+      .then((res) => console.log("res   ", res))
+      .catch((err) => console.log("ошибка   ", err));
+  };
 }
 
 const userAPI = new UserAPI();

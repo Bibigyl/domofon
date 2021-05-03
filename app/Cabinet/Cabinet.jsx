@@ -1,5 +1,6 @@
 import { React, useState, useCallback, useEffect } from "react";
 import { observer } from "mobx-react-lite";
+import { toJS } from "mobx";
 
 import { Login, UserCabinet } from "modules";
 import { Layout } from "app";
@@ -9,7 +10,7 @@ import { Loading } from "components";
 import cl from "./Cabinet.module.scss";
 
 const Cabinet = observer(() => {
-  const { user, isGettingUser, isAdmin, addresses } = store;
+  const { user, isGettingUser, isAdmin } = store;
 
   return (
     <Layout>
@@ -17,7 +18,7 @@ const Cabinet = observer(() => {
         ? <Loading />
         : <>
           {!user && <Login />}
-          {user && isAdmin && <UserCabinet user={user} addresses={addresses} />}
+          {user && isAdmin && <UserCabinet/>}
           {user && !isAdmin && "ADMIN"}
           </>
       }

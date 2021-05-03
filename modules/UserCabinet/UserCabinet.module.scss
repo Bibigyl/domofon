@@ -1,11 +1,23 @@
 .root {
-  .fields {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  .info {
+    position: relative;
+    display: inline-block;
+    padding-right: 50px;
+
+    dt {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    dd {
+      margin-left: 0;
+      margin-bottom: 20px;
+    }
   }
 
-  .field {
-    margin: 20px;
+  .buttonEdit {
+    position: absolute;
+    top: 10px;
+    right: 0;
   }
 }
