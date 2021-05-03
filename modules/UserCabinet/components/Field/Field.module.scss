@@ -1,0 +1,22 @@
+.root {
+  width: 100%;
+  max-width: 370px;
+
+  .label {
+    font-weight: bold;
+  }
+
+  .wrap {
+    display: flex;
+    align-items: center;
+  }
+
+  .field {
+    width: 100%;
+    max-width: 270px;
+  }
+
+  .buttons {
+    display: flex;
+  }
+}

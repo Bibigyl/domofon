@@ -1,0 +1,11 @@
+.root {
+  .fields {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .field {
+    margin: 20px;
+  }
+}
