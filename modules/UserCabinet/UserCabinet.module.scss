@@ -1,26 +1,28 @@
 .root {
   padding: 30px 0;
+}
 
-  .info {
-    display: inline-block;
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
+.user {
+  display: flex;
+  flex: 1 auto;
+  margin-bottom: 60px;
+}
 
-    dt {
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
+.info {
+  flex-shrink: 0;
+  margin-right: 20px;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
 
-    dd {
-      margin-bottom: 20px;
-      margin-left: 0;
-    }
+  dt {
+    margin-bottom: 5px;
+    font-weight: bold;
   }
 
-  .titleWarp {
-    position: relative;
-    padding-right: 50px;
+  dd {
+    margin-bottom: 20px;
+    margin-left: 0;
   }
 
   .infoIcon {
@@ -28,11 +30,80 @@
     margin: 0 auto;
     font-size: 50px;
   }
+}
 
-  .buttonEdit {
-    position: absolute;
-    top: 50%;
-    right: 0px;
-    transform: translateY(-50%);
+.facesWrap {
+  width: 100%;
+  padding: 20px;
+  overflow-x: auto;
+
+  h3 {
+    margin-bottom: 45px;
+    text-transform: uppercase;
+    font-size: 22px;
+  }
+}
+
+.faces {
+  display: flex;
+}
+
+.face {
+  position: relative;
+  flex-shrink: 0;
+  margin: 0 10px;
+  width: 210px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
+    0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  img {
+    width: 210px;
+    height: 210px;
+    object-fit: cover;
+  }
+
+  p {
+    margin: 10px 50px 10px 10px;
+  }
+}
+
+.faceNew {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 210px;
+
+  .newFaceIcon {
+    display: block;
+    color: #d4d4d4;
+    font-size: 100px;
+  }
+}
+
+.titleWarp {
+  position: relative;
+  padding-right: 50px;
+}
+
+.infoEdit {
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  transform: translateY(-50%);
+}
+
+.faceEdit {
+  position: absolute;
+  right: 0px;
+  bottom: -21px;
+  transform: translateY(-50%);
+
+  .editIcon {
+    font-size: 18px;
   }
 }

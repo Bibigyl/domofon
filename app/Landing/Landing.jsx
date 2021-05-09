@@ -1,21 +1,55 @@
-import { Container } from "@material-ui/core";
-
+import { InfoRequest, Container } from "components";
 import { Layout } from "app";
 
 import cl from "./Landing.module.scss";
 
-const Landing = () => {
-  const y = 9;
+const Landing = () => (
+  <Layout isLanding className={cl.root}>
+    <div className={cl.bgTech}>
+      <Container isCenter>
+        <h1>Domofondon.ru</h1>
+      </Container>
+    </div>
 
-  return (
-    <Layout isLanding className={cl.root}>
-      <div className={cl.bgTech}>
-        <Container className={cl.alignCenter} maxWidth="lg">
-          <h1>Domofondon.ru</h1>
-        </Container>
-      </div>
-    </Layout>
-  );
-};
+    <Container>
+      <InfoRequest />
+    </Container>
+
+    <Container>
+      <section className={cl.about}>
+        <h2 className="h2">О нас</h2>
+        <p>
+          Системы контроля доступом (СКД) — автоматизированные
+          контрольно-пропускные системы, которые позволяют управлять
+          безопасностью объекта и осуществлять контроль доступа. СКД,
+          собранная «под ключ», исполняет несколько функций, в том числе:{" "}
+        </p>
+        <ul>
+          <li>разграничение доступа сотрудников;</li>
+          <li>регистрацию посетителей;</li>
+          <li>электронный учет посетителей;</li>
+          <li>учет рабочего времени персонала.</li>
+        </ul>
+        <p>
+          Правильный выбор контрольно-пропускной системы влияет и на
+          безопасность предприятия, и на комфорт сотрудников. Системы,
+          предоставляемые компанией «ПрофДелоДон», благодаря многозадачности и
+          возможностям модификации системы, способны удовлетворить любые
+          требования заказчика.
+        </p>
+        <p>
+          В состав системы безопасности входит широкий спектр самых разных
+          устройств контроля доступа, например:
+        </p>
+        <ul>
+          <li>считывателей;</li>
+          <li>картоприемников;</li>
+          <li>адаптеров;</li>
+          <li>контроллеров.</li>
+        </ul>
+      </section>
+    </Container>
+  </Layout>
+);
 
 export { Landing };

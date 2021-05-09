@@ -1,4 +1,4 @@
-import { Container } from "@material-ui/core";
+import { Container } from "components";
 
 import cl from "./Footer.module.scss";
 
@@ -7,7 +7,7 @@ const Footer = () => {
 
   return (
     <footer className={cl.root}>
-      <Container className={cl.container} maxWidth="lg">
+      <Container>
         <div className={cl.root}>footer</div>
       </Container>
     </footer>

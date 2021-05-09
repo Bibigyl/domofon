@@ -1,15 +1,31 @@
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+
 import { Header, Footer } from "./components";
 import cl from "./Layout.module.scss";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#2f7491",
+      light: '#9dffae'
+    },
+    secondary: {
+      main: "#fff",
+    },
+  },
+});
 
 const Layout = (props) => {
   const { children, isLanding } = props;
 
   return (
-    <div className={`${cl.root} ${isLanding ? cl.landing : ""}`}>
-      <Header />
-      <main>{children}</main>
-      <Footer />
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className={`${cl.root} ${isLanding ? cl.landing : ""}`}>
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </div>
+    </ThemeProvider>
   );
 };
 
