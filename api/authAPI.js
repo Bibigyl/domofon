@@ -23,14 +23,14 @@ class AuthAPI {
   phoneSignIn = (phoneNumber) => {
     firebase
       .auth()
-      .signInWithPhoneNumber('+79889513454', this.recaptchaVerifier)
+      .signInWithPhoneNumber(phoneNumber, this.recaptchaVerifier)
       .then((confirmationResult) => {
         this.confirmationResult = confirmationResult;
       });
   };
 
   verifyCode = (code) => {
-    this.confirmationResult.confirm('123456');
+    this.confirmationResult.confirm(code);
   };
 
   logout = () => {
