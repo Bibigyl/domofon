@@ -9,7 +9,7 @@ export default function Home() {
         <title>Личный кабинет</title>
       </Head>
 
-      <Cabinet>test2</Cabinet>
+      <Cabinet />
     </>
   );
 }

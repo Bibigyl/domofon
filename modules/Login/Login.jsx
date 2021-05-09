@@ -57,7 +57,7 @@ const Login = () => {
           </form>
         ) : (
           <form className={cl.form} onSubmit={verifyCode}>
-            <div>{phone}</div>
+            <div className={cl.phone}>{phone}</div>
             <CodeInput className={cl.input} onChange={setCode} />
             <Button className={cl.button} type="submit">
               Отправить код

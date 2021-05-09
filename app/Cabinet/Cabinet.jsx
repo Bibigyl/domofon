@@ -1,6 +1,7 @@
 import { React, useState, useCallback, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
+import { Container } from "@material-ui/core";
 
 import { Login, UserCabinet } from "modules";
 import { Layout } from "app";
@@ -14,14 +15,12 @@ const Cabinet = observer(() => {
 
   return (
     <Layout>
-      {isGettingUser
-        ? <Loading />
-        : <>
-          {!user && <Login />}
-          {user && isAdmin && <UserCabinet/>}
-          {user && !isAdmin && "ADMIN"}
-          </>
-      }
+      <Container className={cl.container} maxWidth="lg">
+        {isGettingUser && <Loading />}
+        {!isGettingUser && !user && <Login />}
+        {user && isAdmin && <UserCabinet />}
+        {user && !isAdmin && "ADMIN"}
+      </Container>
     </Layout>
   );
 });

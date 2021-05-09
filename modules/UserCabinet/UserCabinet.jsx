@@ -1,84 +1,53 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
 import {
-  TextField,
   IconButton,
   Tooltip,
-  Select,
-  MenuItem,
-  Grid,
   Dialog,
+  Paper,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 import { store } from "store";
-import { userAPI } from "api";
 
-import { Field, Edit } from "./components";
+import { Edit } from "./components";
 import cl from "./UserCabinet.module.scss";
 
 const UserCabinet = observer(() => {
   const { user, editUser, addresses } = store;
   const [showEdit, setShowEdit] = useState(false);
 
-  console.log('user  UserCabinet', user?.name);
-
-  // const editUser = async (data) => {
-  //   updateUser(data);
-  // };
-
   return (
     <div className={cl.root}>
-      <Grid container spacing={8}>
-        <Grid item lg={4}>
-          <div className={cl.info}>
-            <h2>{`${user.name} ${user.surname}`}</h2>
-            <dl>
-              <dt>Телефон</dt>
-              <dd>{`${user.phone}`}</dd>
-              <dt>Email</dt>
-              <dd>{`${user.email}`}</dd>
-              <dt>Адрес</dt>
-              <dd>{`${addresses.find(ad => ad.id === user.addresses[0])?.fullAddress}`}</dd>
-              <dt>Номер договора</dt>
-              <dd>{`${user.contractNumber}`}</dd>
-            </dl>
-            <div className={cl.buttonEdit}>
-              <Tooltip title="Редактировать">
-                <IconButton
-                  onClick={() => {
-                    setShowEdit(true);
-                  }}
-                >
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
-          </div>
-        </Grid>
-
-        <Grid item lg={8}>
-          <div className={cl.info}>
-            <h2>{`${user.name} ${user.surname}`}</h2>
-            <dl>
-              <dt>Телефон</dt>
-              <dd>{`${user.phone}`}</dd>
-              <dt>Email</dt>
-              <dd>{`${user.email}`}</dd>
-              <dt>Номер договора</dt>
-              <dd>{`${user.contractNumber}`}</dd>
-            </dl>
-            <div className={cl.buttonEdit}>
-              <Tooltip title="Редактировать">
-                <IconButton onClick={() => {}}>
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
-          </div>
-        </Grid>
-      </Grid>
+      <Paper className={cl.info}>
+        <AssignmentIndIcon className={cl.infoIcon} color="primary" />
+        <div className={cl.titleWarp}>
+          <h2>{`${user.name} ${user.surname}`}</h2> 
+          <div className={cl.buttonEdit}>
+            <Tooltip title="Редактировать">
+              <IconButton
+                onClick={() => {
+                  setShowEdit(true);
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+          </div>   
+        </div>
+        <dl>
+          <dt>Телефон</dt>
+          <dd>{`${user.phone}`}</dd>
+          <dt>Email</dt>
+          <dd>{`${user.email}`}</dd>
+          <dt>Адрес</dt>
+          <dd>{`${addresses.find(ad => ad.id === user.addresses[0])?.fullAddress}`}</dd>
+          <dt>Номер договора</dt>
+          <dd>{`${user.contractNumber}`}</dd>
+        </dl>
+      </Paper>
 
       <Dialog maxWidth="md" open={showEdit} onClose={() => setShowEdit(false)}>
         <Edit

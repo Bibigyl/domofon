@@ -49,15 +49,10 @@ class Store {
 
   editUser = async (newData) => {
     this.isGettingUser = true;
-    const data = { ...newData };
-    delete data.id;
-
-    await userAPI.editUser(this.user.id, data);
-    // NOTE: editUser не успевает записать новые данные в базу
-    setTimeout(async () => {
-      this.user = await userAPI.getUserInfo(data.phone);
-      this.isGettingUser = false;
-    }, 300);
+    const { id, ...data } = { ...newData };
+    await userAPI.editUser(id, data);
+    this.user = { ...this.user, ...newData };
+    this.isGettingUser = false;
   };
 
   getAddresses = async () => {

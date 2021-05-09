@@ -28,6 +28,11 @@ const Edit = ({ data: propsData, addresses = [], onSave, onCancel }) => {
     [data]
   );
 
+  const handleSaveClick = async () => {
+    await onSave(data);
+    onCancel();
+  };
+
   return (
     <form className={cl.root}>
       <h2 className={cl.title}>Редактировать</h2>
@@ -66,7 +71,7 @@ const Edit = ({ data: propsData, addresses = [], onSave, onCancel }) => {
         </FormControl>
       </div>
       <div className={cl.buttons}>
-        <Button startIcon={<SaveIcon />} onClick={() => onSave(data)}>
+        <Button startIcon={<SaveIcon />} onClick={handleSaveClick}>
           Сохранить
         </Button>
         <Button onClick={onCancel}>Отмена</Button>

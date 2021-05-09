@@ -1,10 +1,11 @@
 import React, { forwardRef } from "react";
 import ReactCodeInput from "react-verification-code-input";
-import "./CodeInput.module.scss";
+
+import cl from "./CodeInput.module.scss";
 
 const CodeInput = forwardRef(({ onChange, onComplete }, ref) => (
   <ReactCodeInput
-    className="CodeInput"
+    className={cl.CodeInput}
     ref={ref}
     fields={6}
     onChange={onChange}
