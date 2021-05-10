@@ -26,15 +26,16 @@ class AuthAPI {
       .signInWithPhoneNumber(phoneNumber, this.recaptchaVerifier)
       .then((confirmationResult) => {
         this.confirmationResult = confirmationResult;
-      });
+      })
+      .catch(alert);
   };
 
   verifyCode = (code) => {
-    this.confirmationResult.confirm(code);
+    this.confirmationResult.confirm(code).catch(alert);
   };
 
   logout = () => {
-    firebase.auth().signOut();
+    firebase.auth().signOut().catch(alert);
   };
 }
 

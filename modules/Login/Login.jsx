@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "firebase/auth";
 import { Card, TextField } from "@material-ui/core";
+import { AddAlertRounded } from "@material-ui/icons";
 
 import { CodeInput, Button } from "../../components";
 import { authAPI } from "../../api/authAPI";
@@ -22,7 +23,7 @@ const Login = () => {
     try {
       authAPI.phoneSignIn(validPhone);
     } catch (err) {
-      console.error(err);
+      alert(err.message);
     }
   };
 
@@ -31,7 +32,7 @@ const Login = () => {
     try {
       authAPI.verifyCode(code);
     } catch (err) {
-      console.error(err);
+      alert(err.message);
     }
   };
 

@@ -35,8 +35,8 @@ const Header = observer(() => {
                 }
                 <Button theme='outlined' onClick={authAPI.logout}>Выйти</Button>
               </> 
-            : <Link href="/">
-                <Button theme='outlined' onClick={authAPI.login}>Личный кабинет</Button>
+            : <Link href="/cabinet">
+                <a><Button theme='outlined'>Личный кабинет</Button></a>
               </Link>
           }
         </div>

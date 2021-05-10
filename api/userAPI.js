@@ -1,4 +1,5 @@
 import { db } from "../firebase";
+import "firebase/storage";
 
 class UserAPI {
   getUserInfo = async (phoneNumber) =>
@@ -18,10 +19,24 @@ class UserAPI {
   createUser = async (phoneNumber) =>
     db
       .collection("users")
-      .add({ phone: phoneNumber })
+      .add({ 
+        phone: phoneNumber,
+        addresses: [],
+        contractNumber: '',
+        email: '',
+        faces: [],
+        name: '',
+        surname: ''
+      })
       .then((docRef) => ({
         id: docRef.id,
         phone: phoneNumber,
+        addresses: [],
+        contractNumber: '',
+        email: '',
+        faces: [],
+        name: '',
+        surname: ''
       }));
 
   editUser = async (id, data) => {
@@ -31,6 +46,12 @@ class UserAPI {
       .then((res) => console.log("res   ", res))
       .catch((err) => console.log("ошибка   ", err));
   };
+
+  addPhoto = {}
+
+  getPhotoUrl = {}
+
+  uploadPhoto = {}
 }
 
 const userAPI = new UserAPI();

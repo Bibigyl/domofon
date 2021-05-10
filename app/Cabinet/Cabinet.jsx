@@ -17,8 +17,8 @@ const Cabinet = observer(() => {
       <Container>
         {isGettingUser && <Loading />}
         {!isGettingUser && !user && <Login />}
-        {user && isAdmin && <UserCabinet />}
-        {user && !isAdmin && "ADMIN"}
+        {user && !isAdmin && <UserCabinet />}
+        {user && isAdmin && "ADMIN"}
       </Container>
     </Layout>
   );
