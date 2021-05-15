@@ -16,8 +16,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-export const storage = firebase.storage();
-
-export const storageRef = storage.ref();
-
 export const db = firebase.firestore();
+
+export const storageRef = firebase.storage().ref();

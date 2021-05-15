@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
@@ -5,23 +6,33 @@ import { IconButton, Tooltip, Dialog, Paper } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import firebase from "firebase/app";
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 import { store } from "store";
 import { InfoRequest } from "components";
 import { userAPI } from "api";
 
-import { Edit } from "./components";
+import { Edit, EditFace } from "./components";
 import cl from "./UserCabinet.module.scss";
 
 const UserCabinet = observer(() => {
-  const { user, editUser, addresses } = store;
+  const { user, editUser, addresses, photoURLs, addFace, editFaces, deleteFace } = store;
   const [showEdit, setShowEdit] = useState(false);
+  const [editingFaceId, setEditingFaceId] = useState(null);
 
   const getAddress = () => {
-    if (!user.addresses) return '———';
-    return addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress || '———';
+    if (!user.addresses) return '___';
+    return addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress || '___';
+  };
+
+  const handlePhotoAdd = (ev) => {
+    const file = ev.target?.files[0];
+    if (file) addFace(file);
+  };
+
+  const editFace = async (data) => {
+    await editFaces({ faceId: editingFaceId, ...data });
   };
 
   return (
@@ -45,13 +56,13 @@ const UserCabinet = observer(() => {
           </div>
           <dl>
             <dt>Телефон</dt>
-            <dd>{user.phone || '———'}</dd>
+            <dd>{user.phone || '___'}</dd>
             <dt>Email</dt>
-            <dd>{user.email || '———'}</dd>
+            <dd>{user.email || '___'}</dd>
             <dt>Адрес</dt>
             <dd>{getAddress()}</dd>
             <dt>Номер договора</dt>
-            <dd>{user.contractNumber || '———'}</dd>
+            <dd>{user.contractNumber || '___'}</dd>
           </dl>
         </Paper>
 
@@ -60,25 +71,31 @@ const UserCabinet = observer(() => {
           <div className={cl.faces}>
             <div className={`${cl.faceNew} ${cl.face}`}>
               <Tooltip title="Добавить фото">
-                <IconButton
-                  onClick={() => {}}
-                >
-                  <PersonAddIcon className={cl.newFaceIcon} />
-                </IconButton>
+                  <IconButton
+                    onClick={() => {}}
+                    component="label"
+                  >
+                    <input type='file' hidden onChange={handlePhotoAdd} accept=".jpg" />   
+                    <PersonAddIcon className={cl.newFaceIcon} />
+                  </IconButton>
               </Tooltip>
             </div>
-            {(user.faces || []).map((face) => {
-              const name = `${face.name} ${face.surname}`;
+            {toJS(photoURLs).map((photo) => {
+              // TODO нужны ли подписи под фото
+              const { name, surname } = toJS(user.faces).find(el => el.fileId === photo.id);
               return (
-                <div key={name} className={cl.face}>
-                  <img src={face.photoURL} alt="user" />
-                  <p>{name}</p>
-                  <div className={cl.faceEdit}>
+                <div key={photo.id} className={cl.face}>
+                  <img src={photo.url} alt="user" />
+                  <div className={cl.faceControls}>
+                    <p>{name} {surname}</p>
                     <Tooltip title="Редактировать">
-                      <IconButton
-                        onClick={() => {}}
-                      >
-                        <EditIcon className={cl.editIcon} />
+                      <IconButton onClick={() => setEditingFaceId(photo.id)}>
+                        <EditIcon className={cl.faceIcon} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Удалить">
+                      <IconButton onClick={() => deleteFace(photo.id)}>
+                        <DeleteIcon className={cl.faceIcon} />
                       </IconButton>
                     </Tooltip>
                   </div>
@@ -97,6 +114,14 @@ const UserCabinet = observer(() => {
           addresses={toJS(addresses)}
           onSave={editUser}
           onCancel={() => setShowEdit(false)}
+        />
+      </Dialog>
+
+      <Dialog maxWidth="md" open={editingFaceId !== null} onClose={() => setEditingFaceId(null)}>
+        <EditFace
+          data={toJS(user.faces).find(el => el.fileId === editingFaceId)}
+          onSave={editFace}
+          onCancel={() => setEditingFaceId(null)}
         />
       </Dialog>
     </div>

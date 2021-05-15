@@ -1,6 +1,5 @@
 import { React, useState, useCallback, useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { toJS } from "mobx";
 
 import { Login, UserCabinet } from "modules";
 import { Layout } from "app";

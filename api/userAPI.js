@@ -1,4 +1,4 @@
-import { db } from "../firebase";
+import { db, storageRef } from "../firebase";
 import "firebase/storage";
 
 class UserAPI {
@@ -16,28 +16,21 @@ class UserAPI {
         return userInfo;
       });
 
-  createUser = async (phoneNumber) =>
-    db
-      .collection("users")
-      .add({ 
-        phone: phoneNumber,
-        addresses: [],
-        contractNumber: '',
-        email: '',
-        faces: [],
-        name: '',
-        surname: ''
-      })
-      .then((docRef) => ({
-        id: docRef.id,
-        phone: phoneNumber,
-        addresses: [],
-        contractNumber: '',
-        email: '',
-        faces: [],
-        name: '',
-        surname: ''
-      }));
+  createUser = async (phoneNumber) => {
+    const emptyUser = {
+      phone: phoneNumber,
+      addresses: [],
+      contractNumber: "",
+      email: "",
+      faces: [],
+      name: "",
+      surname: "",
+    };
+
+    db.collection("users")
+      .add(emptyUser)
+      .then((docRef) => ({ id: docRef.id, ...emptyUser }));
+  };
 
   editUser = async (id, data) => {
     db.collection("users")
@@ -47,11 +40,27 @@ class UserAPI {
       .catch((err) => console.log("ошибка   ", err));
   };
 
-  addPhoto = {}
+  uploadPhoto = async (fileId, file) => {
+    storageRef
+      .child("users")
+      .child(`${fileId}.jpg`)
+      .put(file)
+      .then((snapshot) => {
+        console.log("Uploaded a blob or file!", snapshot);
+        return file;
+      });
+  };
 
-  getPhotoUrl = {}
+  getPhotoUrl = async (id) =>
+    storageRef
+      .child("users")
+      .child(`${id}.jpg`)
+      .getDownloadURL()
+      .then((url) => url);
 
-  uploadPhoto = {}
+  deletePhoto = async (id) => {
+    storageRef.child("users").child(`${id}.jpg`).delete();
+  };
 }
 
 const userAPI = new UserAPI();
