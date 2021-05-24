@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
 import { IconButton, Tooltip, Dialog, Paper } from "@material-ui/core";
@@ -8,10 +8,8 @@ import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
 import { store } from "store";
 import { InfoRequest } from "components";
-import { userAPI } from "api";
 
 import { Edit, EditFace } from "./components";
 import cl from "./UserCabinet.module.scss";
@@ -67,7 +65,7 @@ const UserCabinet = observer(() => {
         </Paper>
 
         <Paper className={cl.facesWrap}>
-          <h3>Domofon face</h3>
+          <h3>Фото</h3>
           <div className={cl.faces}>
             <div className={`${cl.faceNew} ${cl.face}`}>
               <Tooltip title="Добавить фото">
@@ -80,11 +78,10 @@ const UserCabinet = observer(() => {
                   </IconButton>
               </Tooltip>
             </div>
-            {toJS(photoURLs).map((photo) => {
-              // TODO нужны ли подписи под фото
-              const { name, surname } = toJS(user.faces).find(el => el.fileId === photo.id);
+            {toJS(photoURLs).map((photo, id) => {
+              const { name = '', surname = '' } = toJS(user.faces).find(el => el.fileId === photo.id) || {};
               return (
-                <div key={photo.id} className={cl.face}>
+                <div key={photo.id || id} className={cl.face}>
                   <img src={photo.url} alt="user" />
                   <div className={cl.faceControls}>
                     <p>{name} {surname}</p>

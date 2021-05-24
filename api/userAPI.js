@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 import { db, storageRef } from "../firebase";
 import "firebase/storage";
 
@@ -20,27 +21,30 @@ class UserAPI {
     const emptyUser = {
       phone: phoneNumber,
       addresses: [],
-      contractNumber: "",
-      email: "",
+      contractNumber: '',
+      email: '',
       faces: [],
-      name: "",
-      surname: "",
+      name: '',
+      surname: ''
     };
 
-    db.collection("users")
+    return db
+      .collection("users")
       .add(emptyUser)
-      .then((docRef) => ({ id: docRef.id, ...emptyUser }));
-  };
+      .then((docRef) => ({
+        id: docRef.id,
+        ...emptyUser
+      }));
+  }
 
-  editUser = async (id, data) => {
+  editUser = async (id, data) =>
     db.collection("users")
       .doc(id)
       .set(data)
       .then((res) => console.log("res   ", res))
       .catch((err) => console.log("ошибка   ", err));
-  };
 
-  uploadPhoto = async (fileId, file) => {
+  uploadPhoto = async (fileId, file) => 
     storageRef
       .child("users")
       .child(`${fileId}.jpg`)
@@ -49,7 +53,6 @@ class UserAPI {
         console.log("Uploaded a blob or file!", snapshot);
         return file;
       });
-  };
 
   getPhotoUrl = async (id) =>
     storageRef
@@ -58,9 +61,8 @@ class UserAPI {
       .getDownloadURL()
       .then((url) => url);
 
-  deletePhoto = async (id) => {
+  deletePhoto = async (id) => 
     storageRef.child("users").child(`${id}.jpg`).delete();
-  };
 }
 
 const userAPI = new UserAPI();

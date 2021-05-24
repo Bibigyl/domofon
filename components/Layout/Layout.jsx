@@ -1,6 +1,7 @@
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
-import { Header, Footer } from "./components";
+import { Header, Footer } from "components";
+
 import cl from "./Layout.module.scss";
 
 const theme = createMuiTheme({

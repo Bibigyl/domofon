@@ -1,5 +1,4 @@
-import { InfoRequest, Container } from "components";
-import { Layout } from "app";
+import { InfoRequest, Container, Layout } from "components";
 
 import cl from "./Landing.module.scss";
 

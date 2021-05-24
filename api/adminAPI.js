@@ -27,6 +27,19 @@ class AdminAPI {
         });
         return addresses;
       });
+
+  getUsers = async () =>
+    db
+      .collection("users")
+      .get()
+      .then((querySnapshot) => {
+        const users = [];
+        querySnapshot.forEach((doc) => {
+          const user = doc.data();
+          users.push({ id: doc.id, ...user });
+        });
+        return users;
+      });
 }
 
 const adminAPI = new AdminAPI();

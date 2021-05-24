@@ -18,6 +18,8 @@ class Store {
 
   photoURLs = [];
 
+  users = [];
+
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
     firebase.auth().onAuthStateChanged(this.#handleAuthStateChange);
@@ -29,6 +31,7 @@ class Store {
       const phone = user.phoneNumber;
 
       let userInfo = await userAPI.getUserInfo(phone);
+
       if (userInfo === null) {
         userInfo = await userAPI.createUser(phone);
       }
@@ -70,7 +73,8 @@ class Store {
     const fullData = { ...this.user, faces };
     const { id, ...data } = { ...fullData };
 
-    await userAPI.deletePhoto(faceId);
+    // eslint-disable-next-line no-empty
+    try { await userAPI.deletePhoto(faceId); } catch {}
     await userAPI.editUser(id, data);
     this.photoURLs = photoURLs;
     this.user = fullData;
@@ -80,35 +84,17 @@ class Store {
     this.addresses = await adminAPI.getAdrdesses();
   };
 
-  getPhotoURLs = async () => {
-    // TODO ошибка когда в базе удаляешь файл
-    // const photoURLs = await Promise.all(this.user.faces.map(async (face) => {
-    //   try {
-    //     const url = await userAPI.getPhotoUrl(face.fileId);
-    //     return { id: face.fileId, url };
-    //   } catch {
-    //     console.log(
-    //       "Не удалось загрузить фото, попробуйте перезагрузить страницу."
-    //     );
-    //     return { id: face.fileId, url: '' };
-    //   }
-    // }));
-    // console.log(8888, photoURLs);
-    // this.photoURLs = photoURLs;
-
-    try {
-      this.photoURLs = await Promise.all(
-        this.user.faces.map(async (face) => {
-          const url = await userAPI.getPhotoUrl(face.fileId);
-          return { id: face.fileId, url };
-        })
-      );
-    } catch {
-      console.log(
-        "Не удалось загрузить фото, попробуйте перезагрузить страницу."
-      );
-      this.user.faces.map(async (face) => ({ id: face.fileId, url: "" }));
-    }
+  getPhotoURLs = async (user) => {
+    const photoURLs = await Promise.all((user?.faces || this.user.faces).map(async (face) => {
+      try {
+        const url = await userAPI.getPhotoUrl(face.fileId);
+        return { id: face.fileId, url };
+      } catch {
+        console.log("Произошла ошибка. Попробуйте добавить фотографию заново." );
+        return { id: face.fileId, url: '' };
+      }
+    }));
+    this.photoURLs = photoURLs;
   };
 
   addFace = async (file) => {
@@ -126,8 +112,12 @@ class Store {
       this.photoURLs.push({ id: fileId, url: URL.createObjectURL(file) });
     } catch (err) {
       console.log(err);
-      // console.log('Не удалось загрузить фото');
+      console.log('Не удалось загрузить фото');
     }
+  };
+
+  getUsers = async () => {
+    this.users = await adminAPI.getUsers();
   };
 }
 

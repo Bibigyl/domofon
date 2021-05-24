@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-import { Landing } from "app";
+import { Landing } from "modules";
 
 export default function Home() {
   return (
