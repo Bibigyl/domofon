@@ -53,6 +53,7 @@
     "semi": [2, "always"],
     "import/prefer-default-export": "off",
     "no-shadow": "off",
+    "jsx-a11y/label-has-associated-control": "off",
     "import/order": [
       "error",
       {

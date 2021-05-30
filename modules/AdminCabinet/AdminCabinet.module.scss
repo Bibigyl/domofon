@@ -2,24 +2,81 @@
   padding: 30px 0;
 }
 
-.users {
+.controls {
   display: flex;
-  flex: 1 auto;
+  margin-bottom: 20px;
+
+  ul {
+    display: flex;
+    align-content: flex-start;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 0;
+    margin-bottom: 10px;
+    height: 100px;
+    padding: 0;
+    font-size: 14px;
+  }
+
+  li {
+    margin-right: 20px;
+    margin-bottom: 8px;
+    width: 100%;
+    max-width: 300px;
+    list-style-type: none;
+    b {
+      margin-right: 10px;
+    }
+  }
+
+  .user {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-right: 20px;
+    padding: 20px 20px 12px;
+  }
+
+  .search {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+  }
+
+  .checkbox {
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .addUser {
+    margin-left: auto;
+  }
+
+  .faces {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .hide {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}
+
+.users {
 }
 
 .table {
-  margin-right: 20px;
   width: 100%;
-  max-width: 600px;
-  table-layout: fixed;
+  max-width: 1240px;
+  table-layout: auto;
   border-collapse: collapse;
-
-  th,
-  td {
-    border: 1px solid #afafaf;
-    padding: 10px;
-    font-weight: 300;
-  }
+  font-size: 14px;
 
   thead tr {
     background-color: #2f7491;
@@ -33,71 +90,46 @@
       background-color: #efefef;
     }
   }
-}
 
-.facesWrap {
-  width: 100%;
-  padding: 20px;
-  overflow-x: auto;
-
-  h3 {
-    margin: 0 0 10px;
-    text-transform: uppercase;
-    font-size: 17px;
-  }
-}
-
-.faces {
-  display: flex;
-
-  &:after {
-    flex-shrink: 0;
-    width: 10px;
-    height: 253px;
-    content: "";
-  }
-}
-
-.face {
-  position: relative;
-  flex-shrink: 0;
-  margin: 0 10px;
-  width: 210px;
-  border-radius: 5px;
-  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
-    0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
-
-  &:first-child {
-    margin-left: 0;
-    height: 253px;
+  .selectedTr {
+    outline: solid #00bd077a 3px;
+    outline-offset: -2px;
   }
 
-  img {
-    display: block;
-    width: 210px;
-    height: 210px;
-    object-fit: cover;
+  th,
+  td {
+    border: 1px solid #afafaf;
+    padding: 5px 10px;
+    font-weight: 300;
   }
 
-  p {
-    margin: 10px;
-    width: 100%;
-    font-size: 12px;
-  }
-}
-
-.faceControls {
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
-
-  p {
+  td {
+    width: 100px;
+    height: 38px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .faceIcon {
-    font-size: 18px;
+  td[data-content="name"],
+  td[data-content="address"],
+  td[data-content="email"] {
+    width: 200px;
+    max-width: 250px;
+  }
+
+  td[data-content="faces"],
+  td[data-content="facesProcessed"] {
+    width: 100px;
+    max-width: 100px;
+    text-align: center;
   }
 }
+
+// <th data-content="phone">Номер телефона</th>
+// <th data-content="name">Имя Фамилия</th>
+// <th data-content="contractNumber">Номер договора</th>
+// <th data-content="address">Адрес</th>
+// <th data-content="email">Email</th>
+// <th data-content="faces">Есть фото</th>
+// <th data-content="facesProcessed">Фото обработаны</th>

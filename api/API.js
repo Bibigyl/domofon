@@ -2,7 +2,7 @@
 import { db, storageRef } from "../firebase";
 import "firebase/storage";
 
-class UserAPI {
+class FirebaseAPI {
   getUserInfo = async (phoneNumber) =>
     db
       .collection("users")
@@ -44,6 +44,33 @@ class UserAPI {
       .then((res) => console.log("res   ", res))
       .catch((err) => console.log("ошибка   ", err));
 
+  checkIsAdmin = async (userId) =>
+    db
+      .collection("admins")
+      .where("id", "==", userId)
+      .get()
+      .then((querySnapshot) => {
+        let isAdmin = false;
+        querySnapshot.forEach((doc) => {
+          isAdmin = doc.data();
+          isAdmin = true;
+        });
+        return isAdmin;
+      });
+
+  getAdrdesses = async () =>
+    db
+      .collection("addresses")
+      .get()
+      .then((querySnapshot) => {
+        const addresses = [];
+        querySnapshot.forEach((doc) => {
+          const { city, address } = doc.data();
+          addresses.push({ city, address, id: doc.id, fullAddress: `${city}, ${address}` });
+        });
+        return addresses;
+      });
+
   uploadPhoto = async (fileId, file) => 
     storageRef
       .child("users")
@@ -63,8 +90,21 @@ class UserAPI {
 
   deletePhoto = async (id) => 
     storageRef.child("users").child(`${id}.jpg`).delete();
+
+  getUsers = async () =>
+    db
+      .collection("users")
+      .get()
+      .then((querySnapshot) => {
+        const users = [];
+        querySnapshot.forEach((doc) => {
+          const user = doc.data();
+          users.push({ id: doc.id, ...user });
+        });
+        return users;
+      });
 }
 
-const userAPI = new UserAPI();
+const API = new FirebaseAPI();
 
-export { userAPI };
+export { API };

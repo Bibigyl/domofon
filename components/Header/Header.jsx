@@ -9,7 +9,7 @@ import { authAPI } from "api/authAPI";
 import cl from "./Header.module.scss";
 
 const Header = observer(() => {
-  const { user } = store;
+  const { user } = store.userStore;
 
   return (
     <header className={cl.root}>

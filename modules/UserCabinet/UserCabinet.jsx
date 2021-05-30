@@ -15,7 +15,7 @@ import { Edit, EditFace } from "./components";
 import cl from "./UserCabinet.module.scss";
 
 const UserCabinet = observer(() => {
-  const { user, editUser, addresses, photoURLs, addFace, editFaces, deleteFace } = store;
+  const { user, editUser, addresses, photoURLs, addFace, editFaces, deleteFace } = store.userStore;
   const [showEdit, setShowEdit] = useState(false);
   const [editingFaceId, setEditingFaceId] = useState(null);
 
