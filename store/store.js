@@ -1,7 +1,8 @@
 import { makeAutoObservable } from "mobx";
 import firebase from "firebase/app";
 
-import { API, adminAPI } from "api";
+import { API } from "api";
+import { photoURLs } from 'helpers';
 
 import { userStore } from './stores/userStore';
 import { adminStore } from './stores/adminStore';
@@ -45,6 +46,7 @@ class Store {
       } else {
         await this.adminStore.getUsers();
         await this.adminStore.getAddresses();
+        await photoURLs.loadByUser(userInfo);
       }
 
     } else {

@@ -1,7 +1,6 @@
 import { makeAutoObservable } from "mobx";
-import firebase from "firebase/app";
 
-import { API, adminAPI } from "api";
+import { API } from "api";
 
 class UserStore {
   user = null;
@@ -19,65 +18,69 @@ class UserStore {
   }
 
   editUser = async (newData) => {
-    const fullData = { ...this.user, ...newData };
-    const { id, ...data } = { ...fullData };
-
-    await API.editUser(id, data);
-    this.user = fullData;
+    try {
+      await API.editUser(newData);
+      this.user = newData;      
+    } catch {
+      console.log('Произошла ошибка');
+    }
   };
 
   addFace = async (file) => {
     try {
-      const fileId = `${this.user.id}_${Date.now()}`;
+      const id = `${this.user.id}_${Date.now()}`;
       const newFace = {
-        fileId,
+        id,
+        fileId: id,
         name: "",
         surname: "",
         relation: "",
+        isProcessed: false,
       };
-      await API.uploadPhoto(fileId, file);
+      await API.uploadPhoto(id, file);
       await this.editUser({ faces: [...this.user.faces, newFace] });
-      this.user.faces.push(newFace);
-      this.photoURLs.push({ id: fileId, url: URL.createObjectURL(file) });
+      // this.user.faces.push(newFace);
     } catch (err) {
       console.log(err);
       console.log('Не удалось загрузить фото');
     }
   };
 
-  deleteFace = async (faceId) => {
-    const faces = this.user.faces.filter((el) => el.fileId !== faceId);
-    const photoURLs = this.photoURLs.filter((el) => el.id !== faceId);
-    const fullData = { ...this.user, faces };
-    const { id, ...data } = { ...fullData };
+  deleteFace = async (id) => {
+    const faces = this.user.faces.filter(face => face.id !== id);
+    const userData = { ...this.user, faces };
 
-    // eslint-disable-next-line no-empty
-    try { await API.deletePhoto(faceId); } catch {}
-    await API.editUser(id, data);
-    this.photoURLs = photoURLs;
-    this.user = fullData;
+    try { 
+      await API.deletePhoto(id);
+      await API.editUser(userData);
+      this.user = userData;
+    } catch { 
+      console.error("Файл не удален из хранилища"); 
+    }
   };
 
-  editFaces = async ({ faceId, name = "", surname = "" }) => {
-    // TODO баг когда два одинаковых файла
-    const faces = this.user.faces.map((el) =>
-      el.fileId === faceId ? { ...el, name, surname } : el
+  editFace = async (face) => {
+    const faces = this.user.faces.map(el =>
+      el.id === face.id ? { ...el, ...face } : el
     );
-    const fullData = { ...this.user, faces };
-    const { id, ...data } = { ...fullData };
+    const userData = { ...this.user, faces };
 
-    await API.editUser(id, data);
-    this.user = fullData;
+    try {
+      await API.editUser(userData);
+      this.user = userData;      
+    } catch {
+      console.log('Произошла ошибка');
+    }
   };
 
   getPhotoURLs = async (user) => {
     const photoURLs = await Promise.all((user?.faces || this.user.faces).map(async (face) => {
       try {
-        const url = await API.getPhotoUrl(face.fileId);
-        return { id: face.fileId, url };
+        const url = await API.getPhotoUrl(face.id);
+        return { id: face.id, url };
       } catch {
         console.log("Произошла ошибка. Попробуйте добавить фотографию заново." );
-        return { id: face.fileId, url: '' };
+        return { id: face.id, url: '' };
       }
     }));
     this.photoURLs = photoURLs;

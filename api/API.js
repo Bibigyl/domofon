@@ -21,11 +21,11 @@ class FirebaseAPI {
     const emptyUser = {
       phone: phoneNumber,
       addresses: [],
-      contractNumber: '',
-      email: '',
+      contractNumber: "",
+      email: "",
       faces: [],
-      name: '',
-      surname: ''
+      name: "",
+      surname: "",
     };
 
     return db
@@ -33,16 +33,18 @@ class FirebaseAPI {
       .add(emptyUser)
       .then((docRef) => ({
         id: docRef.id,
-        ...emptyUser
+        ...emptyUser,
       }));
-  }
+  };
 
-  editUser = async (id, data) =>
-    db.collection("users")
+  editUser = async (userData) => {
+    const { id, ...data } = { ...userData };
+    return db
+      .collection("users")
       .doc(id)
       .set(data)
-      .then((res) => console.log("res   ", res))
-      .catch((err) => console.log("ошибка   ", err));
+      .then((res) => console.log("res   ", res));
+  }
 
   checkIsAdmin = async (userId) =>
     db
@@ -66,12 +68,17 @@ class FirebaseAPI {
         const addresses = [];
         querySnapshot.forEach((doc) => {
           const { city, address } = doc.data();
-          addresses.push({ city, address, id: doc.id, fullAddress: `${city}, ${address}` });
+          addresses.push({
+            city,
+            address,
+            id: doc.id,
+            fullAddress: `${city}, ${address}`,
+          });
         });
         return addresses;
       });
 
-  uploadPhoto = async (fileId, file) => 
+  uploadPhoto = async (fileId, file) =>
     storageRef
       .child("users")
       .child(`${fileId}.jpg`)
@@ -81,15 +88,15 @@ class FirebaseAPI {
         return file;
       });
 
-  getPhotoUrl = async (id) =>
+  getPhotoUrl = async (fileId) =>
     storageRef
       .child("users")
-      .child(`${id}.jpg`)
+      .child(`${fileId}.jpg`)
       .getDownloadURL()
       .then((url) => url);
 
-  deletePhoto = async (id) => 
-    storageRef.child("users").child(`${id}.jpg`).delete();
+  deletePhoto = async (fileId) =>
+    storageRef.child("users").child(`${fileId}.jpg`).delete();
 
   getUsers = async () =>
     db

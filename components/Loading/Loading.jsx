@@ -1,5 +1,7 @@
 import cl from "./Loading.module.scss";
 
-const Loading = () => <div className={cl.loading} />;
+const Loading = ({ className }) => <div 
+  className={`${cl.loading} ${className || ''}`} 
+/>;
 
 export { Loading };
