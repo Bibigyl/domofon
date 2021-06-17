@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
 import { IconButton, Tooltip, Paper, Checkbox } from "@material-ui/core";
@@ -7,11 +7,11 @@ import SaveIcon from "@material-ui/icons/Save";
 import { useForceUpdate } from "helpers/hooks";
 import { photoURLs } from 'helpers';
 import { store } from "store";
-import { Button } from "components";
 
 import cl from "./Faces.module.scss";
 
 const Faces = observer(({ openUser, className }) => {
+  const { setFaceProcessed } = store.adminStore;
   const forceUpdate = useForceUpdate();
 
   const loadPhotoURLs = useCallback(async () => {
@@ -38,8 +38,8 @@ const Faces = observer(({ openUser, className }) => {
     xhr.send();
   };
 
-  const setFaceProcessed = (faceId, isProcessed) => {
-    console.log(faceId, isProcessed);
+  const setProcessed = (faceId, isProcessed) => {
+    setFaceProcessed({ userId: openUser.id, faceId, isProcessed });
   };
 
   return (
@@ -48,7 +48,7 @@ const Faces = observer(({ openUser, className }) => {
       <div className={cl.faces}>
         {openUser &&
           toJS(openUser.faces).map(face => {
-            const { id, fileId, name = "", surname = "" } = face;
+            const { id, fileId, isProcessed, name = "", surname = "" } = face;
             const fileName = `${openUser.phone}_${fileId}`;
             const url = photoURLs.get(fileId);
             if (!url) return null;
@@ -62,13 +62,14 @@ const Faces = observer(({ openUser, className }) => {
                     Обработано:
                     <Checkbox
                       color="primary"
-                     onChange={ev => setFaceProcessed(id, ev.target)}
+                      defaultChecked={isProcessed}
+                      onChange={ev => setProcessed(id, ev.target.checked)}
                     />
                   </p>
                   <div className={cl.saveButton}>
                     <Tooltip title="Скачать">
                       <IconButton
-                        onClick={(e) => uploadPhoto(e, { url, fileName })}
+                        onClick={(ev) => uploadPhoto(ev, { url, fileName })}
                       >
                         <SaveIcon className={cl.saveIcon} />
                       </IconButton>

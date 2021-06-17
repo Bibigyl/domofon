@@ -1,11 +1,6 @@
 import { makeAutoObservable } from "mobx";
 
 import { API } from "api";
-// import { getPhotoUrl } from 'helpers';
-
-// configure({
-//   enforceActions: "never",
-// });
 
 class AdminStore {
   addresses = [];
@@ -14,26 +9,32 @@ class AdminStore {
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
+
+    this.setFaceProcessed = this.setFaceProcessed.bind(this);
   }
 
-  getAddresses = async () => {
-    this.addresses = await API.getAdrdesses();
-  };
+  *getAddresses() {
+    this.addresses = yield API.getAdrdesses();
+  }
 
-  getUsers = async () => {
-    this.users = await API.getUsers();
-  };
+  *getUsers() {
+    this.users = yield API.getUsers();
+  }
 
-  setFaceProcessed = async ({ userId, faceId, isProcessed }) => {
-    const userData = this.users.find(user => user.id === userId);
-    const faces = userData.faces.map(face => face.id === faceId ? {...face, isProcessed} : face);
-    const newUserData = {...userData, faces};
+  *setFaceProcessed({ userId, faceId, isProcessed }) {
+    const userData = this.users.find((user) => user.id === userId);
+    const faces = userData.faces.map((face) =>
+      face.id === faceId ? { ...face, isProcessed } : face
+    );
+    const newUserData = { ...userData, faces };
 
     try {
-      await API.editUser(newUserData);
-      this.users = this.users.map(user => user.id === userId ? newUserData : user);
+      yield API.editUser(newUserData);
+      this.users = this.users.map((user) =>
+        user.id === userId ? newUserData : user
+      );
     } catch {
-      console.log('Произошла ошибка');
+      console.log("Произошла ошибка");
     }
   }
 }

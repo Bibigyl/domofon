@@ -34,8 +34,6 @@ const Faces = observer(({ className }) => {
     if (file) addFace(file);
   };
 
-  console.log(99999);
-
   return (
     <Paper className={`${cl.root} ${className}`}>
       <h3>Фото</h3>

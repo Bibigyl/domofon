@@ -1,0 +1,21 @@
+.root {
+  display: flex;
+  align-items: center;
+  margin-top: auto;
+
+  button:disabled {
+    opacity: 0.5;
+  }
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  margin: 0 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.addUser {
+  margin-left: auto;
+}

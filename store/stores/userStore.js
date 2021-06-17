@@ -11,22 +11,28 @@ class UserStore {
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
+
+    this.editUser = this.editUser.bind(this);
+    this.addFace = this.addFace.bind(this);
+    this.deleteFace = this.deleteFace.bind(this);
+    this.editFace = this.editFace.bind(this);
   }
 
   setUser = (user) => {
     this.user = user;
-  }
-
-  editUser = async (newData) => {
-    try {
-      await API.editUser(newData);
-      this.user = newData;      
-    } catch {
-      console.log('Произошла ошибка');
-    }
   };
 
-  addFace = async (file) => {
+  *editUser(newData) {
+    try {
+      const userData = { ...this.user, ...newData };
+      yield API.editUser(userData);
+      this.user = userData;
+    } catch {
+      console.log("Произошла ошибка");
+    }
+  }
+
+  *addFace(file) {
     try {
       const id = `${this.user.id}_${Date.now()}`;
       const newFace = {
@@ -37,58 +43,43 @@ class UserStore {
         relation: "",
         isProcessed: false,
       };
-      await API.uploadPhoto(id, file);
-      await this.editUser({ faces: [...this.user.faces, newFace] });
-      // this.user.faces.push(newFace);
+      yield API.uploadPhoto(id, file);
+      yield this.editUser({ faces: [...this.user.faces, newFace] });
     } catch (err) {
-      console.log(err);
-      console.log('Не удалось загрузить фото');
+      console.log("Не удалось загрузить фото");
     }
-  };
+  }
 
-  deleteFace = async (id) => {
-    const faces = this.user.faces.filter(face => face.id !== id);
+  *deleteFace(id) {
+    const faces = this.user.faces.filter((face) => face.id !== id);
     const userData = { ...this.user, faces };
 
-    try { 
-      await API.deletePhoto(id);
-      await API.editUser(userData);
+    try {
+      yield API.deletePhoto(id);
+      yield API.editUser(userData);
       this.user = userData;
-    } catch { 
-      console.error("Файл не удален из хранилища"); 
+    } catch {
+      console.error("Файл не удален из хранилища");
     }
-  };
+  }
 
-  editFace = async (face) => {
-    const faces = this.user.faces.map(el =>
+  *editFace(face) {
+    const faces = this.user.faces.map((el) =>
       el.id === face.id ? { ...el, ...face } : el
     );
     const userData = { ...this.user, faces };
 
     try {
-      await API.editUser(userData);
-      this.user = userData;      
+      yield API.editUser(userData);
+      this.user = userData;
     } catch {
-      console.log('Произошла ошибка');
+      console.log("Произошла ошибка");
     }
-  };
+  }
 
-  getPhotoURLs = async (user) => {
-    const photoURLs = await Promise.all((user?.faces || this.user.faces).map(async (face) => {
-      try {
-        const url = await API.getPhotoUrl(face.id);
-        return { id: face.id, url };
-      } catch {
-        console.log("Произошла ошибка. Попробуйте добавить фотографию заново." );
-        return { id: face.id, url: '' };
-      }
-    }));
-    this.photoURLs = photoURLs;
-  };
-
-  getAddresses = async () => {
-    this.addresses = await API.getAdrdesses();
-  };
+  *getAddresses() {
+    this.addresses = yield API.getAdrdesses();
+  }
 }
 
 const userStore = new UserStore();

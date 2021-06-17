@@ -2,15 +2,10 @@ import { makeAutoObservable } from "mobx";
 import firebase from "firebase/app";
 
 import { API } from "api";
-import { photoURLs } from 'helpers';
+import { photoURLs } from "helpers";
 
-import { userStore } from './stores/userStore';
-import { adminStore } from './stores/adminStore';
-
-
-// configure({
-//   enforceActions: "never",
-// });
+import { userStore } from "./stores/userStore";
+import { adminStore } from "./stores/adminStore";
 
 class Store {
   isGettingAuth = true;
@@ -23,38 +18,36 @@ class Store {
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
-    firebase.auth().onAuthStateChanged(this.#handleAuthStateChange);
+    firebase.auth().onAuthStateChanged(this.handleAuthStateChange.bind(this));
   }
 
-  #handleAuthStateChange = async (user) => {
+  *handleAuthStateChange(user) {
     this.isGettingAuth = true;
     if (user) {
       const phone = user.phoneNumber;
 
-      let userInfo = await API.getUserInfo(phone);
+      let userInfo = yield API.getUserInfo(phone);
 
       if (userInfo === null) {
-        userInfo = await API.createUser(phone);
+        userInfo = yield API.createUser(phone);
       }
 
-      this.isAdmin = await API.checkIsAdmin(userInfo.id);
+      this.isAdmin = yield API.checkIsAdmin(userInfo.id);
       this.userStore.setUser(userInfo);
-      
-      if (!this.isAdmin) {
-        await this.userStore.getAddresses();
-        await this.userStore.getPhotoURLs();
-      } else {
-        await this.adminStore.getUsers();
-        await this.adminStore.getAddresses();
-        await photoURLs.loadByUser(userInfo);
-      }
 
+      if (!this.isAdmin) {
+        yield this.userStore.getAddresses();
+      } else {
+        yield this.adminStore.getUsers();
+        yield this.adminStore.getAddresses();
+        yield photoURLs.loadByUser(userInfo);
+      }
     } else {
       this.isAdmin = false;
       this.user = null;
     }
     this.isGettingAuth = false;
-  };
+  }
 }
 
 const store = new Store();

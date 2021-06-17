@@ -2,7 +2,7 @@
   padding: 30px 0;
 }
 
-.controls {
+.usersHeader {
   display: flex;
   margin-bottom: 20px;
 
@@ -24,6 +24,7 @@
     width: 100%;
     max-width: 300px;
     list-style-type: none;
+
     b {
       margin-right: 10px;
     }
@@ -38,24 +39,6 @@
     padding: 20px 20px 12px;
   }
 
-  .search {
-    display: flex;
-    align-items: center;
-    margin-top: auto;
-  }
-
-  .checkbox {
-    display: flex;
-    align-items: center;
-    margin: 0 20px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-
-  .addUser {
-    margin-left: auto;
-  }
-
   .faces {
     width: 100%;
     max-width: 500px;
@@ -66,9 +49,6 @@
     top: 5px;
     right: 5px;
   }
-}
-
-.users {
 }
 
 .table {
@@ -92,8 +72,7 @@
   }
 
   .selectedTr {
-    outline: solid #00bd077a 3px;
-    outline-offset: -2px;
+    box-shadow: 3px 3px 1px #00bd077a inset, -2px -2px 1px #00bd077a inset;
   }
 
   th,
@@ -125,11 +104,3 @@
     text-align: center;
   }
 }
-
-// <th data-content="phone">Номер телефона</th>
-// <th data-content="name">Имя Фамилия</th>
-// <th data-content="contractNumber">Номер договора</th>
-// <th data-content="address">Адрес</th>
-// <th data-content="email">Email</th>
-// <th data-content="faces">Есть фото</th>
-// <th data-content="facesProcessed">Фото обработаны</th>
