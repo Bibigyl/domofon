@@ -5,6 +5,7 @@ import {
   IconButton,
   Tooltip,
   TextField,
+  Dialog
 } from "@material-ui/core";
 import Checkbox from '@material-ui/core/Checkbox';
 import SearchIcon from '@material-ui/icons/Search';
@@ -13,15 +14,27 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import { Button } from 'components';
+import { UserCabinet } from 'modules';
+import { API } from 'api';
 import { store } from "store";
 
 import cl from "./Controls.module.scss";
 
+const FORM = {
+  EDIT: 'EDIT',
+  CREATE: 'CREATE',
+  REMOVE: 'REMOVE'
+};
 
 const Controls = observer(({ setVisibleUsers, openUser }) => {
-  const { users, addresses } = store.adminStore;
+  const { users, getUsers } = store.adminStore;
+  const { addresses } = store.addressesStore;
+  const { user, setUser } = store.userStore;
+
   const [searchString, setSearchString] = useState('');
   const [showNotProcessed, setShowNotProcessed] = useState(false);
+  const [formType, setFormType] = useState(null);
   const searchRef = useRef();
 
   useEffect(() => {
@@ -61,12 +74,38 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
     setShowNotProcessed(!showNotProcessed);
   };
 
+  const createUser = async () => {
+    setFormType(FORM.CREATE);
+    const newUser = await API.createUser();
+    setUser(newUser);
+  };
+
+  const editUser = () => {
+    setUser(openUser);
+    setFormType(FORM.EDIT);
+  };
+
+  const removeUser = async () => {
+    await API.removeUser(openUser.id);
+    closeForm();
+  };
+
+  const closeForm = async () => {
+    if (formType === FORM.CREATE) {
+      const isEmpty = !Object.keys(user).some(key => key !== 'id' && user[key]?.length);
+      if (isEmpty) await API.removeUser(user.id);
+    }
+    setUser(null);
+    setFormType(null);
+    getUsers();
+  };
+
   const getText = useCallback((user, field) => {
     let text;
-    if (field === 'name') text = user.name && `${user.name} ${user.surname}`;
+    if (field === 'name') text = (user.name || user.surname) && `${user.name} ${user.surname}`;
     if (field === 'phone') text = user.phone;
     if (field === 'email') text = user.email;
-    if (field === 'address') text = toJS(addresses).find((ad) => ad.id === user.addresses[0])?.fullAddress;
+    if (field === 'address') text = addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress;
     if (field === 'contractNumber') text = user.contractNumber;
     return text || '___';
   }, [addresses]);
@@ -98,21 +137,56 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
       />
       Только необработанные
     </label>
+
     <Tooltip title="Редактировать пользователя">
-      <IconButton disabled={!openUser}  className={cl.addUser} >
+      <IconButton 
+        className={`${cl.createUser} ${!openUser ? cl.disabled : ''}`} 
+        onClick={editUser}
+      >
         <EditIcon style={{color: "#2f7491"}}/> 
       </IconButton> 
     </Tooltip>
     <Tooltip title="Удалить пользователя">
-      <IconButton disabled={!openUser}  className={cl.addUser} >
+      <IconButton 
+        className={`${cl.createUser} ${!openUser ? cl.disabled : ''}`} 
+        onClick={() => setFormType(FORM.REMOVE)}
+      >
         <DeleteIcon style={{color: "#2f7491"}}/> 
       </IconButton> 
     </Tooltip>
     <Tooltip title="Добавить пользователя">
-      <IconButton className={cl.addUser} >
+      <IconButton className={cl.createUser} onClick={createUser}>
         <PersonAddIcon style={{color: "#2f7491"}}/> 
       </IconButton> 
     </Tooltip>
+
+    <Dialog
+      fullWidth
+      maxWidth="lg" 
+      open={!!formType && formType !== FORM.REMOVE} 
+      onClose={closeForm}
+    >
+      <div className={cl.form}>
+        <h2>{formType === FORM.EDIT ? 'Редактировать пользователя' : 'Создать нового пользователя'}</h2>
+        <UserCabinet />
+        <Button className={cl.formButton} onClick={closeForm}>Закрыть</Button>        
+      </div>
+    </Dialog>
+
+    <Dialog
+      open={!!formType && formType === FORM.REMOVE} 
+      onClose={closeForm}
+    >
+      <div className={cl.form}>
+        <h3>Вы уверены что хотите удалить пользователя?</h3>
+        {openUser?.name && <p>{`${openUser.name} ${openUser.surname}`}</p>}
+        {openUser?.phone && <p>{openUser.phone}</p>}
+        <div className={cl.formButtons}>
+          <Button onClick={removeUser}>Да</Button>
+          <Button  onClick={closeForm}>Нет</Button>          
+        </div>
+      </div>
+    </Dialog>
   </div>
   );
 });

@@ -10,11 +10,11 @@ import { Button } from "components";
 
 import cl from "./InfoRequest.module.scss";
 
-const InfoRequest = () => {
+const InfoRequest = ({ className }) => {
   const y = 9;
 
   return (
-    <div className={cl.root}>
+    <div className={`${cl.root} ${className}`}>
       <h2 className="h2">Услуги</h2>
       <div className={cl.cards}>
         <Paper className={cl.card}>

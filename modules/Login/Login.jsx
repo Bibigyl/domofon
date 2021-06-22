@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import "firebase/auth";
 import { Card, TextField } from "@material-ui/core";
-import { AddAlertRounded } from "@material-ui/icons";
 
 import { CodeInput, Button } from "../../components";
 import { authAPI } from "../../api/authAPI";

@@ -6,6 +6,7 @@ import { photoURLs } from "helpers";
 
 import { userStore } from "./stores/userStore";
 import { adminStore } from "./stores/adminStore";
+import { addressesStore } from "./stores/addressesStore";
 
 class Store {
   isGettingAuth = true;
@@ -16,6 +17,8 @@ class Store {
 
   adminStore = adminStore;
 
+  addressesStore = addressesStore;
+
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
     firebase.auth().onAuthStateChanged(this.handleAuthStateChange.bind(this));
@@ -23,31 +26,39 @@ class Store {
 
   *handleAuthStateChange(user) {
     this.isGettingAuth = true;
-    if (user) {
-      const phone = user.phoneNumber;
+    try {
+      if (user) {
+        const phone = user.phoneNumber;
 
-      let userInfo = yield API.getUserInfo(phone);
+        let userInfo = yield API.getUserInfo(phone);
 
-      if (userInfo === null) {
-        userInfo = yield API.createUser(phone);
-      }
+        if (userInfo === null) {
+          userInfo = yield API.createUser(phone);
+        }
 
-      this.isAdmin = yield API.checkIsAdmin(userInfo.id);
-      this.userStore.setUser(userInfo);
+        this.isAdmin = yield API.checkIsAdmin(phone);
 
-      if (!this.isAdmin) {
-        yield this.userStore.getAddresses();
+        if (!this.isAdmin) {
+          this.userStore.setUser(userInfo);
+          yield this.userStore.getAddresses();
+        } else {
+          this.adminStore.setAdmin(userInfo);
+          yield this.adminStore.getUsers();
+          yield this.adminStore.getAdmins();
+          yield photoURLs.loadByUser(userInfo);
+        }
+
+        yield this.addressesStore.getAddresses();
       } else {
-        yield this.adminStore.getUsers();
-        yield this.adminStore.getAddresses();
-        yield photoURLs.loadByUser(userInfo);
+        this.isAdmin = false;
+        this.userStore.setUser(null);
+        this.adminStore.setAdmin(null);
       }
-    } else {
-      this.isAdmin = false;
-      this.user = null;
+    } catch {
+      alert('Произошла ошибка');
     }
-    this.isGettingAuth = false;
-  }
+    this.isGettingAuth = false;   
+  } 
 }
 
 const store = new Store();

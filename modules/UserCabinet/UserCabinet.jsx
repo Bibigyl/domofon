@@ -12,13 +12,17 @@ import { Edit, Faces } from "./components";
 import cl from "./UserCabinet.module.scss";
 
 const UserCabinet = observer(() => {
-  const { user, editUser, addresses } = store.userStore;
+  const { isAdmin } = store;
+  const { user, editUser } = store.userStore;
+  const { addresses } = store.addressesStore;
   const [showEdit, setShowEdit] = useState(false);
 
   const getAddress = () => {
     if (!user.addresses) return '___';
-    return addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress || '___';
+    return addresses.find((ad) => ad.id === toJS(user).addresses[0])?.fullAddress || '___';
   };
+
+  if (!user) return null;
 
   return (
     <div className={cl.root}>
@@ -26,7 +30,7 @@ const UserCabinet = observer(() => {
         <Paper className={cl.info}>
           <AssignmentIndIcon className={cl.infoIcon} color="primary" />
           <div className={cl.titleWarp}>
-            <h2>{user.name ? `${user.name} ${user.surname}` : 'Заполните данные'}</h2>
+            <h2>{(user.name || user.surname) ? `${user.name} ${user.surname}` : 'Заполните данные'}</h2>
             <div className={cl.infoEdit}>
               <Tooltip title="Редактировать">
                 <IconButton
@@ -54,12 +58,12 @@ const UserCabinet = observer(() => {
         <Faces className={cl.facesWrap} />
       </div>
 
-      <InfoRequest />
+      {!isAdmin && <InfoRequest className={cl.infoRequest} />}
 
       <Dialog maxWidth="md" open={showEdit} onClose={() => setShowEdit(false)}>
         <Edit
-          data={user}
-          addresses={toJS(addresses)}
+          data={toJS(user)}
+          addresses={addresses}
           onSave={editUser}
           onCancel={() => setShowEdit(false)}
         />

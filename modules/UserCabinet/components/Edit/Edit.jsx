@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { toJS } from 'mobx';
 import {
   TextField,
   Select,
@@ -8,6 +9,7 @@ import {
 } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
 
+import { store } from 'store';
 import { Button } from "components";
 
 import cl from "./Edit.module.scss";
@@ -20,7 +22,8 @@ const textFields = [
   { label: "Номер договора", field: "contractNumber" },
 ];
 
-const Edit = ({ data: propsData, addresses = [], onSave, onCancel }) => {
+const Edit = ({ data: propsData, onSave, onCancel }) => {
+  const { addresses } = store.addressesStore;
   const [data, setData] = useState(propsData);
 
   const handleChange = useCallback(
@@ -44,6 +47,7 @@ const Edit = ({ data: propsData, addresses = [], onSave, onCancel }) => {
             label={label}
             value={data[field] || ""}
             onChange={(ev) => handleChange(field, ev.target.value)}
+            name={field}
           />
         ))}
         <FormControl className={cl.field}>
@@ -52,12 +56,7 @@ const Edit = ({ data: propsData, addresses = [], onSave, onCancel }) => {
           </InputLabel>
           <Select
             value={data.addresses[0] || ""}
-            onChange={(ev) =>
-              handleChange(
-                "addresses",
-                ev.target.value ? [ev.target.value] : []
-              )
-            }
+            onChange={(ev) => handleChange("addresses", ev.target.value ? [ev.target.value] : [])}
           >
             <MenuItem value="">
               <em>Не выбран</em>

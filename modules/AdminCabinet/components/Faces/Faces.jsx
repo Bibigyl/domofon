@@ -62,7 +62,8 @@ const Faces = observer(({ openUser, className }) => {
                     Обработано:
                     <Checkbox
                       color="primary"
-                      defaultChecked={isProcessed}
+                      value='mock'
+                      checked={!!isProcessed}
                       onChange={ev => setProcessed(id, ev.target.checked)}
                     />
                   </p>

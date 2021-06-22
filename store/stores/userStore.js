@@ -5,10 +5,6 @@ import { API } from "api";
 class UserStore {
   user = null;
 
-  addresses = [];
-
-  photoURLs = [];
-
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
 
@@ -25,8 +21,7 @@ class UserStore {
   *editUser(newData) {
     try {
       const userData = { ...this.user, ...newData };
-      yield API.editUser(userData);
-      this.user = userData;
+      this.user = yield API.editUser(userData);
     } catch {
       console.log("Произошла ошибка");
     }
@@ -75,10 +70,6 @@ class UserStore {
     } catch {
       console.log("Произошла ошибка");
     }
-  }
-
-  *getAddresses() {
-    this.addresses = yield API.getAdrdesses();
   }
 }
 

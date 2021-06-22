@@ -51,6 +51,12 @@
   }
 }
 
+.tableWrap {
+  max-height: 700px;
+  overflow-y: auto;
+  margin-bottom: 60px;
+}
+
 .table {
   width: 100%;
   max-width: 1240px;
@@ -103,4 +109,15 @@
     max-width: 100px;
     text-align: center;
   }
+}
+
+.admins {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 60px;
+}
+
+.addresses {
+  display: inline-block;
+  vertical-align: top;
 }

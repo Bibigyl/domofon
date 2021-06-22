@@ -16,6 +16,30 @@
   font-size: 14px;
 }
 
-.addUser {
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.createUser {
   margin-left: auto;
+}
+
+.form {
+  padding: 30px;
+}
+
+.form .formButton {
+  display: block;
+  margin: 0px auto 20px;
+}
+
+.formButtons {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+
+  > button {
+    margin: 0 10px;
+  }
 }

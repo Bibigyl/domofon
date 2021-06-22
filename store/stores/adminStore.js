@@ -3,22 +3,30 @@ import { makeAutoObservable } from "mobx";
 import { API } from "api";
 
 class AdminStore {
-  addresses = [];
+  admin = null;
 
   users = [];
+
+  admins = [];
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
 
+    this.getUsers = this.getUsers.bind(this);
+    this.getAdmins = this.getAdmins.bind(this);
     this.setFaceProcessed = this.setFaceProcessed.bind(this);
   }
 
-  *getAddresses() {
-    this.addresses = yield API.getAdrdesses();
+  setAdmin = userInfo => {
+    this.admin = userInfo;
   }
 
   *getUsers() {
     this.users = yield API.getUsers();
+  }
+
+  *getAdmins() {
+    this.admins = yield API.getAdmins();
   }
 
   *setFaceProcessed({ userId, faceId, isProcessed }) {

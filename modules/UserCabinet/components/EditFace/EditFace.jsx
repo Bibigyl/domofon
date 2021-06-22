@@ -35,6 +35,7 @@ const EditFace = ({ data: propsData, onSave, onCancel }) => {
             label={label}
             value={data[field] || ""}
             onChange={(ev) => handleChange(field, ev.target.value)}
+            name={field}
           />
         ))}
       </div>

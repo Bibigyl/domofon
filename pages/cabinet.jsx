@@ -8,6 +8,10 @@ import { Layout, Loading, Container } from "components";
 export default observer(() => {
   const { isGettingAuth, isAdmin } = store;
   const { user } = store.userStore;
+  const { admin } = store.adminStore;
+
+  const isUserCabinet = !isAdmin && user;
+  const isAdminCabinet = isAdmin && admin;
   
   return (
     <>
@@ -17,9 +21,9 @@ export default observer(() => {
       <Layout>
         <Container>
           {isGettingAuth && <Loading />}
-          {!isGettingAuth && !user && <Login />}
-          {user && !isAdmin && <UserCabinet />}
-          {user && isAdmin && <AdminCabinet />}
+          {!isGettingAuth && !isUserCabinet && !isAdminCabinet && <Login />}
+          {isUserCabinet && <UserCabinet />}
+          {isAdminCabinet && <AdminCabinet />}
         </Container>
       </Layout>
     </>
