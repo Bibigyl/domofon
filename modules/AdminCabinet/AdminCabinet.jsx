@@ -13,14 +13,22 @@ import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import { store } from "store";
 import { Button } from "components";
 
-import { Faces, Controls } from "./components";
+import { Faces, Controls, Admins, Addresses } from "./components";
 import cl from "./AdminCabinet.module.scss";
 
 const AdminCabinet = observer(() => {
-  const { users, addresses } = store.adminStore;
+  const { users } = store.adminStore;
+  const { addresses } = store.addressesStore;
   const [openUser, setOpenUser] = useState(null);
-  const [visibleUsers, setVisibleUsers] = useState(users);
+  const [visibleUsers, setVisibleUsers] = useState(toJS(users));
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+
+  useEffect(() => {
+    if (openUser) {
+      setOpenUser(toJS(users).find(user => user.id === openUser.id) || null);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [users]);
 
   const togglePanel = () => {
     setIsPanelOpen(!isPanelOpen);
@@ -28,7 +36,7 @@ const AdminCabinet = observer(() => {
 
   const getText = (user, field) => {
     let text;
-    if (field === 'name') text = user.name && `${user.name} ${user.surname}`;
+    if (field === 'name') text = (user.name || user.surname) && `${user.name} ${user.surname}`;
     if (field === 'phone') text = user.phone;
     if (field === 'email') text = user.email;
     if (field === 'address') text = addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress;
@@ -47,6 +55,7 @@ const AdminCabinet = observer(() => {
               <li><b>Email: </b>{getText(openUser, 'email')}</li>
               <li><b>Адрес: </b>{getText(openUser, 'address')}</li>
               <li><b>Номер договора: </b>{getText(openUser, 'contractNumber')}</li>
+              <li><b>Оплачено до: </b></li>
             </ul>
           </>}
           <Controls setVisibleUsers={setVisibleUsers} openUser={openUser}/>
@@ -58,42 +67,46 @@ const AdminCabinet = observer(() => {
         </Paper>
         <Faces openUser={isPanelOpen ? openUser : null} className={cl.faces} />
       </div>
-      <table className={cl.table}>
-        <thead>
-          <tr>
-            <th data-content="phone">Номер телефона</th>
-            <th data-content="name">Имя Фамилия</th>
-            <th data-content="contractNumber">Номер договора</th>
-            <th data-content="address">Адрес</th>
-            <th data-content="email">Email</th>
-            <th data-content="faces">Есть фото</th>
-            <th data-content="facesProcessed">Необработанные фото</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(visibleUsers).map((user) => (<tr 
-              className={openUser && openUser.id === user.id ? cl.selectedTr : ''} 
-              key={user.id} 
-              onClick={() => setOpenUser(user)}
-            >
-              <td data-content="phone">{getText(user, 'phone')}</td>
-              <td data-content="name">{getText(user, 'name')}</td>
-              <td data-content="contractNumber">{getText(user, 'contractNumber')}</td>
-              <td data-content="address">{getText(user, 'address')}</td>
-              <td data-content="email">{getText(user, 'email')}</td>
-              <td data-content="faces">
-                {user.faces.length !== 0 && <CheckIcon style={{color: "green"}}/>}
-              </td>
-              <td data-content="facesProcessed">
-                {user.faces.length !== 0 
-                  && user.faces.some(face => !face.isProcessed) 
-                  && <ErrorOutlineIcon style={{color: "brown"}}/>
-                }
-              </td>
-            </tr>)
-          )}
-        </tbody>
-      </table>
+      <div className={cl.tableWrap}>
+        <table className={cl.table}>
+          <thead>
+            <tr>
+              <th data-content="phone">Номер телефона</th>
+              <th data-content="name">Имя Фамилия</th>
+              <th data-content="contractNumber">Номер договора</th>
+              <th data-content="address">Адрес</th>
+              <th data-content="email">Email</th>
+              <th data-content="faces">Есть фото</th>
+              <th data-content="facesProcessed">Необработанные фото</th>
+            </tr>
+          </thead>
+          <tbody>
+            {visibleUsers.map((user) => (<tr 
+                className={openUser && openUser.id === user.id ? cl.selectedTr : ''} 
+                key={user.id} 
+                onClick={() => setOpenUser(user)}
+              >
+                <td data-content="phone">{getText(user, 'phone')}</td>
+                <td data-content="name">{getText(user, 'name')}</td>
+                <td data-content="contractNumber">{getText(user, 'contractNumber')}</td>
+                <td data-content="address">{getText(user, 'address')}</td>
+                <td data-content="email">{getText(user, 'email')}</td>
+                <td data-content="faces">
+                  {user.faces.length !== 0 && <CheckIcon style={{color: "green"}}/>}
+                </td>
+                <td data-content="facesProcessed">
+                  {user.faces.length !== 0 
+                    && user.faces.some(face => !face.isProcessed) 
+                    && <ErrorOutlineIcon style={{color: "brown"}}/>
+                  }
+                </td>
+              </tr>)
+            )}
+          </tbody>
+        </table>
+      </div>
+      <Admins className={cl.admins}/>
+      <Addresses className={cl.addresses}/>
     </div>
   );
 });
