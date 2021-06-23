@@ -2,6 +2,10 @@
 import { db, storageRef } from "../firebase";
 import "firebase/storage";
 
+const getFullName = ({ name, surname }) => {
+  return (surname || '') + (surname && name ? ' ' : '') + (name || '');
+};
+
 class FirebaseAPI {
   getUserInfo = async (phoneNumber) =>
     db
@@ -13,12 +17,13 @@ class FirebaseAPI {
         querySnapshot.forEach((doc) => {
           userInfo = doc.data();
           userInfo.id = doc.id;
+          userInfo.fullName = getFullName(userInfo);
         });
         return userInfo;
       });
 
   createUser = async (phoneNumber) => {
-    let validPhone;
+    let validPhone = '';
     if (phoneNumber) {
       validPhone = `+7${phoneNumber.replace(/\D/g, "").slice(1)}`;
       if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
@@ -39,6 +44,7 @@ class FirebaseAPI {
       .add(emptyUser)
       .then((docRef) => ({
         id: docRef.id,
+        fullName: '',
         ...emptyUser,
       }));
   };
@@ -51,7 +57,7 @@ class FirebaseAPI {
   
 
   editUser = async (userData) => {
-    const { id, ...data } = { ...userData };
+    const { id, fullName, ...data } = userData;
     if (data.phone) {
       const validPhone = `+7${data.phone.replace(/\D/g, "").slice(1)}`;
       if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
@@ -93,7 +99,7 @@ class FirebaseAPI {
         return isAdmin;
       });
 
-  getAdrdesses = async () =>
+  getAddresses = async () =>
     db
       .collection("addresses")
       .get()
@@ -139,7 +145,7 @@ class FirebaseAPI {
         const users = [];
         querySnapshot.forEach((doc) => {
           const user = doc.data();
-          users.push({ id: doc.id, ...user });
+          users.push({ id: doc.id, fullName: getFullName(user), ...user });
         });
         return users;
       });

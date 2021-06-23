@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
 import { IconButton, Tooltip, Dialog, Paper } from "@material-ui/core";
-import Alert from '@material-ui/lab/Alert';
 import EditIcon from "@material-ui/icons/Edit";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 
@@ -31,7 +30,7 @@ const UserCabinet = observer(() => {
         <Paper className={cl.info}>
           <AssignmentIndIcon className={cl.infoIcon} color="primary" />
           <div className={cl.titleWarp}>
-            <h2>{(user.name || user.surname) ? `${user.name} ${user.surname}` : 'Заполните данные'}</h2>
+            <h2>{user.fullName || 'Заполните данные'}</h2>
             <div className={cl.infoEdit}>
               <Tooltip title="Редактировать">
                 <IconButton
@@ -58,7 +57,6 @@ const UserCabinet = observer(() => {
 
         <Faces className={cl.facesWrap} />
       </div>
-      {/* {user.paidUntil && <Alert>Оплачено до {user.paidUntil}</Alert>} */}
 
       {!isAdmin && <InfoRequest className={cl.infoRequest} />}
 

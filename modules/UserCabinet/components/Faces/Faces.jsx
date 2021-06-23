@@ -5,6 +5,7 @@ import { IconButton, Tooltip, Dialog, Paper } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import DeleteIcon from "@material-ui/icons/Delete";
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 
 import { store } from "store";
 import { photoURLs } from "helpers";

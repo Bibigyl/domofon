@@ -13,7 +13,8 @@ class AddressesStore {
   }
 
   *getAddresses() {
-    this.addresses = yield API.getAdrdesses();
+    const addresses = yield API.getAddresses();
+    this.addresses = addresses.sort((a, b) => a.fullAddress > b.fullAddress ? 1 : -1);
   }
 }
 

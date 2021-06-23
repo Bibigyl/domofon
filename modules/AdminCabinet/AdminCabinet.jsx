@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
 import {
@@ -13,7 +13,6 @@ import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 import { API } from 'api';
 import { store } from "store";
-import { Button } from "components";
 
 import { Faces, Controls, Admins, Addresses } from "./components";
 import cl from "./AdminCabinet.module.scss";
@@ -52,25 +51,14 @@ const AdminCabinet = observer(() => {
 
   const getText = (user, field) => {
     let text;
-    if (field === 'name') text = (user.name || user.surname) && `${user.name} ${user.surname}`;
+    if (field === 'fullName') text = user.fullName;
     if (field === 'phone') text = user.phone;
     if (field === 'email') text = user.email;
+    if (field === 'paidUntil') text = user.paidUntil;
     if (field === 'address') text = addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress;
     if (field === 'contractNumber') text = user.contractNumber;
     return text || '___';
   };
-
-  // const getPaidUntilInput = () => {
-  //   console.log(openUser.paidUntil);
-  //   // const date = openUser.paidUntil.split('-').reverse.join('.');
-  //   // const initialValue = openUser?.paidUntil?.split('-').reverse().join('.') || '';
-  //   return <TextField 
-  //     key={openUser.id}
-  //     defaultValue={openUser?.paidUntil || ''}
-  //     type='date' 
-  //     onBlur={savePaidUntil} 
-  //     onKeyPress={savePaidUntil} 
-  //   />;};
 
   return (
     <div className={cl.root}>
@@ -78,7 +66,7 @@ const AdminCabinet = observer(() => {
         <Paper className={cl.user}>
           {openUser && isPanelOpen && <>
             <ul>
-              <li><b>Имя: </b>{getText(openUser, 'name')}</li>
+              <li><b>Имя: </b>{getText(openUser, 'fullName')}</li>
               <li><b>Телефон: </b>{getText(openUser, 'phone')}</li>
               <li><b>Email: </b>{getText(openUser, 'email')}</li>
               <li><b>Адрес: </b>{getText(openUser, 'address')}</li>
@@ -108,10 +96,11 @@ const AdminCabinet = observer(() => {
           <thead>
             <tr>
               <th data-content="phone">Номер телефона</th>
-              <th data-content="name">Имя Фамилия</th>
+              <th data-content="fullName">Фамилия Имя</th>
               <th data-content="contractNumber">Номер договора</th>
               <th data-content="address">Адрес</th>
               <th data-content="email">Email</th>
+              <th data-content="paidUntil">Оплачено до</th>
               <th data-content="faces">Есть фото</th>
               <th data-content="facesProcessed">Необработанные фото</th>
             </tr>
@@ -123,10 +112,11 @@ const AdminCabinet = observer(() => {
                 onClick={() => setOpenUser(user)}
               >
                 <td data-content="phone">{getText(user, 'phone')}</td>
-                <td data-content="name">{getText(user, 'name')}</td>
+                <td data-content="fullName">{getText(user, 'fullName')}</td>
                 <td data-content="contractNumber">{getText(user, 'contractNumber')}</td>
                 <td data-content="address">{getText(user, 'address')}</td>
                 <td data-content="email">{getText(user, 'email')}</td>
+                <td data-content="paidUntil">{getText(user, 'paidUntil')}</td>
                 <td data-content="faces">
                   {user.faces.length !== 0 && <CheckIcon style={{color: "green"}}/>}
                 </td>

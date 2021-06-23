@@ -47,8 +47,9 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
 
     if (searchString) filtered = filtered.filter(user => (
       JSON.stringify(user).toUpperCase().includes(searchString.toUpperCase()) ||
-      getText(user, 'address').includes(searchString.toUpperCase())
+      getText(user, 'address').toUpperCase().includes(searchString.toUpperCase())
     ));
+
     if (showNotProcessed) filtered = filtered.filter(user => (
       user.faces.length !== 0 && user.faces.some(face => !face.isProcessed)
     ));
@@ -102,7 +103,7 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
 
   const getText = useCallback((user, field) => {
     let text;
-    if (field === 'name') text = (user.name || user.surname) && `${user.name} ${user.surname}`;
+    if (field === 'name') text = user.fullName;
     if (field === 'phone') text = user.phone;
     if (field === 'email') text = user.email;
     if (field === 'address') text = addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress;

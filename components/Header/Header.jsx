@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { observer } from "mobx-react-lite";
 import Link from 'next/link';
-import Alert from '@material-ui/lab/Alert';
 
 import { store } from 'store';
 import { Button, Container } from "components";
@@ -14,10 +13,8 @@ const Header = observer(() => {
   const { user } = store.userStore;
   const { admin } = store.adminStore;
   
-  console.log(isAdmin);
   const hasAuth = isAdmin && admin || !isAdmin && user;
   const data = isAdmin ? admin : user;
-  const userName = (data?.name && data?.surname) ? `${data.name} ${data.surname}` : data?.phone;
 
   return (
     <header className={cl.root}>
@@ -34,11 +31,13 @@ const Header = observer(() => {
             </Link>
           </li>
         </ul>
-        <div className={cl.cabinet}>
+        <div className={cl.userInfo}>
           {hasAuth 
             ? <>
-                {!isAdmin && user?.paidUntil && <span className={cl.caption}>Оплачено до: {user.paidUntil}</span>}
-                <span className={cl.caption}>Пользователь: {userName}</span>
+                {!isAdmin && user?.paidUntil && 
+                  <span className={cl.paidUntil}><span>Оплачено до: </span>{user.paidUntil}</span>
+                }
+                <span className={cl.userName}>{data.fullName || data.phone}</span>
                 <Button theme='outlined' onClick={authAPI.logout}>Выйти</Button>
               </> 
             : <Link href="/cabinet">

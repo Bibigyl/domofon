@@ -24,8 +24,9 @@ class AdminStore {
   *getUsers() {
     const users = yield API.getUsers();
     const adminsPhones = this.admins.map(admin => admin.phone);
-    console.log(adminsPhones);
-    this.users = users.filter(user => !adminsPhones.includes(user.phone));
+    this.users = users
+      .filter(user => !adminsPhones.includes(user.phone))
+      .sort((a, b) => a.fullName > b.fullName ? 1 : -1);
   }
 
   *getAdmins() {

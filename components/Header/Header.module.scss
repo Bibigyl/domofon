@@ -1,6 +1,8 @@
 .root {
   box-shadow: 0px 1px 12px rgb(182 182 182 / 40%);
   background: #2f7491;
+  color: #ffffffe6;
+  font-size: 15px;
 
   .container {
     display: flex;
@@ -20,17 +22,32 @@
       text-transform: uppercase;
       text-decoration: none;
       color: white;
-      font-size: 15px;
     }
   }
 
-  .cabinet {
+  .userInfo {
     margin-left: auto;
   }
 
-  .caption {
+  .paidUntil {
+    span {
+      margin-right: 10px;
+      color: #ffffff9c;
+      font-size: 12px;
+    }
+
+    &:after {
+      display: inline-block;
+      margin-bottom: -5px;
+      margin-left: 20px;
+      width: 1px;
+      height: 20px;
+      background-color: #ffffff7d;
+      content: "";
+    }
+  }
+
+  .userName {
     margin: 0 20px;
-    color: #ffffffad;
-    font-size: 15px;
   }
 }
