@@ -8,8 +8,6 @@ class AddressesStore {
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
-
-    this.getAddresses = this.getAddresses.bind(this);
   }
 
   *getAddresses() {

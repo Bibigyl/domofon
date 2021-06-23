@@ -11,10 +11,6 @@ class AdminStore {
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
-
-    this.getUsers = this.getUsers.bind(this);
-    this.getAdmins = this.getAdmins.bind(this);
-    this.setFaceProcessed = this.setFaceProcessed.bind(this);
   }
 
   setAdmin = userInfo => {

@@ -7,11 +7,6 @@ class UserStore {
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
-
-    this.editUser = this.editUser.bind(this);
-    this.addFace = this.addFace.bind(this);
-    this.deleteFace = this.deleteFace.bind(this);
-    this.editFace = this.editFace.bind(this);
   }
 
   setUser = (user) => {
@@ -39,7 +34,7 @@ class UserStore {
         isProcessed: false,
       };
       yield API.uploadPhoto(id, file);
-      this.editUser({ faces: [...this.user.faces, newFace] });
+      yield this.editUser({ faces: [...this.user.faces, newFace] });
     } catch (err) {
       console.log("Не удалось загрузить фото");
     }
