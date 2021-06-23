@@ -39,7 +39,7 @@ class UserStore {
         isProcessed: false,
       };
       yield API.uploadPhoto(id, file);
-      yield this.editUser({ faces: [...this.user.faces, newFace] });
+      this.editUser({ faces: [...this.user.faces, newFace] });
     } catch (err) {
       console.log("Не удалось загрузить фото");
     }

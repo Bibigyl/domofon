@@ -5,8 +5,9 @@ import { IconButton, Tooltip, Dialog, Paper } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import DeleteIcon from "@material-ui/icons/Delete";
-import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
+import { Button } from 'components';
 import { store } from "store";
 import { photoURLs } from "helpers";
 import { useForceUpdate } from "helpers/hooks";
@@ -51,6 +52,13 @@ const Faces = observer(({ className }) => {
               <PersonAddIcon className={cl.newFaceIcon} />
             </IconButton>
           </Tooltip>
+          <div className={cl.or}>ИЛИ</div>
+          <Button
+            className={cl.or}
+            startIcon={<PhotoCameraIcon />}
+          >
+            Сделать селфи
+          </Button>
         </div>
         {toJS(user.faces).map((face) => {
           const { id, fileId, name = "", surname = "" } = face;
