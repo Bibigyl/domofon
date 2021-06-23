@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
 import { IconButton, Tooltip, Dialog, Paper } from "@material-ui/core";
+import Alert from '@material-ui/lab/Alert';
 import EditIcon from "@material-ui/icons/Edit";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 
@@ -57,6 +58,7 @@ const UserCabinet = observer(() => {
 
         <Faces className={cl.facesWrap} />
       </div>
+      {/* {user.paidUntil && <Alert>Оплачено до {user.paidUntil}</Alert>} */}
 
       {!isAdmin && <InfoRequest className={cl.infoRequest} />}
 

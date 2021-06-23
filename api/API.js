@@ -31,6 +31,7 @@ class FirebaseAPI {
       faces: [],
       name: "",
       surname: "",
+      paidUntil: "",
     };
 
     return db

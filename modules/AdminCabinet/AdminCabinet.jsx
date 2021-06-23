@@ -5,11 +5,13 @@ import {
   IconButton,
   Tooltip,
   Paper,
+  TextField
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
+import { API } from 'api';
 import { store } from "store";
 import { Button } from "components";
 
@@ -17,7 +19,7 @@ import { Faces, Controls, Admins, Addresses } from "./components";
 import cl from "./AdminCabinet.module.scss";
 
 const AdminCabinet = observer(() => {
-  const { users } = store.adminStore;
+  const { users, getUsers } = store.adminStore;
   const { addresses } = store.addressesStore;
   const [openUser, setOpenUser] = useState(null);
   const [visibleUsers, setVisibleUsers] = useState(toJS(users));
@@ -34,6 +36,20 @@ const AdminCabinet = observer(() => {
     setIsPanelOpen(!isPanelOpen);
   };
 
+  const savePaidUntil = async (ev) => {
+    if (ev.code && ev.code !== 'Enter') return;
+    const paidUntil = ev.target.value;
+    const input = ev.target;
+    if (paidUntil.length !== 10) {
+      alert('Неверный формат даты, дата не сохранена');
+      input.value = openUser.paidUntil || '';
+      return;
+    };
+    await API.editUser({ ...openUser, paidUntil });
+    input.blur();
+    getUsers();
+  };
+
   const getText = (user, field) => {
     let text;
     if (field === 'name') text = (user.name || user.surname) && `${user.name} ${user.surname}`;
@@ -43,6 +59,18 @@ const AdminCabinet = observer(() => {
     if (field === 'contractNumber') text = user.contractNumber;
     return text || '___';
   };
+
+  // const getPaidUntilInput = () => {
+  //   console.log(openUser.paidUntil);
+  //   // const date = openUser.paidUntil.split('-').reverse.join('.');
+  //   // const initialValue = openUser?.paidUntil?.split('-').reverse().join('.') || '';
+  //   return <TextField 
+  //     key={openUser.id}
+  //     defaultValue={openUser?.paidUntil || ''}
+  //     type='date' 
+  //     onBlur={savePaidUntil} 
+  //     onKeyPress={savePaidUntil} 
+  //   />;};
 
   return (
     <div className={cl.root}>
@@ -55,7 +83,15 @@ const AdminCabinet = observer(() => {
               <li><b>Email: </b>{getText(openUser, 'email')}</li>
               <li><b>Адрес: </b>{getText(openUser, 'address')}</li>
               <li><b>Номер договора: </b>{getText(openUser, 'contractNumber')}</li>
-              <li><b>Оплачено до: </b></li>
+              <li><b>Оплачено до: </b>
+                <TextField 
+                  key={openUser.id}
+                  defaultValue={openUser?.paidUntil || ''}
+                  type='date' 
+                  onBlur={savePaidUntil} 
+                  onKeyPress={savePaidUntil} 
+                />
+              </li>
             </ul>
           </>}
           <Controls setVisibleUsers={setVisibleUsers} openUser={openUser}/>

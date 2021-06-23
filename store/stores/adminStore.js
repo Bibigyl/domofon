@@ -22,7 +22,10 @@ class AdminStore {
   }
 
   *getUsers() {
-    this.users = yield API.getUsers();
+    const users = yield API.getUsers();
+    const adminsPhones = this.admins.map(admin => admin.phone);
+    console.log(adminsPhones);
+    this.users = users.filter(user => !adminsPhones.includes(user.phone));
   }
 
   *getAdmins() {

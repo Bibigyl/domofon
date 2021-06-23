@@ -43,8 +43,8 @@ class Store {
           yield this.userStore.getAddresses();
         } else {
           this.adminStore.setAdmin(userInfo);
-          yield this.adminStore.getUsers();
           yield this.adminStore.getAdmins();
+          yield this.adminStore.getUsers();
           yield photoURLs.loadByUser(userInfo);
         }
 
@@ -55,7 +55,7 @@ class Store {
         this.adminStore.setAdmin(null);
       }
     } catch {
-      alert('Произошла ошибка');
+      console.log('Произошла ошибка');
     }
     this.isGettingAuth = false;   
   } 

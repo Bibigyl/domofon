@@ -27,6 +27,7 @@
 
     b {
       margin-right: 10px;
+      vertical-align: bottom;
     }
   }
 
@@ -52,9 +53,9 @@
 }
 
 .tableWrap {
+  margin-bottom: 60px;
   max-height: 700px;
   overflow-y: auto;
-  margin-bottom: 60px;
 }
 
 .table {
@@ -113,8 +114,8 @@
 
 .admins {
   display: inline-block;
-  vertical-align: top;
   margin-right: 60px;
+  vertical-align: top;
 }
 
 .addresses {
