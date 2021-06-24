@@ -75,8 +75,12 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
 
   const createUser = async () => {
     setFormType(FORM.CREATE);
-    const newUser = await API.createUser();
-    setUser(newUser);
+    try {
+      const newUser = await API.createUser();
+      setUser(newUser);      
+    } catch (err) {
+      alert(err);
+    }
   };
 
   const editUser = () => {
@@ -85,8 +89,12 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
   };
 
   const removeUser = async () => {
-    await API.removeUser(openUser.id);
-    closeForm();
+    try {
+      await API.removeUser(openUser.id);
+      closeForm();
+    } catch (err) {
+      alert(err);
+    }
   };
 
   const closeForm = async () => {

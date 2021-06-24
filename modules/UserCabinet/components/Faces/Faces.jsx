@@ -9,7 +9,7 @@ import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
 import { Button } from 'components';
 import { store } from 'store';
-import { photoURLs } from 'helpers';
+import { photoURLs, ImageTools } from 'helpers';
 import { useForceUpdate } from 'helpers/hooks';
 
 import { EditFace } from '../EditFace/EditFace';
@@ -35,8 +35,23 @@ const Faces = observer(({ className }) => {
   }, [loadPhotoURLs, user]);
 
   const handlePhotoAdd = (ev) => {
+    const MAX_SIZE = 5 * 1024 * 1024;
     const file = ev.target?.files[0];
-    if (file) addFace(file);
+
+    ImageTools.resize(
+      file,
+      {
+        width: 700, // maximum width
+        height: 700, // maximum height
+      },
+      (blob, didItResize) => {
+        if (didItResize) {
+          addFace(blob);
+        } else if (file.size > MAX_SIZE) {
+          alert('Файл слишком большой, пожалуйста загрузите другой');
+        }
+      }
+    );
   };
 
   return (

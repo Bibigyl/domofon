@@ -15,7 +15,14 @@ const Header = observer(() => {
 
   const hasAuth = (isAdmin && admin) || (!isAdmin && user);
   const data = isAdmin ? admin : user;
-  const getUserName = () => (isAdmin ? admins.find(admin.phone === data.phone)?.fullName : data.fullName) || data.phone;
+
+  const getUserName = () => {
+    if ((isAdmin && !admins) || !data) return '';
+    return (
+      (isAdmin ? admins.find((admin) => admin.phone === data.phone)?.fullName : data.fullName) ||
+      data.phone
+    );
+  };
 
   return (
     <header className={cl.root}>

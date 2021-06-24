@@ -37,11 +37,16 @@ const AdminCabinet = observer(() => {
     if (paidUntil.length !== 10) {
       alert('Неверный формат даты, дата не сохранена');
       input.value = openUser.paidUntil || '';
+      input.blur();
       return;
     }
-    await API.editUser({ ...openUser, paidUntil });
+    try {
+      await API.editUser({ ...openUser, paidUntil });
+      getUsers();
+    } catch (err) {
+      alert(err);
+    }
     input.blur();
-    getUsers();
   };
 
   const getText = (user, field) => {
