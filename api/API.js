@@ -3,8 +3,13 @@ import { db, storageRef } from "../firebase";
 import "firebase/storage";
 
 const getFullName = ({ name, surname }) => {
-  return (surname || '') + (surname && name ? ' ' : '') + (name || '');
+  return (surname || "") + (surname && name ? " " : "") + (name || "");
 };
+
+const commonError = new Error(
+  "Произошла ошибка. Попробуйте обновить страницу."
+);
+const errorText = "Произошла ошибка.";
 
 class FirebaseAPI {
   getUserInfo = async (phoneNumber) =>
@@ -20,13 +25,17 @@ class FirebaseAPI {
           userInfo.fullName = getFullName(userInfo);
         });
         return userInfo;
+      })
+      .catch(() => {
+        throw commonError;
       });
 
   createUser = async (phoneNumber) => {
-    let validPhone = '';
+    let validPhone = "";
     if (phoneNumber) {
       validPhone = `+7${phoneNumber.replace(/\D/g, "").slice(1)}`;
-      if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
+      if (validPhone.length !== 12)
+        throw new Error("Неправильный формат номера телефона");
     }
     const emptyUser = {
       phone: validPhone || "",
@@ -44,23 +53,29 @@ class FirebaseAPI {
       .add(emptyUser)
       .then((docRef) => ({
         id: docRef.id,
-        fullName: '',
+        fullName: "",
         ...emptyUser,
-      }));
+      }))
+      .catch(() => {
+        throw commonError;
+      });
   };
 
-  removeUser = async (userId) => 
+  removeUser = async (userId) =>
     db
       .collection("users")
       .doc(userId)
       .delete()
-  
+      .catch(() => {
+        throw new Error(`${errorText}Не удалось удалить пользователя.`);
+      });
 
   editUser = async (userData) => {
     const { id, fullName, ...data } = userData;
     if (data.phone) {
       const validPhone = `+7${data.phone.replace(/\D/g, "").slice(1)}`;
-      if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
+      if (validPhone.length !== 12)
+        throw new Error("Неправильный формат номера телефона");
       data.phone = validPhone;
     }
 
@@ -68,23 +83,11 @@ class FirebaseAPI {
       .collection("users")
       .doc(id)
       .set(data)
-      .then(() => ({ id, ...data }));
+      .then(() => ({ id, ...data }))
+      .catch(() => {
+        throw new Error(`${errorText}Не удалось сохранить данные.`);
+      });
   };
-
-  // checkIsAdmin = async (userId) =>
-  //   db
-  //     .collection("admins")
-  //     .where("id", "==", userId)
-  //     .get()
-  //     .then((querySnapshot) => {
-  //       let isAdmin = false;
-  //       querySnapshot.forEach((doc) => {
-  //         isAdmin = doc.data();
-  //         isAdmin = true;
-  //       });
-  //       return isAdmin;
-  //     });
-
 
   checkIsAdmin = async (userPhone) =>
     db
@@ -97,6 +100,9 @@ class FirebaseAPI {
           isAdmin = true;
         });
         return isAdmin;
+      })
+      .catch(() => {
+        throw commonError;
       });
 
   getAddresses = async () =>
@@ -115,6 +121,9 @@ class FirebaseAPI {
           });
         });
         return addresses;
+      })
+      .catch(() => {
+        throw commonError;
       });
 
   uploadPhoto = async (fileId, file) =>
@@ -125,6 +134,9 @@ class FirebaseAPI {
       .then((snapshot) => {
         console.log("Uploaded a blob or file!", snapshot);
         return file;
+      })
+      .catch(() => {
+        throw new Error(`${errorText}Не удалось загрузить изображение.`);
       });
 
   getPhotoUrl = async (fileId) =>
@@ -132,10 +144,19 @@ class FirebaseAPI {
       .child("users")
       .child(`${fileId}.jpg`)
       .getDownloadURL()
-      .then((url) => url);
+      .then((url) => url)
+      .catch(() => {
+        console.log("Не удалось получить фото");
+      });
 
   deletePhoto = async (fileId) =>
-    storageRef.child("users").child(`${fileId}.jpg`).delete();
+    storageRef
+      .child("users")
+      .child(`${fileId}.jpg`)
+      .delete()
+      .catch(() => {
+        throw new Error(`${errorText}Не удалось удалить изображение.`);
+      });
 
   getUsers = async () =>
     db
@@ -148,6 +169,9 @@ class FirebaseAPI {
           users.push({ id: doc.id, fullName: getFullName(user), ...user });
         });
         return users;
+      })
+      .catch(() => {
+        throw commonError;
       });
 
   getAdmins = async () =>
@@ -158,26 +182,33 @@ class FirebaseAPI {
         const admins = [];
         querySnapshot.forEach((doc) => {
           const admin = doc.data();
-          admins.push({ id: doc.id, ...admin });
+          admins.push({ id: doc.id, fullName: getFullName(admin), ...admin });
         });
         return admins;
+      })
+      .catch(() => {
+        throw commonError;
       });
 
-  removeAdmin = async (adminId) => 
+  removeAdmin = async (adminId) =>
     db
       .collection("admins")
       .doc(adminId)
       .delete()
+      .catch(() => {
+        throw commonError;
+      });
 
   createAdmin = async (data) => {
-    if (!data.phone) throw new Error('Укажите номер телефона');
+    if (!data.phone) throw new Error("Укажите номер телефона");
     const validPhone = `+7${data.phone.replace(/\D/g, "").slice(1)}`;
-    if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
+    if (validPhone.length !== 12)
+      throw new Error("Неправильный формат номера телефона");
 
     const params = {
       phone: validPhone,
-      name: data.name || '',
-      surname: data.surname || '',
+      name: data.name || "",
+      surname: data.surname || "",
     };
 
     return db
@@ -186,28 +217,37 @@ class FirebaseAPI {
       .then((docRef) => ({
         id: docRef.id,
         ...params,
-      }));
+      }))
+      .catch(() => {
+        throw commonError;
+      });
   };
 
-  removeAddress = async (addressId) => 
+  removeAddress = async (addressId) =>
     db
       .collection("addresses")
       .doc(addressId)
       .delete()
+      .catch(() => {
+        throw commonError;
+      });
 
   createAddress = async (data) => {
     const params = {
       city: data.city,
       address: data.address,
     };
-    
+
     return db
       .collection("addresses")
       .add(params)
       .then((docRef) => ({
         id: docRef.id,
         ...params,
-      }));
+      }))
+      .catch(() => {
+        throw commonError;
+      });
   };
 }
 

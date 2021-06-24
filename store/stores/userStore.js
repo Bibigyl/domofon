@@ -17,8 +17,8 @@ class UserStore {
     try {
       const userData = { ...this.user, ...newData };
       this.user = yield API.editUser(userData);
-    } catch {
-      console.log("Произошла ошибка");
+    } catch (err) {
+      alert(err);
     }
   }
 
@@ -36,7 +36,7 @@ class UserStore {
       yield API.uploadPhoto(id, file);
       yield this.editUser({ faces: [...this.user.faces, newFace] });
     } catch (err) {
-      console.log("Не удалось загрузить фото");
+      alert(err);
     }
   }
 
@@ -48,8 +48,8 @@ class UserStore {
       yield API.deletePhoto(id);
       yield API.editUser(userData);
       this.user = userData;
-    } catch {
-      console.error("Файл не удален из хранилища");
+    } catch (err) {
+      alert(err);
     }
   }
 
@@ -62,8 +62,8 @@ class UserStore {
     try {
       yield API.editUser(userData);
       this.user = userData;
-    } catch {
-      console.log("Произошла ошибка");
+    } catch (err) {
+      alert(err);
     }
   }
 }

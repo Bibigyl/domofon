@@ -1,12 +1,7 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { toJS } from 'mobx';
-import { observer } from "mobx-react-lite";
-import {
-  IconButton,
-  Tooltip,
-  TextField,
-  Dialog
-} from "@material-ui/core";
+import { observer } from 'mobx-react-lite';
+import { IconButton, Tooltip, TextField, Dialog } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -17,14 +12,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Button } from 'components';
 import { UserCabinet } from 'modules';
 import { API } from 'api';
-import { store } from "store";
+import { store } from 'store';
 
-import cl from "./Controls.module.scss";
+import cl from './Controls.module.scss';
 
 const FORM = {
   EDIT: 'EDIT',
   CREATE: 'CREATE',
-  REMOVE: 'REMOVE'
+  REMOVE: 'REMOVE',
 };
 
 const Controls = observer(({ setVisibleUsers, openUser }) => {
@@ -45,19 +40,22 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
     let filtered = toJS(users);
     const searchString = searchRef.current.value;
 
-    if (searchString) filtered = filtered.filter(user => (
-      JSON.stringify(user).toUpperCase().includes(searchString.toUpperCase()) ||
-      getText(user, 'address').toUpperCase().includes(searchString.toUpperCase())
-    ));
+    if (searchString)
+      filtered = filtered.filter(
+        (user) =>
+          JSON.stringify(user).toUpperCase().includes(searchString.toUpperCase()) ||
+          getText(user, 'address').toUpperCase().includes(searchString.toUpperCase())
+      );
 
-    if (showNotProcessed) filtered = filtered.filter(user => (
-      user.faces.length !== 0 && user.faces.some(face => !face.isProcessed)
-    ));
-    
+    if (showNotProcessed)
+      filtered = filtered.filter(
+        (user) => user.faces.length !== 0 && user.faces.some((face) => !face.isProcessed)
+      );
+
     setVisibleUsers(filtered);
   }, [getText, setVisibleUsers, showNotProcessed, users]);
 
-  const handleSearchKeyDown = ev => {
+  const handleSearchKeyDown = (ev) => {
     if (ev.code === 'Enter') applySearch();
   };
 
@@ -93,7 +91,7 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
 
   const closeForm = async () => {
     if (formType === FORM.CREATE) {
-      const isEmpty = !Object.keys(user).some(key => key !== 'id' && user[key]?.length);
+      const isEmpty = !Object.keys(user).some((key) => key !== 'id' && user[key]?.length);
       if (isEmpty) await API.removeUser(user.id);
     }
     setUser(null);
@@ -101,94 +99,95 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
     getUsers();
   };
 
-  const getText = useCallback((user, field) => {
-    let text;
-    if (field === 'name') text = user.fullName;
-    if (field === 'phone') text = user.phone;
-    if (field === 'email') text = user.email;
-    if (field === 'address') text = addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress;
-    if (field === 'contractNumber') text = user.contractNumber;
-    return text || '___';
-  }, [addresses]);
+  const getText = useCallback(
+    (user, field) => {
+      let text;
+      if (field === 'name') text = user.fullName;
+      if (field === 'phone') text = user.phone;
+      if (field === 'email') text = user.email;
+      if (field === 'address')
+        text = addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress;
+      if (field === 'contractNumber') text = user.contractNumber;
+      return text || '___';
+    },
+    [addresses]
+  );
 
   return (
     <div className={cl.root}>
-    <TextField 
-      inputRef={searchRef}
-      label="Поиск" 
-      variant="outlined"
-      size="small"
-      onKeyDown={handleSearchKeyDown}
-    />
-    <Tooltip title="Найти">
-      <IconButton onClick={applySearch} >
-        <SearchIcon /> 
-      </IconButton>
-    </Tooltip>
-    <Tooltip title="Сбросить">
-      <IconButton onClick={resetSearch} >
-        <ClearIcon /> 
-      </IconButton> 
-    </Tooltip>
-    <label className={cl.checkbox}>
-      <Checkbox 
-        onChange={toggleNotProcessed} 
-        checked={showNotProcessed} 
-        color="primary" 
+      <TextField
+        inputRef={searchRef}
+        label='Поиск'
+        variant='outlined'
+        size='small'
+        onKeyDown={handleSearchKeyDown}
       />
-      Только необработанные
-    </label>
+      <Tooltip title='Найти'>
+        <IconButton onClick={applySearch}>
+          <SearchIcon />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title='Сбросить'>
+        <IconButton onClick={resetSearch}>
+          <ClearIcon />
+        </IconButton>
+      </Tooltip>
+      <label className={cl.checkbox}>
+        <Checkbox onChange={toggleNotProcessed} checked={showNotProcessed} color='primary' />
+        Только необработанные
+      </label>
 
-    <Tooltip title="Редактировать пользователя">
-      <IconButton 
-        className={`${cl.createUser} ${!openUser ? cl.disabled : ''}`} 
-        onClick={editUser}
+      <Tooltip title='Редактировать пользователя'>
+        <IconButton
+          className={`${cl.createUser} ${!openUser ? cl.disabled : ''}`}
+          onClick={editUser}
+        >
+          <EditIcon style={{ color: '#2f7491' }} />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title='Удалить пользователя'>
+        <IconButton
+          className={`${cl.createUser} ${!openUser ? cl.disabled : ''}`}
+          onClick={() => setFormType(FORM.REMOVE)}
+        >
+          <DeleteIcon style={{ color: '#2f7491' }} />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title='Добавить пользователя'>
+        <IconButton className={cl.createUser} onClick={createUser}>
+          <PersonAddIcon style={{ color: '#2f7491' }} />
+        </IconButton>
+      </Tooltip>
+
+      <Dialog
+        fullWidth
+        maxWidth='lg'
+        open={!!formType && formType !== FORM.REMOVE}
+        onClose={closeForm}
       >
-        <EditIcon style={{color: "#2f7491"}}/> 
-      </IconButton> 
-    </Tooltip>
-    <Tooltip title="Удалить пользователя">
-      <IconButton 
-        className={`${cl.createUser} ${!openUser ? cl.disabled : ''}`} 
-        onClick={() => setFormType(FORM.REMOVE)}
-      >
-        <DeleteIcon style={{color: "#2f7491"}}/> 
-      </IconButton> 
-    </Tooltip>
-    <Tooltip title="Добавить пользователя">
-      <IconButton className={cl.createUser} onClick={createUser}>
-        <PersonAddIcon style={{color: "#2f7491"}}/> 
-      </IconButton> 
-    </Tooltip>
-
-    <Dialog
-      fullWidth
-      maxWidth="lg" 
-      open={!!formType && formType !== FORM.REMOVE} 
-      onClose={closeForm}
-    >
-      <div className={cl.form}>
-        <h2>{formType === FORM.EDIT ? 'Редактировать пользователя' : 'Создать нового пользователя'}</h2>
-        <UserCabinet />
-        <Button className={cl.formButton} onClick={closeForm}>Закрыть</Button>        
-      </div>
-    </Dialog>
-
-    <Dialog
-      open={!!formType && formType === FORM.REMOVE} 
-      onClose={closeForm}
-    >
-      <div className={cl.form}>
-        <h3>Вы уверены что хотите удалить пользователя?</h3>
-        {openUser?.name && <p>{`${openUser.name} ${openUser.surname}`}</p>}
-        {openUser?.phone && <p>{openUser.phone}</p>}
-        <div className={cl.formButtons}>
-          <Button onClick={removeUser}>Да</Button>
-          <Button  onClick={closeForm}>Нет</Button>          
+        <div className={cl.form}>
+          <h2>
+            {formType === FORM.EDIT ? 'Редактировать пользователя' : 'Создать нового пользователя'}
+          </h2>
+          <UserCabinet />
+          <Button className={cl.formButton} onClick={closeForm}>
+            Закрыть
+          </Button>
         </div>
-      </div>
-    </Dialog>
-  </div>
+      </Dialog>
+
+      <Dialog open={!!formType && formType === FORM.REMOVE} onClose={closeForm}>
+        <div className={cl.form}>
+          <h3>Вы уверены что хотите удалить пользователя?</h3>
+          {openUser?.name && <p>{`${openUser.name} ${openUser.surname}`}</p>}
+          {openUser?.phone && <p>{openUser.phone}</p>}
+          <div className={cl.formButtons}>
+            <Button onClick={removeUser}>Да</Button>
+            <Button onClick={closeForm}>Нет</Button>
+          </div>
+        </div>
+      </Dialog>
+    </div>
   );
 });
 

@@ -1,11 +1,11 @@
-import React, { useState, useRef } from "react";
-import Webcam from "react-webcam";
-import { IconButton } from "@material-ui/core";
+import React, { useState, useRef } from 'react';
+import Webcam from 'react-webcam';
+import { IconButton } from '@material-ui/core';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
 import { Button } from 'components';
 
-import cl from "./Camera.module.scss";
+import cl from './Camera.module.scss';
 
 const Camera = ({ onCancel, onSave }) => {
   const [photo, setPhoto] = useState(null);
@@ -25,28 +25,31 @@ const Camera = ({ onCancel, onSave }) => {
 
   return (
     <div className={cl.root}>
-      {photo && 
+      {photo && (
         <div>
           <img src={photo} alt='user' />
           <div className={cl.buttons}>
-            <Button theme='grey' onClick={handleSaveClick}>Сохранить</Button>
-            <Button theme='grey' onClick={() => setPhoto(null)}>Новое фото</Button>
-            <Button theme='grey' onClick={onCancel}>Отмена</Button>
-          </div>     
-        </div> 
-      }
+            <Button theme='grey' onClick={handleSaveClick}>
+              Сохранить
+            </Button>
+            <Button theme='grey' onClick={() => setPhoto(null)}>
+              Новое фото
+            </Button>
+            <Button theme='grey' onClick={onCancel}>
+              Отмена
+            </Button>
+          </div>
+        </div>
+      )}
 
-      {!photo &&
+      {!photo && (
         <div>
-          <Webcam
-            ref={webcamRef}
-            screenshotFormat="image/jpeg"
-          />
+          <Webcam ref={webcamRef} screenshotFormat='image/jpeg' />
           <IconButton className={cl.cameraIcon} onClick={takePhoto}>
             <PhotoCameraIcon />
-          </IconButton>        
-        </div> 
-      }
+          </IconButton>
+        </div>
+      )}
     </div>
   );
 };

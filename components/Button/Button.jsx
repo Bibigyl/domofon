@@ -1,27 +1,29 @@
-import React from "react";
-import { Button as UIButton } from "@material-ui/core";
+import React from 'react';
+import { Button as UIButton } from '@material-ui/core';
 
 const Button = ({ children, theme, ...props }) => {
-  const outlineConfig = theme === "outlined"
-    ? {
-        style: { color: "white" },
-        variant: "outlined",
-        color: "secondary"
-      }
-    : {};
+  const outlineConfig =
+    theme === 'outlined'
+      ? {
+          style: { color: 'white' },
+          variant: 'outlined',
+          color: 'secondary',
+        }
+      : {};
 
-  const greyConfig = theme === 'grey'
-    ? {
-        color: "default",
-        size: 'small'
-      }
-    : {};
+  const greyConfig =
+    theme === 'grey'
+      ? {
+          color: 'default',
+          size: 'small',
+        }
+      : {};
 
   return (
     <UIButton
-      type="button"
-      color="primary"
-      variant="contained"
+      type='button'
+      color='primary'
+      variant='contained'
       {...props}
       {...outlineConfig}
       {...greyConfig}

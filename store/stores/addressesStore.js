@@ -3,7 +3,6 @@ import { makeAutoObservable } from "mobx";
 import { API } from "api";
 
 class AddressesStore {
-
   addresses = [];
 
   constructor() {
@@ -11,8 +10,14 @@ class AddressesStore {
   }
 
   *getAddresses() {
-    const addresses = yield API.getAddresses();
-    this.addresses = addresses.sort((a, b) => a.fullAddress > b.fullAddress ? 1 : -1);
+    try {
+      const addresses = yield API.getAddresses();
+      this.addresses = addresses.sort((a, b) =>
+        a.fullAddress > b.fullAddress ? 1 : -1
+      );
+    } catch (err) {
+      alert(err);
+    }
   }
 }
 

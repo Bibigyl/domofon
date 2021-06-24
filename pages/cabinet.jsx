@@ -1,9 +1,9 @@
-import Head from "next/head";
-import { observer } from "mobx-react-lite";
+import Head from 'next/head';
+import { observer } from 'mobx-react-lite';
 
-import { Login, UserCabinet, AdminCabinet } from "modules";
-import { store } from "store";
-import { Layout, Loading, Container } from "components";
+import { Login, UserCabinet, AdminCabinet } from 'modules';
+import { store } from 'store';
+import { Layout, Loading, Container } from 'components';
 
 export default observer(() => {
   const { isGettingAuth, isAdmin } = store;
@@ -12,7 +12,7 @@ export default observer(() => {
 
   const isUserCabinet = !isAdmin && user;
   const isAdminCabinet = isAdmin && admin;
-  
+
   return (
     <>
       <Head>

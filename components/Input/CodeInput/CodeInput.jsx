@@ -1,7 +1,7 @@
-import React, { forwardRef } from "react";
-import ReactCodeInput from "react-verification-code-input";
+import React, { forwardRef } from 'react';
+import ReactCodeInput from 'react-verification-code-input';
 
-import cl from "./CodeInput.module.scss";
+import cl from './CodeInput.module.scss';
 
 const CodeInput = forwardRef(({ onChange, onComplete }, ref) => (
   <ReactCodeInput

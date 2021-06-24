@@ -13,20 +13,28 @@ class AdminStore {
     makeAutoObservable(this, {}, { autoBind: true });
   }
 
-  setAdmin = userInfo => {
+  setAdmin = (userInfo) => {
     this.admin = userInfo;
-  }
+  };
 
   *getUsers() {
-    const users = yield API.getUsers();
-    const adminsPhones = this.admins.map(admin => admin.phone);
-    this.users = users
-      .filter(user => !adminsPhones.includes(user.phone))
-      .sort((a, b) => a.fullName > b.fullName ? 1 : -1);
+    try {
+      const users = yield API.getUsers();
+      const adminsPhones = this.admins.map((admin) => admin.phone);
+      this.users = users
+        .filter((user) => !adminsPhones.includes(user.phone))
+        .sort((a, b) => (a.fullName > b.fullName ? 1 : -1));
+    } catch (err) {
+      alert(err);
+    }
   }
 
   *getAdmins() {
-    this.admins = yield API.getAdmins();
+    try {
+      this.admins = yield API.getAdmins();
+    } catch (err) {
+      alert(err);
+    }
   }
 
   *setFaceProcessed({ userId, faceId, isProcessed }) {
@@ -41,8 +49,8 @@ class AdminStore {
       this.users = this.users.map((user) =>
         user.id === userId ? newUserData : user
       );
-    } catch {
-      console.log("Произошла ошибка");
+    } catch (err) {
+      alert(err);
     }
   }
 }

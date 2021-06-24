@@ -1,6 +1,6 @@
-import { Container } from "components";
+import { Container } from 'components';
 
-import cl from "./Footer.module.scss";
+import cl from './Footer.module.scss';
 
 const Footer = () => {
   const y = '';

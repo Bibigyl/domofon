@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { observer } from "mobx-react-lite";
-import { toJS } from "mobx";
-import { IconButton, Tooltip, Dialog, Paper } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import React, { useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { toJS } from 'mobx';
+import { IconButton, Tooltip, Dialog, Paper } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
-import { store } from "store";
-import { InfoRequest } from "components";
+import { store } from 'store';
+import { InfoRequest } from 'components';
 
-import { Edit, Faces } from "./components";
-import cl from "./UserCabinet.module.scss";
+import { Edit, Faces } from './components';
+import cl from './UserCabinet.module.scss';
 
 const UserCabinet = observer(() => {
   const { isAdmin } = store;
@@ -28,11 +28,11 @@ const UserCabinet = observer(() => {
     <div className={cl.root}>
       <div className={cl.user}>
         <Paper className={cl.info}>
-          <AssignmentIndIcon className={cl.infoIcon} color="primary" />
+          <AssignmentIndIcon className={cl.infoIcon} color='primary' />
           <div className={cl.titleWarp}>
             <h2>{user.fullName || 'Заполните данные'}</h2>
             <div className={cl.infoEdit}>
-              <Tooltip title="Редактировать">
+              <Tooltip title='Редактировать'>
                 <IconButton
                   onClick={() => {
                     setShowEdit(true);
@@ -60,7 +60,7 @@ const UserCabinet = observer(() => {
 
       {!isAdmin && <InfoRequest className={cl.infoRequest} />}
 
-      <Dialog maxWidth="md" open={showEdit} onClose={() => setShowEdit(false)}>
+      <Dialog maxWidth='md' open={showEdit} onClose={() => setShowEdit(false)}>
         <Edit
           data={toJS(user)}
           addresses={addresses}

@@ -97,15 +97,15 @@
     white-space: nowrap;
   }
 
-  td[data-content="fullName"],
-  td[data-content="address"],
-  td[data-content="email"] {
+  td[data-content='fullName'],
+  td[data-content='address'],
+  td[data-content='email'] {
     width: 200px;
     max-width: 250px;
   }
 
-  td[data-content="faces"],
-  td[data-content="facesProcessed"] {
+  td[data-content='faces'],
+  td[data-content='facesProcessed'] {
     width: 100px;
     max-width: 100px;
     text-align: center;

@@ -1,23 +1,20 @@
-import { useState, useCallback } from "react";
-import { TextField } from "@material-ui/core";
-import SaveIcon from "@material-ui/icons/Save";
+import { useState, useCallback } from 'react';
+import { TextField } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
 
-import { Button } from "components";
+import { Button } from 'components';
 
-import cl from "./EditFace.module.scss";
+import cl from './EditFace.module.scss';
 
 const textFields = [
-  { label: "Имя", field: "name" },
-  { label: "Фамилия", field: "surname" },
+  { label: 'Имя', field: 'name' },
+  { label: 'Фамилия', field: 'surname' },
 ];
 
 const EditFace = ({ data: propsData, onSave, onCancel }) => {
   const [data, setData] = useState(propsData);
 
-  const handleChange = useCallback(
-    (field, value) => setData({ ...data, [field]: value }),
-    [data]
-  );
+  const handleChange = useCallback((field, value) => setData({ ...data, [field]: value }), [data]);
 
   const handleSaveClick = async () => {
     await onSave(data);
@@ -33,7 +30,7 @@ const EditFace = ({ data: propsData, onSave, onCancel }) => {
             key={field}
             className={cl.field}
             label={label}
-            value={data[field] || ""}
+            value={data[field] || ''}
             onChange={(ev) => handleChange(field, ev.target.value)}
             name={field}
           />

@@ -40,12 +40,11 @@ class Store {
 
         if (!this.isAdmin) {
           this.userStore.setUser(userInfo);
-          yield this.userStore.getAddresses();
+          yield photoURLs.loadByUser(userInfo);
         } else {
           this.adminStore.setAdmin(userInfo);
           yield this.adminStore.getAdmins();
           yield this.adminStore.getUsers();
-          yield photoURLs.loadByUser(userInfo);
         }
 
         yield this.addressesStore.getAddresses();
@@ -54,11 +53,11 @@ class Store {
         this.userStore.setUser(null);
         this.adminStore.setAdmin(null);
       }
-    } catch {
-      console.log('Произошла ошибка');
+    } catch (err) {
+      alert(err);
     }
-    this.isGettingAuth = false;   
-  } 
+    this.isGettingAuth = false;
+  }
 }
 
 const store = new Store();
