@@ -72,9 +72,21 @@
   justify-content: center;
   width: 210px;
 
+  .or {
+    margin: 10px 0 20px;
+  }
+
   .newFaceIcon {
     display: block;
     color: #d4d4d4;
     font-size: 100px;
+  }
+
+  .cameraButton {
+    box-shadow: none;
+
+    &:hover {
+      box-shadow: none;
+    }
   }
 }

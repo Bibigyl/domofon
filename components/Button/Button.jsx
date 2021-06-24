@@ -10,6 +10,13 @@ const Button = ({ children, theme, ...props }) => {
       }
     : {};
 
+  const greyConfig = theme === 'grey'
+    ? {
+        color: "default",
+        size: 'small'
+      }
+    : {};
+
   return (
     <UIButton
       type="button"
@@ -17,6 +24,7 @@ const Button = ({ children, theme, ...props }) => {
       variant="contained"
       {...props}
       {...outlineConfig}
+      {...greyConfig}
     >
       {children}
     </UIButton>

@@ -3,12 +3,12 @@ import { Container } from "components";
 import cl from "./Footer.module.scss";
 
 const Footer = () => {
-  const y = 9;
+  const y = '';
 
   return (
     <footer className={cl.root}>
       <Container>
-        <div className={cl.root}>footer</div>
+        <div className={cl.root}>footer{y}</div>
       </Container>
     </footer>
   );

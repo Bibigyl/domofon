@@ -14,11 +14,13 @@ import { useForceUpdate } from "helpers/hooks";
 
 import { EditFace } from "../EditFace/EditFace";
 import cl from "./Faces.module.scss";
+import { Camera } from "../Camera/Camera";
 
 const Faces = observer(({ className }) => {
   const { user, addFace, editFace, deleteFace } = store.userStore;
   const forceUpdate = useForceUpdate();
   const [editingFace, setEditingFace] = useState(null);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   const loadPhotoURLs = useCallback(async () => {
     await photoURLs.loadByUser(user);
@@ -41,7 +43,7 @@ const Faces = observer(({ className }) => {
       <h3>Фото</h3>
       <div className={cl.faces}>
         <div className={`${cl.faceNew} ${cl.face}`}>
-          <Tooltip title="Добавить фото">
+          <Tooltip title="Загрузить фото">
             <IconButton onClick={() => {}} component="label">
               <input
                 type="file"
@@ -52,9 +54,11 @@ const Faces = observer(({ className }) => {
               <PersonAddIcon className={cl.newFaceIcon} />
             </IconButton>
           </Tooltip>
-          <div className={cl.or}>ИЛИ</div>
+          <div className={cl.or}>или</div>
           <Button
-            className={cl.or}
+            className={cl.cameraButton}
+            theme='grey'
+            onClick={() => setIsCameraOpen(true)}
             startIcon={<PhotoCameraIcon />}
           >
             Сделать селфи
@@ -96,6 +100,17 @@ const Faces = observer(({ className }) => {
           data={editingFace}
           onSave={editFace}
           onCancel={() => setEditingFace(null)}
+        />
+      </Dialog>
+
+      <Dialog
+        maxWidth='md'
+        open={!!isCameraOpen}
+        onClose={() => setIsCameraOpen(false)}
+      >
+        <Camera
+          onSave={addFace}
+          onCancel={() => setIsCameraOpen(false)}
         />
       </Dialog>
     </Paper>
