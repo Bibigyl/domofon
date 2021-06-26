@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import 'firebase/auth';
-import { Card, TextField } from '@material-ui/core';
+import Link from 'next/link';
+import { Card, TextField, Checkbox } from '@material-ui/core';
 
 import { CodeInput, Button, Loading } from 'components';
 import { authAPI } from 'api/authAPI';
@@ -12,6 +13,7 @@ const Login = () => {
   const [code, setCode] = useState('');
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   useEffect(() => {
     authAPI.recaptchaVerifierInvisible(() => {
@@ -60,14 +62,25 @@ const Login = () => {
               className={cl.input}
               onChange={handlePhoneChange}
             />
-
-            <Button className={cl.button} type='submit'>
+            <label className={cl.checkbox}>
+              <Checkbox
+                onChange={() => setIsConfirmed(!isConfirmed)}
+                checked={isConfirmed}
+                color='primary'
+              />
+              <span className={cl.confirmText}>Ознакомлен с 
+                <Link href='/politics'>
+                  <a>политикой конфиденциальности</a>
+                </Link>
+              </span>
+            </label>
+            <Button disabled={!isConfirmed} className={cl.button} type='submit'>
               Далее
             </Button>
           </form>
         )}
 
-        {!isCodeSent && <div id='recaptcha' />}
+        <div id='recaptcha' />
 
         {isCodeSent && !isLoading && (
           <form className={cl.form} onSubmit={verifyCode}>

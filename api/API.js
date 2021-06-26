@@ -1,32 +1,30 @@
 /* eslint-disable arrow-body-style */
-import { db, storageRef } from "../firebase";
-import "firebase/storage";
+import { db, storageRef } from '../firebase';
+import 'firebase/storage';
 
 const getFullName = ({ name, surname }) => {
-  return (surname || "") + (surname && name ? " " : "") + (name || "");
+  return (surname || '') + (surname && name ? ' ' : '') + (name || '');
 };
 
-const commonError = new Error(
-  "Произошла ошибка. Попробуйте обновить страницу."
-);
-const errorText = "Произошла ошибка.";
+const commonError = new Error('Произошла ошибка. Попробуйте обновить страницу.');
+const errorText = 'Произошла ошибка.';
 
 const emptyUser = {
-  phone: "",
+  phone: '',
   addresses: [],
-  contractNumber: "",
-  email: "",
+  contractNumber: '',
+  email: '',
   faces: [],
-  name: "",
-  surname: "",
-  paidUntil: "",
+  name: '',
+  surname: '',
+  paidUntil: '',
 };
 
 class FirebaseAPI {
   getUserInfo = async (phoneNumber) =>
     db
-      .collection("users")
-      .where("phone", "==", phoneNumber)
+      .collection('users')
+      .where('phone', '==', phoneNumber)
       .get()
       .then((querySnapshot) => {
         let userInfo = null;
@@ -42,18 +40,17 @@ class FirebaseAPI {
       });
 
   createUser = async (phoneNumber) => {
-    let validPhone = "";
+    let validPhone = '';
     if (phoneNumber) {
-      validPhone = `+7${phoneNumber.replace(/\D/g, "").slice(1)}`;
-      if (validPhone.length !== 12)
-        throw new Error("Неправильный формат номера телефона");
+      validPhone = `+7${phoneNumber.replace(/\D/g, '').slice(1)}`;
+      if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
     }
     return db
-      .collection("users")
-      .add({...emptyUser, phone: validPhone})
+      .collection('users')
+      .add({ ...emptyUser, phone: validPhone })
       .then((docRef) => ({
         id: docRef.id,
-        fullName: "",
+        fullName: '',
         ...emptyUser,
       }))
       .catch(() => {
@@ -63,7 +60,7 @@ class FirebaseAPI {
 
   removeUser = async (userId) =>
     db
-      .collection("users")
+      .collection('users')
       .doc(userId)
       .delete()
       .catch(() => {
@@ -73,16 +70,15 @@ class FirebaseAPI {
   editUser = async (userData) => {
     const { id, fullName, ...data } = userData;
     if (data.phone) {
-      const validPhone = `+7${data.phone.replace(/\D/g, "").slice(1)}`;
-      if (validPhone.length !== 12)
-        throw new Error("Неправильный формат номера телефона");
+      const validPhone = `+7${data.phone.replace(/\D/g, '').slice(1)}`;
+      if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
       data.phone = validPhone;
     }
 
     return db
-      .collection("users")
+      .collection('users')
       .doc(id)
-      .set({...emptyUser, ...data})
+      .set({ ...emptyUser, ...data })
       .then(() => ({ ...emptyUser, id, fullName: getFullName(data), ...data }))
       .catch(() => {
         throw new Error(`${errorText} Не удалось сохранить данные.`);
@@ -91,8 +87,8 @@ class FirebaseAPI {
 
   checkIsAdmin = async (userPhone) =>
     db
-      .collection("admins")
-      .where("phone", "==", userPhone)
+      .collection('admins')
+      .where('phone', '==', userPhone)
       .get()
       .then((querySnapshot) => {
         let isAdmin = false;
@@ -107,7 +103,7 @@ class FirebaseAPI {
 
   getAddresses = async () =>
     db
-      .collection("addresses")
+      .collection('addresses')
       .get()
       .then((querySnapshot) => {
         const addresses = [];
@@ -128,11 +124,11 @@ class FirebaseAPI {
 
   uploadPhoto = async (fileId, file) =>
     storageRef
-      .child("users")
+      .child('users')
       .child(`${fileId}.jpg`)
       .put(file)
       .then((snapshot) => {
-        console.log("Uploaded a blob or file!", snapshot);
+        console.log('Uploaded a blob or file!', snapshot);
         return file;
       })
       .catch(() => {
@@ -141,17 +137,17 @@ class FirebaseAPI {
 
   getPhotoUrl = async (fileId) =>
     storageRef
-      .child("users")
+      .child('users')
       .child(`${fileId}.jpg`)
       .getDownloadURL()
       .then((url) => url)
       .catch(() => {
-        console.log("Не удалось получить фото");
+        console.log('Не удалось получить фото');
       });
 
   deletePhoto = async (fileId) =>
     storageRef
-      .child("users")
+      .child('users')
       .child(`${fileId}.jpg`)
       .delete()
       .catch(() => {
@@ -160,7 +156,7 @@ class FirebaseAPI {
 
   getUsers = async () =>
     db
-      .collection("users")
+      .collection('users')
       .get()
       .then((querySnapshot) => {
         const users = [];
@@ -176,7 +172,7 @@ class FirebaseAPI {
 
   getAdmins = async () =>
     db
-      .collection("admins")
+      .collection('admins')
       .get()
       .then((querySnapshot) => {
         const admins = [];
@@ -192,7 +188,7 @@ class FirebaseAPI {
 
   removeAdmin = async (adminId) =>
     db
-      .collection("admins")
+      .collection('admins')
       .doc(adminId)
       .delete()
       .catch(() => {
@@ -200,19 +196,18 @@ class FirebaseAPI {
       });
 
   createAdmin = async (data) => {
-    if (!data.phone) throw new Error("Укажите номер телефона");
-    const validPhone = `+7${data.phone.replace(/\D/g, "").slice(1)}`;
-    if (validPhone.length !== 12)
-      throw new Error("Неправильный формат номера телефона");
+    if (!data.phone) throw new Error('Укажите номер телефона');
+    const validPhone = `+7${data.phone.replace(/\D/g, '').slice(1)}`;
+    if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
 
     const params = {
       phone: validPhone,
-      name: data.name || "",
-      surname: data.surname || "",
+      name: data.name || '',
+      surname: data.surname || '',
     };
 
     return db
-      .collection("admins")
+      .collection('admins')
       .add(params)
       .then((docRef) => ({
         id: docRef.id,
@@ -225,7 +220,7 @@ class FirebaseAPI {
 
   removeAddress = async (addressId) =>
     db
-      .collection("addresses")
+      .collection('addresses')
       .doc(addressId)
       .delete()
       .catch(() => {
@@ -239,7 +234,7 @@ class FirebaseAPI {
     };
 
     return db
-      .collection("addresses")
+      .collection('addresses')
       .add(params)
       .then((docRef) => ({
         id: docRef.id,
@@ -247,6 +242,19 @@ class FirebaseAPI {
       }))
       .catch(() => {
         throw commonError;
+      });
+  };
+
+  editAddress = async (addressData) => {
+    const { id, address = '', city = '' } = addressData;
+
+    return db
+      .collection('addresses')
+      .doc(id)
+      .set({ address, city })
+      .then(() => ({ id, city, address, fullAddress: `${city}, ${address}` }))
+      .catch(() => {
+        throw new Error(`${errorText} Не удалось сохранить данные.`);
       });
   };
 }

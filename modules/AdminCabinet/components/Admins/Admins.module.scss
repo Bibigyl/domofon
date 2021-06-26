@@ -13,6 +13,11 @@
     margin: 0;
     margin-right: auto;
   }
+
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
 
 .tableWrap {

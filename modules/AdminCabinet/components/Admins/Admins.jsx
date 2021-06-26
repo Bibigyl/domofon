@@ -24,7 +24,7 @@ const textFields = [
 ];
 
 const Admins = observer(({ className }) => {
-  const { admins, getAdmins } = store.adminStore;
+  const { admins, getAdmins, getUsers } = store.adminStore;
   const [openAdmin, setOpenAdmin] = useState(null);
   const [formType, setFormType] = useState(null);
   const formRef = useRef();
@@ -53,6 +53,7 @@ const Admins = observer(({ className }) => {
         alert(err);
       }
     }
+    getUsers();
   };
 
   const removeAdmin = async () => {
@@ -63,6 +64,7 @@ const Admins = observer(({ className }) => {
       alert(err);
     }
     setFormType(null);
+    getUsers();
   };
 
   const getText = ({ name, surname, phone }, field) => {
@@ -78,14 +80,14 @@ const Admins = observer(({ className }) => {
         <h3>Администраторы</h3>
         <Tooltip title='Удалить администратора'>
           <IconButton
-            className={`${cl.createUser} ${!openAdmin ? cl.disabled : ''}`}
+            className={`${!openAdmin ? cl.disabled : ''}`}
             onClick={() => setFormType(FORM.REMOVE)}
           >
             <DeleteIcon style={{ color: '#2f7491' }} />
           </IconButton>
         </Tooltip>
         <Tooltip title='Добавить администратора'>
-          <IconButton className={cl.createUser} onClick={() => setFormType(FORM.CREATE)}>
+          <IconButton onClick={() => setFormType(FORM.CREATE)}>
             <PersonAddIcon style={{ color: '#2f7491' }} />
           </IconButton>
         </Tooltip>

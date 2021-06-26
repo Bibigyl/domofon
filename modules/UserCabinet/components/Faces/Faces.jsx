@@ -44,12 +44,12 @@ const Faces = observer(({ className }) => {
         width: 700, // maximum width
         height: 700, // maximum height
       },
-      (blob, didItResize) => {
-        if (didItResize) {
-          addFace(blob);
-        } else if (file.size > MAX_SIZE) {
+      (blob) => {
+        if (blob.size > MAX_SIZE) {
           alert('Файл слишком большой, пожалуйста загрузите другой');
+          return;
         }
+        addFace(blob);
       }
     );
   };

@@ -55,6 +55,7 @@
     "no-shadow": "off",
     "jsx-a11y/label-has-associated-control": "off",
     "no-use-before-define": "off",
+    "jsx-a11y/anchor-is-valid": "off",
     "import/order": [
       "error",
       {

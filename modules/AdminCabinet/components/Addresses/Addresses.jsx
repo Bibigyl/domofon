@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
 import { IconButton, Tooltip, TextField, Dialog, Paper } from '@material-ui/core';
 import AddLocationIcon from '@material-ui/icons/AddLocation';
+import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import SearchIcon from '@material-ui/icons/Search';
@@ -16,6 +17,7 @@ import cl from './Addresses.module.scss';
 
 const FORM = {
   CREATE: 'CREATE',
+  EDIT: 'EDIT',
   REMOVE: 'REMOVE',
 };
 
@@ -26,7 +28,7 @@ const textFields = [
 
 const Addresses = observer(({ className }) => {
   const { addresses, getAddresses } = store.addressesStore;
-  const { users } = store.adminStore;
+  const { users, getUsers } = store.adminStore;
   const [visibleAddresses, setVisibleAddresses] = useState(addresses);
   const [openAddress, setOpenAddress] = useState(null);
   const [formType, setFormType] = useState(null);
@@ -41,7 +43,7 @@ const Addresses = observer(({ className }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addresses]);
 
-  const createAddress = async () => {
+  const createOrEditAddress = async () => {
     const params = {};
     let isFilled = false;
     textFields.forEach(({ field }) => {
@@ -51,13 +53,15 @@ const Addresses = observer(({ className }) => {
     });
     if (isFilled) {
       try {
-        await API.createAddress(params);
+        if (formType === FORM.CREATE) await API.createAddress(params);
+        if (formType === FORM.EDIT) await API.editAddress({ id: openAddress.id, ...params });
         await getAddresses();
       } catch (err) {
         alert(err);
       }
     }
     setFormType(null);
+    getUsers();
   };
 
   const removeAddress = async () => {
@@ -113,16 +117,24 @@ const Addresses = observer(({ className }) => {
             <ClearIcon />
           </IconButton>
         </Tooltip>
+        <Tooltip title='Редактировать адрес'>
+          <IconButton
+            className={`${!openAddress ? cl.disabled : ''}`}
+            onClick={() => setFormType(FORM.EDIT)}
+          >
+            <EditIcon style={{ color: '#2f7491' }} />
+          </IconButton>
+        </Tooltip>
         <Tooltip title='Удалить адрес'>
           <IconButton
-            className={`${cl.createUser} ${!openAddress ? cl.disabled : ''}`}
+            className={`${!openAddress ? cl.disabled : ''}`}
             onClick={() => setFormType(FORM.REMOVE)}
           >
             <DeleteIcon style={{ color: '#2f7491' }} />
           </IconButton>
         </Tooltip>
         <Tooltip title='Добавить адрес'>
-          <IconButton className={cl.createUser} onClick={() => setFormType(FORM.CREATE)}>
+          <IconButton onClick={() => setFormType(FORM.CREATE)}>
             <AddLocationIcon style={{ color: '#2f7491' }} />
           </IconButton>
         </Tooltip>
@@ -160,9 +172,11 @@ const Addresses = observer(({ className }) => {
           </div>
         )}
 
-        {formType === FORM.CREATE && (
+        {formType !== FORM.REMOVE && (
           <form className={cl.form} ref={formRef}>
-            <h2 className={cl.title}>Добавить адрес</h2>
+            <h2 className={cl.title}>
+              {formType === FORM.CREATE ? 'Добавить адрес' : 'Редактировать адрес'}
+            </h2>
             <div className={cl.fields}>
               {textFields.map(({ label, field, defaultValue }) => (
                 <TextField
@@ -170,12 +184,14 @@ const Addresses = observer(({ className }) => {
                   className={cl.field}
                   label={label}
                   name={field}
-                  defaultValue={defaultValue || ''}
+                  defaultValue={
+                    (formType === FORM.EDIT && openAddress[field]) || defaultValue || ''
+                  }
                 />
               ))}
             </div>
             <div className={cl.formButtons}>
-              <Button startIcon={<SaveIcon />} onClick={createAddress}>
+              <Button startIcon={<SaveIcon />} onClick={createOrEditAddress}>
                 Сохранить
               </Button>
               <Button onClick={() => setFormType(null)}>Отмена</Button>

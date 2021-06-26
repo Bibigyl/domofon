@@ -1,6 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import MenuIcon from '@material-ui/icons/Menu';
+import CloseIcon from '@material-ui/icons/Close';
+import { IconButton } from '@material-ui/core';
 
 import { store } from 'store';
 import { Button, Container } from 'components';
@@ -12,9 +17,15 @@ const Header = observer(() => {
   const { isAdmin } = store;
   const { user } = store.userStore;
   const { admin, admins } = store.adminStore;
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const hasAuth = (isAdmin && admin) || (!isAdmin && user);
   const data = isAdmin ? admin : user;
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [router.route]);
 
   const getUserName = () => {
     if ((isAdmin && !admins) || !data) return '';
@@ -24,8 +35,20 @@ const Header = observer(() => {
     );
   };
 
+  const handleLogoutClick = async () => {
+    try {
+      await authAPI.logout();
+      setIsOpen(false);
+    } catch (err) {
+      alert(err);
+    }
+  };
+
   return (
-    <header className={cl.root}>
+    <header className={`${cl.root} ${isOpen ? cl.mobilOpen : ''}`}>
+      <IconButton onClick={() => setIsOpen(!isOpen)} className={cl.mobilMenu}>
+        {isOpen ? <CloseIcon /> : <MenuIcon />}
+      </IconButton>
       <Container className={cl.container}>
         <ul className={cl.menu}>
           <li>
@@ -33,11 +56,13 @@ const Header = observer(() => {
               <a>Главная</a>
             </Link>
           </li>
-          <li>
-            <Link href='/cabinet'>
-              <a>Личный кабинет</a>
-            </Link>
-          </li>
+          {hasAuth && (
+            <li>
+              <Link href='/cabinet'>
+                <a>Личный кабинет</a>
+              </Link>
+            </li>
+          )}
         </ul>
         <div className={cl.userInfo}>
           {hasAuth ? (
@@ -49,7 +74,7 @@ const Header = observer(() => {
                 </span>
               )}
               <span className={cl.userName}>{getUserName()}</span>
-              <Button theme='outlined' onClick={authAPI.logout}>
+              <Button theme='outlined' onClick={handleLogoutClick}>
                 Выйти
               </Button>
             </>

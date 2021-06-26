@@ -3,6 +3,10 @@
   width: 100%;
   color: #000;
 
+  @media (max-width: 1000px) {
+    margin: 40px 0;
+  }
+
   .cards {
     display: flex;
     flex-wrap: wrap;
@@ -28,6 +32,21 @@
         color: #5bdc78;
       }
     }
+
+    @media (max-width: 1000px) {
+      margin: 10px 5px;
+      width: 180px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    h3 {
+      @media (max-width: 1000px) {
+        font-size: 15px;
+      }
+    }
   }
 
   .icon {
@@ -35,5 +54,9 @@
     margin: 0 auto 20px;
     color: #c3c3c3;
     font-size: 40px;
+
+    @media (max-width: 1000px) {
+      margin-bottom: 0;
+    }
   }
 }
