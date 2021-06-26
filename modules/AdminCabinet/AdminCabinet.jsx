@@ -55,11 +55,17 @@ const AdminCabinet = observer(() => {
     if (field === 'phone') text = user.phone;
     if (field === 'email') text = user.email;
     if (field === 'paidUntil') text = user.paidUntil;
-    if (field === 'address')
-      text = addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress;
+    if (field === 'address') text = getAddresses(user).join('; ');
     if (field === 'contractNumber') text = user.contractNumber;
     return text || '___';
   };
+
+  const getAddresses = (user) =>
+    user.addresses.map((userAddr) => {
+      let string = addresses.find((ad) => ad.id === userAddr.id).fullAddress;
+      if (userAddr.flat) string = `${string}, кв.${userAddr.flat}`;
+      return string;
+    });
 
   return (
     <div className={cl.root}>
@@ -67,18 +73,34 @@ const AdminCabinet = observer(() => {
         <Paper className={cl.user}>
           {openUser && isPanelOpen && (
             <ul>
-              <li><b>Имя: </b>{getText(openUser, 'fullName')}</li>
-              <li><b>Телефон: </b>{getText(openUser, 'phone')}</li>
-              <li><b>Email: </b>{getText(openUser, 'email')}</li>
-              <li><b>Адрес: </b>{getText(openUser, 'address')}</li>
-              <li><b>Номер договора: </b>{getText(openUser, 'contractNumber')}</li>
-              <li><b>Оплачено до: </b>
-                <TextField 
+              <li>
+                <b>Имя: </b>
+                {getText(openUser, 'fullName')}
+              </li>
+              <li>
+                <b>Телефон: </b>
+                {getText(openUser, 'phone')}
+              </li>
+              <li>
+                <b>Email: </b>
+                {getText(openUser, 'email')}
+              </li>
+              <li>
+                <b>Номер договора: </b>
+                {getText(openUser, 'contractNumber')}
+              </li>
+              <li>
+                <b>Адресa: </b>
+                {getText(openUser, 'address')}
+              </li>
+              <li>
+                <b>Оплачено до: </b>
+                <TextField
                   key={openUser.id}
                   defaultValue={openUser?.paidUntil || ''}
-                  type='date' 
-                  onBlur={savePaidUntil} 
-                  onKeyPress={savePaidUntil} 
+                  type='date'
+                  onBlur={savePaidUntil}
+                  onKeyPress={savePaidUntil}
                 />
               </li>
             </ul>
@@ -132,8 +154,8 @@ const AdminCabinet = observer(() => {
           </tbody>
         </table>
       </div>
-      <Admins className={cl.admins} />
       <Addresses className={cl.addresses} />
+      <Admins className={cl.admins} />
     </div>
   );
 });

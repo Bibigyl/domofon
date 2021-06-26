@@ -5,6 +5,8 @@ import { IconButton, Tooltip, TextField, Dialog, Paper } from '@material-ui/core
 import AddLocationIcon from '@material-ui/icons/AddLocation';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
+import SearchIcon from '@material-ui/icons/Search';
+import ClearIcon from '@material-ui/icons/Clear';
 
 import { Button } from 'components';
 import { store } from 'store';
@@ -24,14 +26,18 @@ const textFields = [
 
 const Addresses = observer(({ className }) => {
   const { addresses, getAddresses } = store.addressesStore;
+  const { users } = store.adminStore;
+  const [visibleAddresses, setVisibleAddresses] = useState(addresses);
   const [openAddress, setOpenAddress] = useState(null);
   const [formType, setFormType] = useState(null);
   const formRef = useRef();
+  const searchRef = useRef();
 
   useEffect(() => {
     if (openAddress) {
       setOpenAddress(toJS(addresses).find((address) => address.id === openAddress.id) || null);
     }
+    applySearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addresses]);
 
@@ -55,6 +61,10 @@ const Addresses = observer(({ className }) => {
   };
 
   const removeAddress = async () => {
+    if (users.some((user) => user.addresses.some((addr) => addr.id === openAddress.id))) {
+      alert('Нельзя удалить этот адрес, пока он указан пользователем.');
+      return;
+    }
     try {
       await API.removeAddress(openAddress.id);
       await getAddresses();
@@ -64,10 +74,45 @@ const Addresses = observer(({ className }) => {
     setFormType(null);
   };
 
+  const handleSearchKeyDown = (ev) => {
+    if (ev.code === 'Enter') applySearch();
+  };
+
+  const applySearch = () => {
+    const searchString = searchRef.current.value;
+    setVisibleAddresses(
+      addresses.filter((addr) =>
+        addr.fullAddress.toUpperCase().includes(searchString.toUpperCase())
+      )
+    );
+  };
+
+  const resetSearch = () => {
+    searchRef.current.value = '';
+    setVisibleAddresses(addresses);
+  };
+
   return (
     <div className={`${cl.root} ${className}`}>
       <Paper className={cl.controls}>
         <h3>Адреса</h3>
+        <TextField
+          inputRef={searchRef}
+          label='Поиск'
+          variant='outlined'
+          size='small'
+          onKeyDown={handleSearchKeyDown}
+        />
+        <Tooltip title='Найти'>
+          <IconButton onClick={applySearch}>
+            <SearchIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title='Сбросить'>
+          <IconButton onClick={resetSearch}>
+            <ClearIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title='Удалить адрес'>
           <IconButton
             className={`${cl.createUser} ${!openAddress ? cl.disabled : ''}`}
@@ -90,7 +135,7 @@ const Addresses = observer(({ className }) => {
             </tr>
           </thead>
           <tbody>
-            {toJS(addresses).map((address) => (
+            {visibleAddresses.map((address) => (
               <tr
                 className={openAddress && openAddress.id === address.id ? cl.selectedTr : ''}
                 key={address.id}

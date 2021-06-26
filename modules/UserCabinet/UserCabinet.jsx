@@ -17,10 +17,12 @@ const UserCabinet = observer(() => {
   const { addresses } = store.addressesStore;
   const [showEdit, setShowEdit] = useState(false);
 
-  const getAddress = () => {
-    if (!user.addresses) return '___';
-    return addresses.find((ad) => ad.id === toJS(user).addresses[0])?.fullAddress || '___';
-  };
+  const getAddresses = () =>
+    user.addresses.map((userAddr) => {
+      let string = addresses.find((ad) => ad.id === userAddr.id).fullAddress;
+      if (userAddr.flat) string = `${string}, кв.${userAddr.flat}`;
+      return string;
+    });
 
   if (!user) return null;
 
@@ -48,8 +50,13 @@ const UserCabinet = observer(() => {
             <dd>{user.phone || '___'}</dd>
             <dt>Email</dt>
             <dd>{user.email || '___'}</dd>
-            <dt>Адрес</dt>
-            <dd>{getAddress()}</dd>
+            <dt>Адреса</dt>
+            <dd>
+              {getAddresses().map((addr) => (
+                <div key={addr}>{addr}</div>
+              ))}
+              {getAddresses().length === 0 && '___'}
+            </dd>
             <dt>Номер договора</dt>
             <dd>{user.contractNumber || '___'}</dd>
           </dl>

@@ -26,12 +26,18 @@
 }
 
 .form {
+  background: #f7f7f7;
   padding: 30px;
 }
 
-.form .formButton {
-  display: block;
-  margin: 0px auto 20px;
+.form .closeForm {
+  position: absolute;
+  top: 40px;
+  right: 30px;
+}
+
+.userCabinet {
+  background: #f7f7f7;
 }
 
 .formButtons {

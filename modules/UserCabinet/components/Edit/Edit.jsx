@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
-import { TextField, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core';
+import { TextField, IconButton, Tooltip } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import SaveIcon from '@material-ui/icons/Save';
+import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 
 import { store } from 'store';
 import { Button } from 'components';
@@ -18,8 +20,21 @@ const textFields = [
 const Edit = ({ data: propsData, onSave, onCancel }) => {
   const { addresses } = store.addressesStore;
   const [data, setData] = useState(propsData);
+  const [newAddress, setNewAddress] = useState({ id: '', flat: '' });
 
   const handleChange = useCallback((field, value) => setData({ ...data, [field]: value }), [data]);
+
+  const addAddress = () => {
+    if (!newAddress.id) return;
+    setData({ ...data, addresses: [...data.addresses, newAddress] });
+  };
+
+  const removeAddress = (id, flat) => {
+    setData({
+      ...data,
+      addresses: data.addresses.filter((addr) => !(addr.id === id && addr.flat === flat)),
+    });
+  };
 
   const handleSaveClick = async () => {
     await onSave(data);
@@ -40,25 +55,45 @@ const Edit = ({ data: propsData, onSave, onCancel }) => {
             name={field}
           />
         ))}
-        <FormControl className={cl.field}>
-          <InputLabel shrink id5='select'>
-            Адрес
-          </InputLabel>
-          <Select
-            value={data.addresses[0] || ''}
-            onChange={(ev) => handleChange('addresses', ev.target.value ? [ev.target.value] : [])}
-          >
-            <MenuItem value=''>
-              <em>Не выбран</em>
-            </MenuItem>
-            {addresses.map((addr) => (
-              <MenuItem key={addr.id} value={addr.id}>
-                {addr.fullAddress}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
       </div>
+
+      <h4 className={cl.subTitle}>Адреса</h4>
+      <div className={cl.newAddress}>
+        <Autocomplete
+          options={addresses}
+          className={cl.newAddressId}
+          getOptionLabel={(option) => option.fullAddress}
+          onChange={(_, addr) => setNewAddress({ ...newAddress, id: addr?.id || '' })}
+          renderInput={(params) => <TextField {...params} label='Адрес' />}
+        />
+        <TextField
+          className={cl.newAddressFlat}
+          label='Квартира'
+          onChange={(ev) => setNewAddress({ ...newAddress, flat: ev.target.value })}
+        />
+        {newAddress.id && (
+          <Button size='small' className={cl.newAddressAdd} onClick={addAddress}>
+            Добавить
+          </Button>
+        )}
+      </div>
+
+      {data.addresses.length === 0 && <div style={{ textAlign: 'center' }}>Адрес не добавлен</div>}
+
+      <div className={cl.addresses}>
+        {data.addresses.map((userAddr) => (
+          <div className={cl.address} key={userAddr.id + userAddr.flat}>
+            {addresses.find((addr) => addr.id === userAddr.id).fullAddress}
+            {userAddr.flat && `, кв. ${userAddr.flat}`}
+            <Tooltip title='Удалить адрес'>
+              <IconButton onClick={() => removeAddress(userAddr.id, userAddr.flat)}>
+                <DeleteSharpIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        ))}
+      </div>
+
       <div className={cl.buttons}>
         <Button startIcon={<SaveIcon />} onClick={handleSaveClick}>
           Сохранить

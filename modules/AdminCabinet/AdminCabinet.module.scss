@@ -19,11 +19,17 @@
   }
 
   li {
+    display: -webkit-box;
     margin-right: 20px;
     margin-bottom: 8px;
     width: 100%;
     max-width: 300px;
+    max-height: 50px;
+    overflow: hidden;
     list-style-type: none;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 
     b {
       margin-right: 10px;
@@ -114,11 +120,11 @@
 
 .admins {
   display: inline-block;
-  margin-right: 60px;
   vertical-align: top;
 }
 
 .addresses {
   display: inline-block;
+  margin-right: 60px;
   vertical-align: top;
 }

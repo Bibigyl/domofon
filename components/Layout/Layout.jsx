@@ -1,4 +1,6 @@
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import MenuIcon from '@material-ui/icons/Menu';
+import { IconButton } from '@material-ui/core';
 
 import { Header, Footer } from 'components';
 
@@ -26,6 +28,10 @@ const Layout = (props) => {
     <ThemeProvider theme={theme}>
       <div className={`${cl.root} ${isLanding ? cl.landing : ''}`}>
         <Header />
+        <IconButton className={cl.mobilMenu}>
+          <MenuIcon />
+        </IconButton>
+        {/* <div className='mobilMenu' /> */}
         <main>{children}</main>
         <Footer />
       </div>

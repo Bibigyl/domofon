@@ -20,10 +20,14 @@ export default observer(() => {
       </Head>
       <Layout>
         <Container>
-          {isGettingAuth && <Loading />}
-          {!isGettingAuth && !isUserCabinet && !isAdminCabinet && <Login />}
-          {isUserCabinet && <UserCabinet />}
-          {isAdminCabinet && <AdminCabinet />}
+          {isGettingAuth 
+          ? <Loading />
+          : <>
+            {!isUserCabinet && !isAdminCabinet && <Login />}
+            {isUserCabinet && <UserCabinet />}
+            {isAdminCabinet && <AdminCabinet />}
+            </>
+          }
         </Container>
       </Layout>
     </>

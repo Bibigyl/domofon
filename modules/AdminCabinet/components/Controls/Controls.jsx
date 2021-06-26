@@ -8,6 +8,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { Button } from 'components';
 import { UserCabinet } from 'modules';
@@ -113,13 +114,19 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
       if (field === 'name') text = user.fullName;
       if (field === 'phone') text = user.phone;
       if (field === 'email') text = user.email;
-      if (field === 'address')
-        text = addresses.find((ad) => ad.id === user.addresses[0])?.fullAddress;
+      if (field === 'address') text = getAddresses(user).join('; ');
       if (field === 'contractNumber') text = user.contractNumber;
       return text || '___';
     },
-    [addresses]
+    [getAddresses]
   );
+
+  const getAddresses = useCallback((user) =>
+    user.addresses.map((userAddr) => {
+      let string = addresses.find((ad) => ad.id === userAddr.id).fullAddress;
+      if (userAddr.flat) string = `${string}, кв.${userAddr.flat}`;
+      return string;
+    }), [addresses]);
 
   return (
     <div className={cl.root}>
@@ -177,10 +184,10 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
           <h2>
             {formType === FORM.EDIT ? 'Редактировать пользователя' : 'Создать нового пользователя'}
           </h2>
-          <UserCabinet />
-          <Button className={cl.formButton} onClick={closeForm}>
-            Закрыть
-          </Button>
+          <UserCabinet  />
+          <IconButton className={cl.closeForm} onClick={closeForm}>
+            <CloseIcon />
+          </IconButton>
         </div>
       </Dialog>
 

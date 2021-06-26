@@ -11,6 +11,17 @@ const commonError = new Error(
 );
 const errorText = "Произошла ошибка.";
 
+const emptyUser = {
+  phone: "",
+  addresses: [],
+  contractNumber: "",
+  email: "",
+  faces: [],
+  name: "",
+  surname: "",
+  paidUntil: "",
+};
+
 class FirebaseAPI {
   getUserInfo = async (phoneNumber) =>
     db
@@ -24,7 +35,7 @@ class FirebaseAPI {
           userInfo.id = doc.id;
           userInfo.fullName = getFullName(userInfo);
         });
-        return userInfo;
+        return { ...emptyUser, ...userInfo };
       })
       .catch(() => {
         throw commonError;
@@ -37,20 +48,9 @@ class FirebaseAPI {
       if (validPhone.length !== 12)
         throw new Error("Неправильный формат номера телефона");
     }
-    const emptyUser = {
-      phone: validPhone || "",
-      addresses: [],
-      contractNumber: "",
-      email: "",
-      faces: [],
-      name: "",
-      surname: "",
-      paidUntil: "",
-    };
-
     return db
       .collection("users")
-      .add(emptyUser)
+      .add({...emptyUser, phone: validPhone})
       .then((docRef) => ({
         id: docRef.id,
         fullName: "",
@@ -67,7 +67,7 @@ class FirebaseAPI {
       .doc(userId)
       .delete()
       .catch(() => {
-        throw new Error(`${errorText}Не удалось удалить пользователя.`);
+        throw new Error(`${errorText} Не удалось удалить пользователя.`);
       });
 
   editUser = async (userData) => {
@@ -82,10 +82,10 @@ class FirebaseAPI {
     return db
       .collection("users")
       .doc(id)
-      .set(data)
-      .then(() => ({ id, ...data }))
+      .set({...emptyUser, ...data})
+      .then(() => ({ ...emptyUser, id, fullName: getFullName(data), ...data }))
       .catch(() => {
-        throw new Error(`${errorText}Не удалось сохранить данные.`);
+        throw new Error(`${errorText} Не удалось сохранить данные.`);
       });
   };
 
@@ -136,7 +136,7 @@ class FirebaseAPI {
         return file;
       })
       .catch(() => {
-        throw new Error(`${errorText}Не удалось загрузить изображение.`);
+        throw new Error(`${errorText} Не удалось загрузить изображение.`);
       });
 
   getPhotoUrl = async (fileId) =>
@@ -155,7 +155,7 @@ class FirebaseAPI {
       .child(`${fileId}.jpg`)
       .delete()
       .catch(() => {
-        throw new Error(`${errorText}Не удалось удалить изображение.`);
+        throw new Error(`${errorText} Не удалось удалить изображение.`);
       });
 
   getUsers = async () =>
@@ -166,7 +166,7 @@ class FirebaseAPI {
         const users = [];
         querySnapshot.forEach((doc) => {
           const user = doc.data();
-          users.push({ id: doc.id, fullName: getFullName(user), ...user });
+          users.push({ ...emptyUser, id: doc.id, fullName: getFullName(user), ...user });
         });
         return users;
       })
