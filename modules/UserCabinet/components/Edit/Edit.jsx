@@ -17,9 +17,10 @@ const textFields = [
   { label: 'Номер договора', field: 'contractNumber' },
 ];
 
-const Edit = ({ data: propsData, onSave, onCancel }) => {
+const Edit = ({ onSave, onCancel }) => {
+  const { user } = store.userStore;
   const { addresses } = store.addressesStore;
-  const [data, setData] = useState(propsData);
+  const [data, setData] = useState(user);
   const [newAddress, setNewAddress] = useState({ id: '', flat: '' });
 
   const handleChange = useCallback((field, value) => setData({ ...data, [field]: value }), [data]);
@@ -83,8 +84,8 @@ const Edit = ({ data: propsData, onSave, onCancel }) => {
       <div className={cl.addresses}>
         {data.addresses.map((userAddr) => (
           <div className={cl.address} key={userAddr.id + userAddr.flat}>
-            {addresses.find((addr) => addr.id === userAddr.id).fullAddress}
-            {userAddr.flat && `, кв. ${userAddr.flat}`}
+            <span>{addresses.find((addr) => addr.id === userAddr.id).fullAddress}
+            {userAddr.flat && `, кв. ${userAddr.flat}`}</span>
             <Tooltip title='Удалить адрес'>
               <IconButton onClick={() => removeAddress(userAddr.id, userAddr.flat)}>
                 <DeleteSharpIcon />

@@ -1,4 +1,6 @@
-import { Paper } from '@material-ui/core';
+import { useState } from 'react';
+import { Paper, Dialog, TextField } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import BuildIcon from '@material-ui/icons/Build';
 import PaymentIcon from '@material-ui/icons/Payment';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
@@ -6,53 +8,191 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import CallEndIcon from '@material-ui/icons/CallEnd';
 import VideocamIcon from '@material-ui/icons/Videocam';
 
+import { store } from 'store';
 import { Button } from 'components';
 
 import cl from './InfoRequest.module.scss';
 
+const SERVICES = {
+  MASTER: 'Вызов мастера',
+  PAY: 'Оплата онлайн',
+  BALANCE: 'Узнать баланс счета',
+  KEYS: 'Ключи для домофона',
+  CHANGE: 'Замена трубки',
+  VIDEO: 'Видеорегистрация в доме',
+};
+
+const textFields = [
+  { label: 'Имя Фамилия', field: 'fullName' },
+  { label: 'Email', field: 'email' },
+  { label: 'Телефон', field: 'phone', required: true },
+  { label: 'Номер договора', field: 'contractNumber' },
+];
+
+const allFields = [
+  ...textFields,
+  { label: 'Адрес', field: 'address' },
+  { label: 'Сообщение', field: 'message' },
+];
+
+const getInitialData = (user, addresses) => {
+  const data = {};
+  textFields.forEach((el) => {
+    data[el.field] = user[el.field];
+  });
+  const firstAddr = user.addresses[0];
+  data.address =
+    addresses.find((addr) => addr.id === firstAddr.id).fullAddress +
+    (firstAddr.flat && `, кв. ${firstAddr.flat}`);
+  data.message = '';
+  return data;
+};
+
 const InfoRequest = ({ className }) => {
-  const y = '';
+  const { user } = store.userStore;
+  const { addresses } = store.addressesStore;
+  const [service, setService] = useState(null);
+  const [data, setData] = useState(user ? getInitialData(user, addresses) : {});
+  const [isSent, setIsSent] = useState(false);
+
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
+
+    const body = {
+      service,
+      fields: allFields.map((el) => ({ ...el, value: data[el.field] })),
+    };
+
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    }).then((res) => {
+      console.log('Response received');
+      if (res.status === 200) {
+        console.log('Response succeeded!');
+        setIsSent(true);
+      }
+    });
+    return false;
+  };
+
+  const closeForm = () => {
+    setService(null);
+    setTimeout(() => setIsSent(false), 0);
+  };
+
+  const getFullUserAddress = (userAddr) =>
+    userAddr
+      ? addresses.find((addr) => addr.id === userAddr.id).fullAddress +
+        (userAddr.flat && `, кв. ${userAddr.flat}`)
+      : '';
 
   return (
-    <div className={`${cl.root} ${className}`}>
-      <h2 className='h2'>Услуги{y}</h2>
+    <div className={`${cl.root} ${className || ''}`}>
+      <h2 className='h2'>Услуги</h2>
       <div className={cl.cards}>
         <Paper className={cl.card}>
           <BuildIcon className={cl.icon} />
-          <h3>Вызов мастера</h3>
-          <Button className={cl.button}>Заказать</Button>
+          <h3>{SERVICES.MASTER}</h3>
+          <Button onClick={() => setService(SERVICES.MASTER)} className={cl.button}>
+            Заказать
+          </Button>
         </Paper>
 
         <Paper className={cl.card}>
           <PaymentIcon className={cl.icon} />
-          <h3>Оплата онлайн</h3>
+          <h3>{SERVICES.PAY}</h3>
           <Button className={cl.button}>Оплатить</Button>
         </Paper>
 
         <Paper className={cl.card}>
           <AccountBalanceWalletIcon className={cl.icon} />
-          <h3>Узнать баланс счета</h3>
-          <Button className={cl.button}>Заказать</Button>
+          <h3>{SERVICES.BALANCE}</h3>
+          <Button onClick={() => setService(SERVICES.BALANCE)} className={cl.button}>
+            Заказать
+          </Button>
         </Paper>
 
         <Paper className={cl.card}>
           <VpnKeyIcon className={cl.icon} />
-          <h3>Ключи для домофона</h3>
-          <Button className={cl.button}>Заказать</Button>
+          <h3>{SERVICES.KEYS}</h3>
+          <Button onClick={() => setService(SERVICES.KEYS)} className={cl.button}>
+            Заказать
+          </Button>
         </Paper>
 
         <Paper className={cl.card}>
           <CallEndIcon className={cl.icon} />
-          <h3>Замена трубки</h3>
-          <Button className={cl.button}>Заказать</Button>
+          <h3>{SERVICES.CHANGE}</h3>
+          <Button onClick={() => setService(SERVICES.CHANGE)} className={cl.button}>
+            Заказать
+          </Button>
         </Paper>
 
         <Paper className={cl.card}>
           <VideocamIcon className={cl.icon} />
-          <h3>Видеорегистрация в доме</h3>
-          <Button className={cl.button}>Заказать</Button>
+          <h3>{SERVICES.VIDEO}</h3>
+          <Button onClick={() => setService(SERVICES.VIDEO)} className={cl.button}>
+            Заказать
+          </Button>
         </Paper>
       </div>
+
+      <Dialog maxWidth='md' open={!!service} onClose={closeForm}>
+        {!isSent && (
+          <form className={cl.form} onSubmit={handleSubmit}>
+            <h2 className={cl.title}>{service}</h2>
+            <div className={cl.fields}>
+              {textFields.map(({ label, field, required }) => (
+                <TextField
+                  key={field}
+                  className={cl.field}
+                  label={label}
+                  value={data[field] || ''}
+                  onChange={(ev) => setData({ ...data, [field]: ev.target.value })}
+                  name={field}
+                  required={!!required}
+                />
+              ))}
+              <Autocomplete
+                freeSolo
+                className={cl.field}
+                defaultValue={user && user.addresses[0]}
+                getOptionLabel={getFullUserAddress}
+                options={user ? user.addresses : []}
+                onChange={(_, addr) => setData({ ...data, address: getFullUserAddress(addr) })}
+                renderInput={(params) => <TextField {...params} label='Адрес' name='address' />}
+                required
+              />
+            </div>
+            <label className={cl.message}>
+              Комментарий
+              <textarea
+                name='message'
+                onChange={(ev) => setData({ ...data, message: ev.target.value })}
+              />
+            </label>
+
+            <div className={cl.buttons}>
+              <Button type='submit'>Отправить</Button>
+              <Button onClick={closeForm}>Отмена</Button>
+            </div>
+          </form>
+        )}
+
+        {isSent && (
+          <div className={cl.form}>
+            <h2>Заявка отправлена!</h2>
+            <div className={cl.buttons}>
+              <Button onClick={closeForm}>Закрыть</Button>
+            </div>
+          </div>
+        )}
+      </Dialog>
     </div>
   );
 };

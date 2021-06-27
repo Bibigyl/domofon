@@ -26,7 +26,7 @@ const Camera = ({ onCancel, onSave }) => {
   return (
     <div className={cl.root}>
       {photo && (
-        <div>
+        <>
           <img src={photo} alt='user' />
           <div className={cl.buttons}>
             <Button theme='grey' onClick={handleSaveClick}>
@@ -39,16 +39,16 @@ const Camera = ({ onCancel, onSave }) => {
               Отмена
             </Button>
           </div>
-        </div>
+        </>
       )}
 
       {!photo && (
-        <div>
+        <>
           <Webcam ref={webcamRef} screenshotFormat='image/jpeg' />
           <IconButton className={cl.cameraIcon} onClick={takePhoto}>
             <PhotoCameraIcon />
           </IconButton>
-        </div>
+        </>
       )}
     </div>
   );

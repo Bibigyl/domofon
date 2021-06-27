@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { toJS } from 'mobx';
 import { IconButton, Tooltip, Dialog, Paper } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 import { store } from 'store';
 import { InfoRequest } from 'components';
+import { pay } from 'api/payment';
 
 import { Edit, Faces } from './components';
 import cl from './UserCabinet.module.scss';
+import { buttonHTML } from './button';
 
 const UserCabinet = observer(() => {
   const { isAdmin } = store;
@@ -26,8 +27,20 @@ const UserCabinet = observer(() => {
 
   if (!user) return null;
 
+  function createMarkup() {
+    return { __html: buttonHTML };
+  }
+
   return (
     <div className={cl.root}>
+      <div className={cl.test}>
+        тест оплаты
+        <button type='button' onClick={pay}>
+          click
+        </button>
+        <div dangerouslySetInnerHTML={createMarkup()} />
+      </div>
+
       <div className={cl.user}>
         <Paper className={cl.info}>
           <AssignmentIndIcon className={cl.infoIcon} color='primary' />
@@ -68,12 +81,7 @@ const UserCabinet = observer(() => {
       {!isAdmin && <InfoRequest className={cl.infoRequest} />}
 
       <Dialog maxWidth='md' open={showEdit} onClose={() => setShowEdit(false)}>
-        <Edit
-          data={toJS(user)}
-          addresses={addresses}
-          onSave={editUser}
-          onCancel={() => setShowEdit(false)}
-        />
+        <Edit onSave={editUser} onCancel={() => setShowEdit(false)} />
       </Dialog>
     </div>
   );

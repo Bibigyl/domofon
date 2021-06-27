@@ -1,9 +1,8 @@
-/* eslint-disable react/display-name */
 import Head from 'next/head';
 
 import { Layout, Container, Politics } from 'components';
 
-export default () => (
+const PoliticsPage = () => (
   <>
     <Head>
       <title>Политика конфиденциальности</title>
@@ -15,3 +14,5 @@ export default () => (
     </Layout>
   </>
 );
+
+export default PoliticsPage;
