@@ -6,7 +6,6 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 import { store } from 'store';
 import { InfoRequest } from 'components';
-import { pay } from 'api/payment';
 
 import { Edit, Faces } from './components';
 import cl from './UserCabinet.module.scss';
@@ -30,6 +29,19 @@ const UserCabinet = observer(() => {
   function createMarkup() {
     return { __html: buttonHTML };
   }
+
+  const pay = () => {
+    fetch('/api/pay', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    }).then((res) => {
+      console.log(555555, res);
+    });
+  };
 
   return (
     <div className={cl.root}>

@@ -6,7 +6,7 @@ export default (req, res) => {
     host: 'smtp.yandex.ru',
     auth: {
       user: 'domofondon.site@yandex.ru',
-      pass: process.env.password,
+      pass: process.env.NEXT_PUBLIC_EMAIL_PASSWORD,
     },
     secure: true,
   });
@@ -28,9 +28,12 @@ export default (req, res) => {
   };
 
   transporter.sendMail(mailData, (err, info) => {
-    if (err) console.log(err);
-    else console.log(info);
+    if (err) { 
+      console.log(err);
+      res.status(err.responseCode).send(err.message);
+    } else { 
+      console.log(info);
+      res.status(200).send('success');
+    }
   });
-
-  res.send('success');
 };

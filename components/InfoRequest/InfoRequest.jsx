@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Paper, Dialog, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import BuildIcon from '@material-ui/icons/Build';
@@ -36,6 +36,7 @@ const allFields = [
 ];
 
 const getInitialData = (user, addresses) => {
+  if (!user || !addresses) return {};
   const data = {};
   textFields.forEach((el) => {
     data[el.field] = user[el.field];
@@ -52,8 +53,13 @@ const InfoRequest = ({ className }) => {
   const { user } = store.userStore;
   const { addresses } = store.addressesStore;
   const [service, setService] = useState(null);
-  const [data, setData] = useState(user ? getInitialData(user, addresses) : {});
+  const [data, setData] = useState(getInitialData(user, addresses));
   const [isSent, setIsSent] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    setData(getInitialData(user, addresses));
+  }, [user, addresses]);
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
@@ -63,7 +69,7 @@ const InfoRequest = ({ className }) => {
       fields: allFields.map((el) => ({ ...el, value: data[el.field] })),
     };
 
-    fetch('/api/contact', {
+    fetch('/api/sendMail', {
       method: 'POST',
       headers: {
         Accept: 'application/json, text/plain, */*',
@@ -71,18 +77,15 @@ const InfoRequest = ({ className }) => {
       },
       body: JSON.stringify(body),
     }).then((res) => {
-      console.log('Response received');
-      if (res.status === 200) {
-        console.log('Response succeeded!');
-        setIsSent(true);
-      }
+      if (res.status !== 200) setIsError(true);
+      setIsSent(true);
     });
     return false;
   };
 
   const closeForm = () => {
     setService(null);
-    setTimeout(() => setIsSent(false), 0);
+    setTimeout(() => { setIsSent(false); setIsError(false); }, 200);
   };
 
   const getFullUserAddress = (userAddr) =>
@@ -186,7 +189,13 @@ const InfoRequest = ({ className }) => {
 
         {isSent && (
           <div className={cl.form}>
-            <h2>Заявка отправлена!</h2>
+            {!isError && <h2>Заявка отправлена!</h2>}
+            {isError && (
+              <>
+                <h2>Не удалось отправить заявку</h2>
+                <p>Пожалуйста, позвоните по телефону или напишите в WhatsApp.</p>
+              </>
+            )}
             <div className={cl.buttons}>
               <Button onClick={closeForm}>Закрыть</Button>
             </div>
