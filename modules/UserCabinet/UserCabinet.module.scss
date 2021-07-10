@@ -2,13 +2,6 @@
   padding: 30px 0;
 }
 
-.test {
-  width: 300px;
-  > * {
-    display: block;
-  }
-}
-
 .user {
   display: flex;
   flex: 1 auto;

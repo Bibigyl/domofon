@@ -9,7 +9,7 @@ import CallEndIcon from '@material-ui/icons/CallEnd';
 import VideocamIcon from '@material-ui/icons/Videocam';
 
 import { store } from 'store';
-import { Button } from 'components';
+import { Button, PayButton } from 'components';
 
 import cl from './InfoRequest.module.scss';
 
@@ -37,15 +37,19 @@ const allFields = [
 
 const getInitialData = (user, addresses) => {
   if (!user || !addresses) return {};
+
   const data = {};
   textFields.forEach((el) => {
     data[el.field] = user[el.field];
   });
+
   const firstAddr = user.addresses[0];
-  data.address =
-    addresses.find((addr) => addr.id === firstAddr.id).fullAddress +
-    (firstAddr.flat && `, кв. ${firstAddr.flat}`);
-  data.message = '';
+  if (firstAddr) {
+    data.address =
+      addresses.find((addr) => addr.id === firstAddr.id).fullAddress +
+      (firstAddr.flat && `, кв. ${firstAddr.flat}`);
+    data.message = '';
+  }
   return data;
 };
 
@@ -85,7 +89,10 @@ const InfoRequest = ({ className }) => {
 
   const closeForm = () => {
     setService(null);
-    setTimeout(() => { setIsSent(false); setIsError(false); }, 200);
+    setTimeout(() => {
+      setIsSent(false);
+      setIsError(false);
+    }, 200);
   };
 
   const getFullUserAddress = (userAddr) =>
@@ -109,7 +116,9 @@ const InfoRequest = ({ className }) => {
         <Paper className={cl.card}>
           <PaymentIcon className={cl.icon} />
           <h3>{SERVICES.PAY}</h3>
-          <Button className={cl.button}>Оплатить</Button>
+          <PayButton>
+            <Button className={cl.button}>Оплатить</Button>
+          </PayButton>
         </Paper>
 
         <Paper className={cl.card}>

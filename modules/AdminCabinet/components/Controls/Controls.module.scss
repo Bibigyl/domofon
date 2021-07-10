@@ -26,8 +26,12 @@
 }
 
 .form {
-  background: #f7f7f7;
   padding: 30px;
+
+  &User {
+    background-image: url('/images/bg.png');
+    background-repeat: repeat;
+  }
 }
 
 .form .closeForm {

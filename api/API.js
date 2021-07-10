@@ -20,6 +20,13 @@ const emptyUser = {
   paidUntil: '',
 };
 
+const emptyAdmin = {
+  name: '',
+  surname: '',
+  phone: '',
+  isSuperAdmin: false,
+};
+
 class FirebaseAPI {
   getUserInfo = async (phoneNumber) =>
     db
@@ -68,17 +75,22 @@ class FirebaseAPI {
       });
 
   editUser = async (userData) => {
-    const { id, fullName, ...data } = userData;
+    const { id, ...data } = userData;
     if (data.phone) {
       const validPhone = `+7${data.phone.replace(/\D/g, '').slice(1)}`;
       if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
       data.phone = validPhone;
     }
 
+    const params = { ...emptyUser };
+    Object.keys(emptyUser).forEach((key) => {
+      params[key] = data[key];
+    });
+
     return db
       .collection('users')
       .doc(id)
-      .set({ ...emptyUser, ...data })
+      .set(params)
       .then(() => ({ ...emptyUser, id, fullName: getFullName(data), ...data }))
       .catch(() => {
         throw new Error(`${errorText} Не удалось сохранить данные.`);
@@ -200,11 +212,11 @@ class FirebaseAPI {
     const validPhone = `+7${data.phone.replace(/\D/g, '').slice(1)}`;
     if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
 
-    const params = {
-      phone: validPhone,
-      name: data.name || '',
-      surname: data.surname || '',
-    };
+    const params = {};
+    Object.keys(emptyAdmin).forEach((key) => {
+      params[key] = data[key] || emptyAdmin[key];
+    });
+    params.phone = validPhone;
 
     return db
       .collection('admins')
@@ -215,6 +227,27 @@ class FirebaseAPI {
       }))
       .catch(() => {
         throw commonError;
+      });
+  };
+
+  editAdmin = async ({ id, ...data }) => {
+    if (!data.phone) throw new Error('Укажите номер телефона');
+    const validPhone = `+7${data.phone.replace(/\D/g, '').slice(1)}`;
+    if (validPhone.length !== 12) throw new Error('Неправильный формат номера телефона');
+
+    const params = { ...emptyAdmin };
+    Object.keys(emptyAdmin).forEach((key) => {
+      params[key] = data[key];
+    });
+    params.phone = validPhone;
+
+    return db
+      .collection('admins')
+      .doc(id)
+      .set(params)
+      .then(() => ({ id, fullName: getFullName(data), ...params }))
+      .catch(() => {
+        throw new Error(`${errorText} Не удалось сохранить данные.`);
       });
   };
 

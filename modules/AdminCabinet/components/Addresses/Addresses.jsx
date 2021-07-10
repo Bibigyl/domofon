@@ -22,8 +22,8 @@ const FORM = {
 };
 
 const textFields = [
-  { label: 'Город', field: 'city', defaultValue: 'Ростов-на-Дону' },
-  { label: 'Адрес', field: 'address' },
+  { label: 'Город', field: 'city', defaultValue: 'Ростов-на-Дону', required: true },
+  { label: 'Адрес', field: 'address', required: true },
 ];
 
 const Addresses = observer(({ className }) => {
@@ -43,25 +43,24 @@ const Addresses = observer(({ className }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addresses]);
 
-  const createOrEditAddress = async () => {
+  const createOrEditAddress = async (ev) => {
+    ev.preventDefault();
+
     const params = {};
-    let isFilled = false;
     textFields.forEach(({ field }) => {
       const value = formRef.current.elements[field].value || '';
-      isFilled = isFilled || !!value;
       params[field] = value;
     });
-    if (isFilled) {
-      try {
-        if (formType === FORM.CREATE) await API.createAddress(params);
-        if (formType === FORM.EDIT) await API.editAddress({ id: openAddress.id, ...params });
-        await getAddresses();
-      } catch (err) {
-        alert(err);
-      }
+    try {
+      if (formType === FORM.CREATE) await API.createAddress(params);
+      if (formType === FORM.EDIT) await API.editAddress({ id: openAddress.id, ...params });
+      await getAddresses();
+      setFormType(null);
+      getUsers();
+    } catch (err) {
+      alert(err);
     }
-    setFormType(null);
-    getUsers();
+    return false;
   };
 
   const removeAddress = async () => {
@@ -172,13 +171,13 @@ const Addresses = observer(({ className }) => {
           </div>
         )}
 
-        {formType !== FORM.REMOVE && (
-          <form className={cl.form} ref={formRef}>
+        {(formType === FORM.CREATE || formType === FORM.EDIT) && (
+          <form className={cl.form} ref={formRef} onSubmit={createOrEditAddress}>
             <h2 className={cl.title}>
               {formType === FORM.CREATE ? 'Добавить адрес' : 'Редактировать адрес'}
             </h2>
             <div className={cl.fields}>
-              {textFields.map(({ label, field, defaultValue }) => (
+              {textFields.map(({ label, field, defaultValue, required }) => (
                 <TextField
                   key={field}
                   className={cl.field}
@@ -187,11 +186,12 @@ const Addresses = observer(({ className }) => {
                   defaultValue={
                     (formType === FORM.EDIT && openAddress[field]) || defaultValue || ''
                   }
+                  required={required}
                 />
               ))}
             </div>
             <div className={cl.formButtons}>
-              <Button startIcon={<SaveIcon />} onClick={createOrEditAddress}>
+              <Button startIcon={<SaveIcon />} type='submit'>
                 Сохранить
               </Button>
               <Button onClick={() => setFormType(null)}>Отмена</Button>

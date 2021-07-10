@@ -180,7 +180,7 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
         open={!!formType && formType !== FORM.REMOVE}
         onClose={closeForm}
       >
-        <div className={cl.form}>
+        <div className={`${cl.form} ${cl.formUser}`}>
           <h2>
             {formType === FORM.EDIT ? 'Редактировать пользователя' : 'Создать нового пользователя'}
           </h2>

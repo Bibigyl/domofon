@@ -7,6 +7,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  min-height: 58px;
   padding: 5px 20px;
 
   h3 {
@@ -63,9 +64,13 @@
     white-space: nowrap;
   }
 
-  td[data-content="name"] {
+  td[data-content='name'] {
     width: 200px;
     max-width: 250px;
+  }
+
+  td[data-content='isSuperAdmin'] {
+    text-align: center;
   }
 }
 

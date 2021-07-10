@@ -5,7 +5,7 @@ export default (req, res) => {
     port: 465,
     host: 'smtp.yandex.ru',
     auth: {
-      user: 'domofondon.site@yandex.ru',
+      user: process.env.NEXT_PUBLIC_EMAIL_SOURCE,
       pass: process.env.NEXT_PUBLIC_EMAIL_PASSWORD,
     },
     secure: true,
@@ -19,8 +19,8 @@ export default (req, res) => {
   `;
 
   const mailData = {
-    from: 'domofondon.site@yandex.ru',
-    to: 'ekaterina.kryakushina@yandex.ru',
+    from: process.env.NEXT_PUBLIC_EMAIL_SOURCE,
+    to: process.env.NEXT_PUBLIC_EMAIL_DEST,
     subject: `Сообщение с сайта Домофондон, от ${
       fields.find((el) => el.field === 'phone').value || ''
     }`,

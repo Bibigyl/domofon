@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
-import { IconButton, Tooltip, TextField, Dialog, Paper } from '@material-ui/core';
+import { IconButton, Tooltip, TextField, Dialog, Paper, Checkbox } from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
+import CheckIcon from '@material-ui/icons/Check';
 
 import { Button } from 'components';
 import { store } from 'store';
@@ -15,16 +17,17 @@ import cl from './Admins.module.scss';
 const FORM = {
   CREATE: 'CREATE',
   REMOVE: 'REMOVE',
+  EDIT: 'EDIT',
 };
 
 const textFields = [
   { label: 'Имя', field: 'name' },
   { label: 'Фамилия', field: 'surname' },
-  { label: 'Телефон', field: 'phone' },
+  { label: 'Телефон', field: 'phone', required: true },
 ];
 
 const Admins = observer(({ className }) => {
-  const { admins, getAdmins, getUsers } = store.adminStore;
+  const { admins, getAdmins, getUsers, admin } = store.adminStore;
   const [openAdmin, setOpenAdmin] = useState(null);
   const [formType, setFormType] = useState(null);
   const formRef = useRef();
@@ -36,24 +39,26 @@ const Admins = observer(({ className }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [admins]);
 
-  const createAdmin = async () => {
+  const createOrEditAdmin = async (ev) => {
+    ev.preventDefault();
+
     const params = {};
-    let isFilled = false;
     textFields.forEach(({ field }) => {
       const value = formRef.current.elements[field].value || '';
-      isFilled = isFilled || !!value;
       params[field] = value;
     });
-    if (isFilled) {
-      try {
-        await API.createAdmin(params);
-        await getAdmins();
-        setFormType(null);
-      } catch (err) {
-        alert(err);
-      }
+    params.isSuperAdmin = formRef.current.elements.isSuperAdmin.checked;
+
+    try {
+      if (formType === FORM.CREATE) await API.createAdmin(params);
+      if (formType === FORM.EDIT) await API.editAdmin({ id: openAdmin.id, ...params });
+      await getAdmins();
+      setFormType(null);
+      getUsers();
+    } catch (err) {
+      alert(err);
     }
-    getUsers();
+    return false;
   };
 
   const removeAdmin = async () => {
@@ -78,19 +83,31 @@ const Admins = observer(({ className }) => {
     <div className={`${cl.root} ${className}`}>
       <Paper className={cl.controls}>
         <h3>Администраторы</h3>
-        <Tooltip title='Удалить администратора'>
-          <IconButton
-            className={`${!openAdmin ? cl.disabled : ''}`}
-            onClick={() => setFormType(FORM.REMOVE)}
-          >
-            <DeleteIcon style={{ color: '#2f7491' }} />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title='Добавить администратора'>
-          <IconButton onClick={() => setFormType(FORM.CREATE)}>
-            <PersonAddIcon style={{ color: '#2f7491' }} />
-          </IconButton>
-        </Tooltip>
+        {!admin.isSuperAdmin && (
+          <>
+            <Tooltip title='Редактировать админа'>
+              <IconButton
+                className={`${!openAdmin ? cl.disabled : ''}`}
+                onClick={() => setFormType(FORM.EDIT)}
+              >
+                <EditIcon style={{ color: '#2f7491' }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Удалить администратора'>
+              <IconButton
+                className={`${!openAdmin ? cl.disabled : ''}`}
+                onClick={() => setFormType(FORM.REMOVE)}
+              >
+                <DeleteIcon style={{ color: '#2f7491' }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Добавить администратора'>
+              <IconButton onClick={() => setFormType(FORM.CREATE)}>
+                <PersonAddIcon style={{ color: '#2f7491' }} />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
       </Paper>
       <div className={cl.tableWrap}>
         <table className={cl.table}>
@@ -98,6 +115,7 @@ const Admins = observer(({ className }) => {
             <tr>
               <th data-content='phone'>Номер телефона</th>
               <th data-content='name'>Имя Фамилия</th>
+              <th data-content='isSuperAdmin'>СуперАдмин</th>
             </tr>
           </thead>
           <tbody>
@@ -109,6 +127,9 @@ const Admins = observer(({ className }) => {
               >
                 <td data-content='phone'>{getText(admin, 'phone')}</td>
                 <td data-content='name'>{getText(admin, 'name')}</td>
+                <td data-content='isSuperAdmin'>
+                  {admin.isSuperAdmin && <CheckIcon style={{ color: 'green' }} />}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -128,16 +149,35 @@ const Admins = observer(({ className }) => {
           </div>
         )}
 
-        {formType === FORM.CREATE && (
-          <form className={cl.form} ref={formRef}>
-            <h2 className={cl.title}>Создать администратора</h2>
+        {(formType === FORM.CREATE || formType === FORM.EDIT) && (
+          <form className={cl.form} ref={formRef} onSubmit={createOrEditAdmin}>
+            <h2 className={cl.title}>
+              {formType === FORM.CREATE ? 'Добавить админа' : 'Редактировать админа'}
+            </h2>
             <div className={cl.fields}>
-              {textFields.map(({ label, field }) => (
-                <TextField key={field} className={cl.field} label={label} name={field} />
+              {textFields.map(({ label, field, required }) => (
+                <TextField
+                  key={field}
+                  className={cl.field}
+                  label={label}
+                  name={field}
+                  defaultValue={(formType === FORM.EDIT && openAdmin[field]) || ''}
+                  required={required}
+                />
               ))}
+              <div className={cl.field}>
+                <label>
+                  <Checkbox
+                    color='primary'
+                    name='isSuperAdmin'
+                    defaultChecked={formType === FORM.EDIT ? openAdmin.isSuperAdmin : false}
+                  />
+                  СуперАдмин
+                </label>
+              </div>
             </div>
             <div className={cl.formButtons}>
-              <Button startIcon={<SaveIcon />} onClick={createAdmin}>
+              <Button startIcon={<SaveIcon />} type='submit'>
                 Сохранить
               </Button>
               <Button onClick={() => setFormType(null)}>Отмена</Button>

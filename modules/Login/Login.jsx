@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import 'firebase/auth';
 import Link from 'next/link';
 import { Card, TextField, Checkbox } from '@material-ui/core';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import { CodeInput, Button, Loading } from 'components';
 import { authAPI } from 'api/authAPI';
@@ -62,17 +63,18 @@ const Login = () => {
               className={cl.input}
               onChange={handlePhoneChange}
             />
-            <label className={cl.checkbox}>
+            <label className={cl.confirm}>
               <Checkbox
                 onChange={() => setIsConfirmed(!isConfirmed)}
                 checked={isConfirmed}
                 color='primary'
               />
-              <span className={cl.confirmText}>Ознакомлен с 
-                <Link href='/politics'>
-                  <a>политикой конфиденциальности</a>
-                </Link>
-              </span>
+              <span className={cl.confirmText}>Ознакомлен с политикой конфиденциальности</span>
+              <Link href='/politics'>
+                <a>
+                  <ExitToAppIcon />
+                </a>
+              </Link>
             </label>
             <Button disabled={!isConfirmed} className={cl.button} type='submit'>
               Далее

@@ -9,7 +9,6 @@ import { InfoRequest } from 'components';
 
 import { Edit, Faces } from './components';
 import cl from './UserCabinet.module.scss';
-import { buttonHTML } from './button';
 
 const UserCabinet = observer(() => {
   const { isAdmin } = store;
@@ -26,33 +25,8 @@ const UserCabinet = observer(() => {
 
   if (!user) return null;
 
-  function createMarkup() {
-    return { __html: buttonHTML };
-  }
-
-  const pay = () => {
-    fetch('/api/pay', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({}),
-    }).then((res) => {
-      console.log(555555, res);
-    });
-  };
-
   return (
     <div className={cl.root}>
-      <div className={cl.test}>
-        тест оплаты
-        <button type='button' onClick={pay}>
-          click
-        </button>
-        <div dangerouslySetInnerHTML={createMarkup()} />
-      </div>
-
       <div className={cl.user}>
         <Paper className={cl.info}>
           <AssignmentIndIcon className={cl.infoIcon} color='primary' />

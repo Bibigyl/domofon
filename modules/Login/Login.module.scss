@@ -27,16 +27,20 @@
     margin: 20px 0;
   }
 
-  .confirmText {
-    display: inline-block;
-    max-width: 182px;
-    vertical-align: middle;
-    font-size: 12px;
+  .confirm {
+    display: flex;
+    align-items: center;
 
     a {
+      padding: 9px;
       color: #0b5675;
-      margin-left: 3px;
     }
+  }
+
+  .confirmText {
+    max-width: 150px;
+    vertical-align: middle;
+    font-size: 12px;
   }
 
   .button {
@@ -45,7 +49,6 @@
 
   .phone {
     margin-bottom: 30px;
-    font-size: 21px;
-    font-weight: bold;
+    font-size: 20px;
   }
 }

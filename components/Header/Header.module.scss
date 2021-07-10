@@ -53,7 +53,8 @@
 
     @media (max-width: 1000px) {
       flex-direction: column;
-      padding: 20px 10px;
+      padding: 20px 20px;
+      margin: 60px 0 10px;
     }
 
     li {
@@ -61,7 +62,7 @@
       list-style-type: none;
 
       @media (max-width: 1000px) {
-        margin: 0 0 20px;
+        margin: 0 0 40px;
       }
     }
 
