@@ -15,8 +15,6 @@ const textFields = [
   { label: 'Номер договора', field: 'contractNumber', required: true },
 ];
 
-const allFields = [...textFields, { label: 'Адрес', field: 'address', required: true }];
-
 const getInitialData = (user, addresses) => {
   if (!user || !addresses) return {};
 
