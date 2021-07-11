@@ -6,10 +6,10 @@
 
   @media (max-width: 1000px) {
     position: fixed;
-    z-index: 100;
     right: -100vw;
-    height: 100vh;
+    z-index: 100;
     width: 100vw;
+    height: 100vh;
     transition: 0.3s;
   }
 
@@ -24,17 +24,19 @@
     position: fixed;
     top: 20px;
     right: 20px;
+    z-index: 100;
     background-color: #2f7491;
     color: white;
-    z-index: 100;
-
-    &:active, &:focus, &:hover {
-      background-color: #2f7491;
-      color: white;
-    }
 
     @media (max-width: 1000px) {
       display: block;
+    }
+
+    &:active,
+    &:focus,
+    &:hover {
+      background-color: #2f7491;
+      color: white;
     }
   }
 
@@ -53,8 +55,8 @@
 
     @media (max-width: 1000px) {
       flex-direction: column;
-      padding: 20px 20px;
       margin: 60px 0 10px;
+      padding: 20px 20px;
     }
 
     li {
@@ -115,5 +117,15 @@
     @media (max-width: 1000px) {
       margin: 0 0 20px;
     }
+  }
+}
+
+.mark {
+  margin-right: 20px;
+  color: #5bdc78;
+  font-weight: bold;
+
+  @media (max-width: 1000px) {
+    margin: 20px 0 0;
   }
 }
