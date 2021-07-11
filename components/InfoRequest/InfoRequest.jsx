@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { toJS } from 'mobx';
+import { observer } from 'mobx-react-lite';
 import { Paper, Dialog, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import BuildIcon from '@material-ui/icons/Build';
@@ -53,16 +55,16 @@ const getInitialData = (user, addresses) => {
   return data;
 };
 
-const InfoRequest = ({ className }) => {
+const InfoRequest = observer(({ className }) => {
   const { user } = store.userStore;
   const { addresses } = store.addressesStore;
   const [service, setService] = useState(null);
-  const [data, setData] = useState(getInitialData(user, addresses));
+  const [data, setData] = useState(getInitialData(toJS(user), toJS(addresses)));
   const [isSent, setIsSent] = useState(false);
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    setData(getInitialData(user, addresses));
+    setData(getInitialData(toJS(user), toJS(addresses)));
   }, [user, addresses]);
 
   const handleSubmit = (ev) => {
@@ -173,9 +175,9 @@ const InfoRequest = ({ className }) => {
               <Autocomplete
                 freeSolo
                 className={cl.field}
-                defaultValue={user && user.addresses[0]}
+                defaultValue={toJS(user) && toJS(user).addresses[0]}
                 getOptionLabel={getFullUserAddress}
-                options={user ? user.addresses : []}
+                options={toJS(user) ? toJS(user).addresses : []}
                 onChange={(_, addr) => setData({ ...data, address: getFullUserAddress(addr) })}
                 renderInput={(params) => <TextField {...params} label='Адрес' name='address' />}
                 required
@@ -213,6 +215,6 @@ const InfoRequest = ({ className }) => {
       </Dialog>
     </div>
   );
-};
+});
 
 export { InfoRequest };

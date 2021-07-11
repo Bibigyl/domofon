@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { toJS } from 'mobx';
+import { observer } from 'mobx-react-lite';
 import { Dialog, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
@@ -33,15 +35,15 @@ const getInitialData = (user, addresses) => {
   return data;
 };
 
-const PayButton = ({ className, children }) => {
+const PayButton = observer(({ className, children }) => {
   const { user } = store.userStore;
   const { addresses } = store.addressesStore;
   const [showForm, setShowForm] = useState(false);
-  const [data, setData] = useState(getInitialData(user, addresses));
+  const [data, setData] = useState(getInitialData(toJS(user), toJS(addresses)));
   const youkassaButtonRef = useRef();
 
   useEffect(() => {
-    setData(getInitialData(user, addresses));
+    setData(getInitialData(toJS(user), toJS(addresses)));
   }, [user, addresses]);
 
   const handleSubmit = (ev) => {
@@ -92,9 +94,9 @@ const PayButton = ({ className, children }) => {
             <Autocomplete
               freeSolo
               className={cl.field}
-              defaultValue={user && user.addresses[0]}
+              defaultValue={toJS(user) && toJS(user).addresses[0]}
               getOptionLabel={getFullUserAddress}
-              options={user ? user.addresses : []}
+              options={toJS(user) ? toJS(user).addresses : []}
               onChange={(_, addr) => setData({ ...data, address: getFullUserAddress(addr) })}
               renderInput={(params) => (
                 <TextField
@@ -116,6 +118,6 @@ const PayButton = ({ className, children }) => {
       </Dialog>
     </>
   );
-};
+});
 
 export { PayButton };

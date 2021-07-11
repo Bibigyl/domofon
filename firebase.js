@@ -4,12 +4,12 @@ import "firebase/firestore";
 import "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC3zHAPQ_EPGeOKh4xneM1pI3MU2txPZr8",
-  authDomain: "profdelodon-8aaf0.firebaseapp.com",
-  projectId: "profdelodon-8aaf0",
-  storageBucket: "profdelodon-8aaf0.appspot.com",
-  messagingSenderId: "988806903810",
-  appId: "1:988806903810:web:565dfac0aaffb36137cf1b",
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  authDomain: `${process.env.NEXT_PUBLIC_PROJECT_ID}.firebaseapp.com`,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: `${process.env.NEXT_PUBLIC_PROJECT_ID}.appspot.com`,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_APP_ID,
 };
 
 if (!firebase.apps.length) {
