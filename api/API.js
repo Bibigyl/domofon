@@ -36,11 +36,11 @@ class FirebaseAPI {
       .then((querySnapshot) => {
         let userInfo = null;
         querySnapshot.forEach((doc) => {
-          userInfo = doc.data();
+          userInfo = { ...emptyUser, ...doc.data() };
           userInfo.id = doc.id;
           userInfo.fullName = getFullName(userInfo);
         });
-        return { ...emptyUser, ...userInfo };
+        return userInfo;
       })
       .catch(() => {
         throw commonError;
@@ -56,9 +56,10 @@ class FirebaseAPI {
       .collection('users')
       .add({ ...emptyUser, phone: validPhone })
       .then((docRef) => ({
+        ...emptyUser,
         id: docRef.id,
         fullName: '',
-        ...emptyUser,
+        phone: validPhone
       }))
       .catch(() => {
         throw commonError;
@@ -174,7 +175,7 @@ class FirebaseAPI {
         const users = [];
         querySnapshot.forEach((doc) => {
           const user = doc.data();
-          users.push({ ...emptyUser, id: doc.id, fullName: getFullName(user), ...user });
+          users.push({ ...emptyUser, ...user, id: doc.id, fullName: getFullName(user)});
         });
         return users;
       })
@@ -190,7 +191,7 @@ class FirebaseAPI {
         const admins = [];
         querySnapshot.forEach((doc) => {
           const admin = doc.data();
-          admins.push({ id: doc.id, fullName: getFullName(admin), ...admin });
+          admins.push({ ...admin, id: doc.id, fullName: getFullName(admin) });
         });
         return admins;
       })
@@ -245,7 +246,7 @@ class FirebaseAPI {
       .collection('admins')
       .doc(id)
       .set(params)
-      .then(() => ({ id, fullName: getFullName(data), ...params }))
+      .then(() => ({  ...params, id, fullName: getFullName(data) }))
       .catch(() => {
         throw new Error(`${errorText} Не удалось сохранить данные.`);
       });
