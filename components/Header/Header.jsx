@@ -50,6 +50,7 @@ const Header = observer(() => {
         {isOpen ? <CloseIcon /> : <MenuIcon />}
       </IconButton>
       <Container className={cl.container}>
+        {process.env.NEXT_PUBLIC_MARK && <div className={cl.mark}>{process.env.NEXT_PUBLIC_MARK}</div>}
         <ul className={cl.menu}>
           <li>
             <Link href='/'>
