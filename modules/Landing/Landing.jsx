@@ -5,7 +5,7 @@ import cl from './Landing.module.scss';
 const Landing = () => (
   <Layout isLanding className={cl.root}>
     <div className={cl.bgTech}>
-      <Container isCenter>
+      <Container className={cl.containerCentered}>
         <h1>Domofondon.ru</h1>
       </Container>
     </div>
@@ -13,6 +13,18 @@ const Landing = () => (
     <Container>
       <InfoRequest />
     </Container>
+
+    <div className={cl.bgWhatsApp}>
+      <Container className={cl.containerCentered}>
+        <h3>Перейти в WhatsApp бот</h3>
+        <a
+          href={`https://api.whatsapp.com/send/?phone=${process.env.NEXT_PUBLIC_BOT}`}
+          target='_blanc'
+        >
+          Whats App
+        </a>
+      </Container>
+    </div>
 
     <Container>
       <section className={cl.about}>

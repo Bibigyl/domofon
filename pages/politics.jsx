@@ -7,7 +7,7 @@ const PoliticsPage = () => (
     <Head>
       <title>Политика конфиденциальности</title>
     </Head>
-    <Layout>
+    <Layout isLanding>
       <Container>
         <Politics />
       </Container>
