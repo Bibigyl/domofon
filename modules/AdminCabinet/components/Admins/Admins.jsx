@@ -90,7 +90,7 @@ const Admins = observer(({ className }) => {
                 className={`${!openAdmin ? cl.disabled : ''}`}
                 onClick={() => setFormType(FORM.EDIT)}
               >
-                <EditIcon style={{ color: '#2f7491' }} />
+                <EditIcon style={{ color: '#EE5859' }} />
               </IconButton>
             </Tooltip>
             <Tooltip title='Удалить администратора'>
@@ -98,12 +98,12 @@ const Admins = observer(({ className }) => {
                 className={`${!openAdmin ? cl.disabled : ''}`}
                 onClick={() => setFormType(FORM.REMOVE)}
               >
-                <DeleteIcon style={{ color: '#2f7491' }} />
+                <DeleteIcon style={{ color: '#EE5859' }} />
               </IconButton>
             </Tooltip>
             <Tooltip title='Добавить администратора'>
               <IconButton onClick={() => setFormType(FORM.CREATE)}>
-                <PersonAddIcon style={{ color: '#2f7491' }} />
+                <PersonAddIcon style={{ color: '#EE5859' }} />
               </IconButton>
             </Tooltip>
           </>

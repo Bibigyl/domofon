@@ -9,6 +9,10 @@ html, body, #__next {
   font-family: Roboto;
 }
 
+body {
+  background-color: #fbfbfb;
+}
+
 .h2 {
   position: relative;
   font-size: 32px;
@@ -21,7 +25,7 @@ html, body, #__next {
     width: 250px;
     height: 26px;
     content: "";
-    background-color: #2f74911c;
+    background-color: #0000001c;
     z-index: -1;
   }
 }

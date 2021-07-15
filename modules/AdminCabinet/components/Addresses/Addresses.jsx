@@ -121,7 +121,7 @@ const Addresses = observer(({ className }) => {
             className={`${!openAddress ? cl.disabled : ''}`}
             onClick={() => setFormType(FORM.EDIT)}
           >
-            <EditIcon style={{ color: '#2f7491' }} />
+            <EditIcon style={{ color: '#EE5859' }} />
           </IconButton>
         </Tooltip>
         <Tooltip title='Удалить адрес'>
@@ -129,12 +129,12 @@ const Addresses = observer(({ className }) => {
             className={`${!openAddress ? cl.disabled : ''}`}
             onClick={() => setFormType(FORM.REMOVE)}
           >
-            <DeleteIcon style={{ color: '#2f7491' }} />
+            <DeleteIcon style={{ color: '#EE5859' }} />
           </IconButton>
         </Tooltip>
         <Tooltip title='Добавить адрес'>
           <IconButton onClick={() => setFormType(FORM.CREATE)}>
-            <AddLocationIcon style={{ color: '#2f7491' }} />
+            <AddLocationIcon style={{ color: '#EE5859' }} />
           </IconButton>
         </Tooltip>
       </Paper>

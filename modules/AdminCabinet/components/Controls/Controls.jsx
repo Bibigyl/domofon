@@ -157,7 +157,7 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
           className={`${cl.createUser} ${!openUser ? cl.disabled : ''}`}
           onClick={editUser}
         >
-          <EditIcon style={{ color: '#2f7491' }} />
+          <EditIcon style={{ color: '#EE5859' }} />
         </IconButton>
       </Tooltip>
       <Tooltip title='Удалить пользователя'>
@@ -165,12 +165,12 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
           className={`${cl.createUser} ${!openUser ? cl.disabled : ''}`}
           onClick={() => setFormType(FORM.REMOVE)}
         >
-          <DeleteIcon style={{ color: '#2f7491' }} />
+          <DeleteIcon style={{ color: '#EE5859' }} />
         </IconButton>
       </Tooltip>
       <Tooltip title='Добавить пользователя'>
         <IconButton className={cl.createUser} onClick={createUser}>
-          <PersonAddIcon style={{ color: '#2f7491' }} />
+          <PersonAddIcon style={{ color: '#EE5859' }} />
         </IconButton>
       </Tooltip>
 
