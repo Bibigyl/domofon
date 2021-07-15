@@ -8,7 +8,7 @@ import cl from './Layout.module.scss';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#EE5859',
+      main: '#2f7491',
       light: '#9dffae',
     },
     secondary: {
