@@ -17,7 +17,8 @@
   .card {
     margin: 20px;
     width: 300px;
-    background-color: #ececec;
+    // background-color: #ececec;
+    background-color: #f9f9f9;
     padding: 20px;
     text-align: center;
     transition: 0.4s;
@@ -31,9 +32,11 @@
       top: 23%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background-color: #2f7491;
+      // background-color: #2f7491;
       // background-color: #ececec;
       // background-color: #9a9a9a;
+      // background-color: #c3c3c3;
+      background-color: #fff;
       border-radius: 50%;
       transition: 0.4s;
       // border: 3px solid #2f7491;
@@ -47,8 +50,8 @@
       //   0px 1px 3px 0px rgb(0 0 0 / 12%), 0px 2px 7px 1px #00bd077a;
 
       &:before {
-        width: 55px;
-        height: 55px;
+        // width: 55px;
+        // height: 55px;
         transition: 0.4s;
         transition-delay: 0.15s;
       }
