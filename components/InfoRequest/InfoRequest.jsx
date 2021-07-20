@@ -105,7 +105,7 @@ const InfoRequest = observer(({ className }) => {
 
   return (
     <div className={`${cl.root} ${className || ''}`}>
-      <h2 className='h2'>Услуги</h2>
+      <h2 className='title-decorated'>Услуги</h2>
       <div className={cl.cards}>
         <Paper className={cl.card}>
           <BuildIcon className={cl.icon} />

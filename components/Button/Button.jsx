@@ -1,13 +1,14 @@
 import React from 'react';
 import { Button as UIButton } from '@material-ui/core';
 
+import cl from './Button.module.scss';
+
 const Button = ({ children, theme, ...props }) => {
   const outlineConfig =
     theme === 'outlined'
       ? {
-          style: { color: 'white' },
+          className: cl.outlined,
           variant: 'outlined',
-          color: 'secondary',
         }
       : {};
 

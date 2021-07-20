@@ -6,7 +6,7 @@ const Landing = () => (
   <Layout isLanding className={cl.root}>
     <div className={cl.bgTech}>
       <Container className={cl.containerCentered}>
-        <h1>Domofondon.ru</h1>
+        <h1>moidom61<span>.ru</span></h1>
       </Container>
     </div>
 
@@ -16,7 +16,7 @@ const Landing = () => (
 
     <div className={cl.bgWhatsApp}>
       <Container className={cl.containerCentered}>
-        <h3>Перейти в WhatsApp бот</h3>
+        <h3>Перейти в <span>WhatsApp</span> бот</h3>
         <a
           href={`https://api.whatsapp.com/send/?phone=${process.env.NEXT_PUBLIC_BOT}`}
           target='_blanc'
@@ -28,7 +28,7 @@ const Landing = () => (
 
     <Container>
       <section className={cl.about}>
-        <h2 className='h2'>О нас</h2>
+        <h2 className='title-decorated'>О нас</h2>
         <p>
           Системы контроля доступом (СКД) — автоматизированные контрольно-пропускные системы,
           которые позволяют управлять безопасностью объекта и осуществлять контроль доступа. СКД,
