@@ -84,8 +84,9 @@
     }
   }
 
-  .selectedTr {
-    box-shadow: 3px 3px 1px #00bd077a inset, -2px -2px 1px #00bd077a inset;
+  tbody tr.selectedTr {
+    // box-shadow: 3px 3px 1px #00bd077a inset, -2px -2px 1px #00bd077a inset;
+    background: rgb(195 255 196 / 50%);
   }
 
   th,

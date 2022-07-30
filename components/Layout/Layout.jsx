@@ -1,11 +1,11 @@
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider, createTheme } from '@material-ui/core/styles';
 import Head from 'next/head';
 
 import { Header, Footer } from 'components';
 
 import cl from './Layout.module.scss';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#2f7491',

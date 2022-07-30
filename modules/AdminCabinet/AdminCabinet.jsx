@@ -18,6 +18,8 @@ const AdminCabinet = observer(() => {
   const [openUser, setOpenUser] = useState(null);
   const [visibleUsers, setVisibleUsers] = useState(toJS(users));
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [sortField, setSortField] = useState('paidUntil');
+  const [isSortAsk, setIsSortAsk] = useState(true);
 
   useEffect(() => {
     if (openUser) {
@@ -49,6 +51,13 @@ const AdminCabinet = observer(() => {
     input.blur();
   };
 
+  const handleHeaderClick = (ev) => {
+    const field = ev.target.dataset.content;
+    if (!field) return;
+    if (field === sortField) setIsSortAsk(!isSortAsk);
+    setSortField(field);
+  };
+
   const getText = (user, field) => {
     let text;
     if (field === 'fullName') text = user.fullName;
@@ -66,6 +75,13 @@ const AdminCabinet = observer(() => {
       if (userAddr.flat) string = `${string}, кв.${userAddr.flat}`;
       return string;
     });
+
+  const sortedUsers = [...visibleUsers].sort((a, b) => {
+    if (isSortAsk) {
+      return a[sortField] > b[sortField] ? -1 : 1;
+    }
+    return a[sortField] > b[sortField] ? 1 : -1;
+  });
 
   return (
     <div className={cl.root}>
@@ -98,7 +114,7 @@ const AdminCabinet = observer(() => {
                 <TextField
                   key={openUser.id}
                   defaultValue={openUser?.paidUntil || ''}
-                  type='date'
+                  type="date"
                   onBlur={savePaidUntil}
                   onKeyPress={savePaidUntil}
                 />
@@ -107,7 +123,7 @@ const AdminCabinet = observer(() => {
           )}
           <Controls setVisibleUsers={setVisibleUsers} openUser={openUser} />
           <Tooltip title={isPanelOpen ? 'Скрыть панель' : 'Показать панель'}>
-            <IconButton hidden={!openUser} size='small' className={cl.hide} onClick={togglePanel}>
+            <IconButton hidden={!openUser} size="small" className={cl.hide} onClick={togglePanel}>
               <KeyboardArrowUpIcon style={isPanelOpen ? {} : { transform: 'rotate(180deg)' }} />
             </IconButton>
           </Tooltip>
@@ -117,34 +133,35 @@ const AdminCabinet = observer(() => {
       <div className={cl.tableWrap}>
         <table className={cl.table}>
           <thead>
-            <tr>
-              <th data-content='phone'>Номер телефона</th>
-              <th data-content='fullName'>Фамилия Имя</th>
-              <th data-content='contractNumber'>Номер договора</th>
-              <th data-content='address'>Адрес</th>
-              <th data-content='email'>Email</th>
-              <th data-content='paidUntil'>Оплачено до</th>
-              <th data-content='faces'>Есть фото</th>
-              <th data-content='facesProcessed'>Необработанные фото</th>
+            <tr onClick={handleHeaderClick}>
+              <th data-content="phone">Номер телефона</th>
+              <th data-content="fullName">Фамилия Имя</th>
+              <th data-content="contractNumber">Номер договора</th>
+              <th data-content="address">Адрес</th>
+              <th data-content="email">Email</th>
+              <th data-content="paidUntil">Оплачено до</th>
+              <th data-content="faces">Есть фото</th>
+              <th data-content="facesProcessed">Необработанные фото</th>
             </tr>
           </thead>
           <tbody>
-            {visibleUsers.map((user) => (
+            {sortedUsers.map((user) => (
               <tr
                 className={openUser && openUser.id === user.id ? cl.selectedTr : ''}
                 key={user.id}
                 onClick={() => setOpenUser(user)}
+                onDoubleClick={() => setOpenUser(null)}
               >
-                <td data-content='phone'>{getText(user, 'phone')}</td>
-                <td data-content='fullName'>{getText(user, 'fullName')}</td>
-                <td data-content='contractNumber'>{getText(user, 'contractNumber')}</td>
-                <td data-content='address'>{getText(user, 'address')}</td>
-                <td data-content='email'>{getText(user, 'email')}</td>
-                <td data-content='paidUntil'>{getText(user, 'paidUntil')}</td>
-                <td data-content='faces'>
+                <td data-content="phone">{getText(user, 'phone')}</td>
+                <td data-content="fullName">{getText(user, 'fullName')}</td>
+                <td data-content="contractNumber">{getText(user, 'contractNumber')}</td>
+                <td data-content="address">{getText(user, 'address')}</td>
+                <td data-content="email">{getText(user, 'email')}</td>
+                <td data-content="paidUntil">{getText(user, 'paidUntil')}</td>
+                <td data-content="faces">
                   {user.faces.length !== 0 && <CheckIcon style={{ color: 'green' }} />}
                 </td>
-                <td data-content='facesProcessed'>
+                <td data-content="facesProcessed">
                   {user.faces.length !== 0 && user.faces.some((face) => !face.isProcessed) && (
                     <ErrorOutlineIcon style={{ color: 'brown' }} />
                   )}

@@ -124,6 +124,7 @@ const Admins = observer(({ className }) => {
                 className={openAdmin && openAdmin.id === admin.id ? cl.selectedTr : ''}
                 key={admin.id}
                 onClick={() => setOpenAdmin(admin)}
+                onDoubleClick={() => setOpenAdmin(null)}
               >
                 <td data-content='phone'>{getText(admin, 'phone')}</td>
                 <td data-content='name'>{getText(admin, 'name')}</td>

@@ -38,7 +38,7 @@ const allFields = [
 ];
 
 const getInitialData = (user, addresses) => {
-  if (!user || !addresses) return {};
+  if (!user || addresses.length === 0) return {};
 
   const data = {};
   textFields.forEach((el) => {
@@ -108,14 +108,6 @@ const InfoRequest = observer(({ className }) => {
       <h2 className='h2'>Услуги</h2>
       <div className={cl.cards}>
         <Paper className={cl.card}>
-          <BuildIcon className={cl.icon} />
-          <h3>{SERVICES.MASTER}</h3>
-          <Button onClick={() => setService(SERVICES.MASTER)} className={cl.button}>
-            Заказать
-          </Button>
-        </Paper>
-
-        <Paper className={cl.card}>
           <PaymentIcon className={cl.icon} />
           <h3>{SERVICES.PAY}</h3>
           <PayButton>
@@ -127,6 +119,14 @@ const InfoRequest = observer(({ className }) => {
           <AccountBalanceWalletIcon className={cl.icon} />
           <h3>{SERVICES.BALANCE}</h3>
           <Button onClick={() => setService(SERVICES.BALANCE)} className={cl.button}>
+            Заказать
+          </Button>
+        </Paper>
+
+        <Paper className={cl.card}>
+          <BuildIcon className={cl.icon} />
+          <h3>{SERVICES.MASTER}</h3>
+          <Button onClick={() => setService(SERVICES.MASTER)} className={cl.button}>
             Заказать
           </Button>
         </Paper>

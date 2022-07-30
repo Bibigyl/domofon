@@ -50,6 +50,7 @@
     // my rules
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
+    "react/destructuring-assignment": "off",
     "semi": [2, "always"],
     "import/prefer-default-export": "off",
     "no-shadow": "off",

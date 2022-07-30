@@ -28,7 +28,7 @@ const Header = observer(() => {
   }, [router.route]);
 
   const getUserName = () => {
-    if ((isAdmin && !admins) || !data) return '';
+    if ((isAdmin && admins.length === 0) || !data) return '';
     return (
       (isAdmin ? admins.find((admin) => admin.phone === data.phone)?.fullName : data.fullName) ||
       data.phone

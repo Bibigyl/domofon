@@ -18,7 +18,7 @@ const Landing = () => (
       <Container className={cl.containerCentered}>
         <h3>Перейти в WhatsApp бот</h3>
         <a
-          href={`https://api.whatsapp.com/send/?phone=${process.env.NEXT_PUBLIC_BOT}`}
+          href={`https://api.whatsapp.com/send/?phone=${process.env.NEXT_PUBLIC_WHATSAPP_BOT}`}
           target='_blanc'
         >
           Whats App

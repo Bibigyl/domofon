@@ -151,6 +151,7 @@ const Addresses = observer(({ className }) => {
                 className={openAddress && openAddress.id === address.id ? cl.selectedTr : ''}
                 key={address.id}
                 onClick={() => setOpenAddress(address)}
+                onDoubleClick={() => setOpenAddress(null)}
               >
                 <td>{address.fullAddress}</td>
               </tr>
