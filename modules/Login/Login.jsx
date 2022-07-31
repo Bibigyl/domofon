@@ -57,9 +57,9 @@ const Login = () => {
         {!isCodeSent && !isLoading && (
           <form className={cl.form} onSubmit={signIn}>
             <TextField
-              label='Введите телефон'
-              type='tel'
-              name='phone'
+              label="Введите телефон"
+              type="tel"
+              name="phone"
               className={cl.input}
               onChange={handlePhoneChange}
             />
@@ -67,28 +67,28 @@ const Login = () => {
               <Checkbox
                 onChange={() => setIsConfirmed(!isConfirmed)}
                 checked={isConfirmed}
-                color='primary'
+                color="primary"
               />
               <span className={cl.confirmText}>Ознакомлен с политикой конфиденциальности</span>
-              <Link href='/politics'>
-                <a>
+              <Link href="/politics">
+                <a  target="_blank">
                   <ExitToAppIcon />
                 </a>
               </Link>
             </label>
-            <Button disabled={!isConfirmed} className={cl.button} type='submit'>
+            <Button disabled={!isConfirmed} className={cl.button} type="submit">
               Далее
             </Button>
           </form>
         )}
 
-        <div id='recaptcha' />
+        <div id="recaptcha" />
 
         {isCodeSent && !isLoading && (
           <form className={cl.form} onSubmit={verifyCode}>
             <div className={cl.phone}>{phone}</div>
             <CodeInput className={cl.input} onChange={setCode} />
-            <Button className={cl.button} type='submit'>
+            <Button className={cl.button} type="submit">
               Отправить код
             </Button>
           </form>

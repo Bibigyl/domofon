@@ -1,14 +1,13 @@
 .root {
   margin: 40px 0;
-  // padding: 20px 40px 60px;
-
-  // @media (max-width: 1000px) {
-  //   padding: 20px 10px 40px;
-  // }
 
   h1 {
     @media (max-width: 1000px) {
       font-size: 25px;
     }
+  }
+
+  li {
+    list-style-type: none;
   }
 }

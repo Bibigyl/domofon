@@ -46,7 +46,7 @@ const Header = observer(() => {
 
   return (
     <header className={`${cl.root} ${isOpen ? cl.mobilOpen : ''}`}>
-      <IconButton onClick={() => setIsOpen(!isOpen)} className={cl.mobilMenu}>
+      <IconButton size="large" onClick={() => setIsOpen(!isOpen)} className={cl.mobilMenu}>
         {isOpen ? <CloseIcon /> : <MenuIcon />}
       </IconButton>
       <Container className={cl.container}>

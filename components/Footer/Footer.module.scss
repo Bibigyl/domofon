@@ -21,6 +21,12 @@
 
   a {
     color: #eaeaea;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+      color: #5bdc78;
+    }
   }
 
   .contacts {

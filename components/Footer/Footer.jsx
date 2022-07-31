@@ -10,21 +10,30 @@ const Footer = () => (
       <div className={cl.contacts}>
         <h4>Контакты</h4>
         <ul>
-          <li>Адрес: Садовая 22</li>
-          <li>Телефон: +7 999 555 22 33</li>
-          <li>Email: email@mail.com</li>
+          <li>Адрес: г. Ростов-на-Дону, ул. Тельмана, д. 20, оф. 5</li>
+          <li>Телефон: +7(863)310-02-26, +7(928)773-19-80</li>
+          <li>Email: profdelodon@yandex.ru</li>
         </ul>
       </div>
       <div className={cl.links}>
         <h4>Ссылки</h4>
         <ul>
-          <li>Стоимость</li>
+          {/* <li>Стоимость услуги &quot;Умный домофон&quot;: 40 руб/мес</li> */}
           <li>
-            <Link href='/politics'>
-              <a>Политика конфиденциальности</a>
+            <Link href='/contract-offer.pdf' >
+              <a target='_blank'>Договор оферты</a>
             </Link>
           </li>
-          <li>Реквизиты</li>
+          <li>
+            <Link href='/politics'>
+              <a target='_blank'>Политика конфиденциальности</a>
+            </Link>
+          </li>
+          <li>
+            <Link href='/requisites'>
+              <a>Реквизиты</a>
+            </Link>
+          </li>
         </ul>
       </div>
     </Container>
