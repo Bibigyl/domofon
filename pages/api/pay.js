@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default async (req, res) => {
   try {
+    console.log(req.body);
     const { data, returnURL } = JSON.parse(req.body);
 
     // INFO: https://yookassa.ru/developers/api#create_payment
@@ -34,6 +35,7 @@ export default async (req, res) => {
 
     res.status(200).send(result);
   } catch (err) {
-    res.status(err.responseCode || 500).send(err.message);
+    console.log(err);
+    res.status(err.responseCode || 500).send(err);
   }
 };
