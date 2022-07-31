@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default async (req, res) => {
   try {
-    console.log(req.body);
+    console.log('pay body', req.body);
     const { data, returnURL } = JSON.parse(req.body);
 
     // INFO: https://yookassa.ru/developers/api#create_payment
@@ -11,9 +11,9 @@ export default async (req, res) => {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         'Idempotence-Key': uuidv4(),
-        Authorization: `Basic ${btoa(
+        Authorization: `Basic ${Buffer.from(
           `${process.env.NEXT_PUBLIC_SHOP_ID}:${process.env.NEXT_PUBLIC_SECRET_KEY}`
-        )}`
+        ).toString('base64')}`
       },
       body: JSON.stringify({
         amount: {
@@ -35,7 +35,7 @@ export default async (req, res) => {
 
     res.status(200).send(result);
   } catch (err) {
-    console.log(err);
+    console.log('pay error', err);
     res.status(err.responseCode || 500).send(err);
   }
 };

@@ -29,10 +29,10 @@ export default (req, res) => {
 
   transporter.sendMail(mailData, (err, info) => {
     if (err) { 
-      console.log(err);
+      console.log('sendMail error', err);
       res.status(err.responseCode).send(err.message);
     } else { 
-      console.log(info);
+      console.log('sendMail info', info);
       res.status(200).send('success');
     }
   });
