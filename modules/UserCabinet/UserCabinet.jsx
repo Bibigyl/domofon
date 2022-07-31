@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { IconButton, Tooltip, Dialog, Paper } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import { IconButton, Tooltip, Dialog, Paper } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 
 import { store } from 'store';
 import { InfoRequest } from 'components';

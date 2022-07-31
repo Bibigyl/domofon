@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
-import { IconButton, Tooltip, TextField, Dialog, Paper, Checkbox } from '@material-ui/core';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import SaveIcon from '@material-ui/icons/Save';
-import CheckIcon from '@material-ui/icons/Check';
+import { IconButton, Tooltip, TextField, Dialog, Paper, Checkbox } from '@mui/material';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import CheckIcon from '@mui/icons-material/Check';
 
 import { Button } from 'components';
 import { store } from 'store';

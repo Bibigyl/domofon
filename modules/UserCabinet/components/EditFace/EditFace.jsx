@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { TextField } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
+import { TextField } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
 
 import { Button } from 'components';
 

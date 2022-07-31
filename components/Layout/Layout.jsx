@@ -1,4 +1,4 @@
-import { ThemeProvider, createTheme } from '@material-ui/core/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Head from 'next/head';
 
 import { Header, Footer } from 'components';

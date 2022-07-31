@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import MenuIcon from '@material-ui/icons/Menu';
-import CloseIcon from '@material-ui/icons/Close';
-import { IconButton } from '@material-ui/core';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import { IconButton } from '@mui/material';
 
 import { store } from 'store';
 import { Button, Container } from 'components';
@@ -52,13 +52,13 @@ const Header = observer(() => {
       <Container className={cl.container}>
         {process.env.NEXT_PUBLIC_MARK && <div className={cl.mark}>{process.env.NEXT_PUBLIC_MARK}</div>}
         <ul className={cl.menu}>
-          <li>
+          <li className={router.asPath === "/" && cl.active}>
             <Link href='/'>
               <a>Главная</a>
             </Link>
           </li>
           {hasAuth && (
-            <li>
+            <li className={router.asPath === "/cabinet" && cl.active}>
               <Link href='/cabinet'>
                 <a>Личный кабинет</a>
               </Link>

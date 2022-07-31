@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
-import { IconButton, Tooltip, Dialog, Paper } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import DeleteIcon from '@material-ui/icons/Delete';
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import { IconButton, Tooltip, Dialog, Paper } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 
 import { Button } from 'components';
 import { store } from 'store';

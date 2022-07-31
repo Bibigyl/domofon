@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
-import { IconButton, Tooltip, Paper, TextField } from '@material-ui/core';
-import CheckIcon from '@material-ui/icons/Check';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import { IconButton, Tooltip, Paper, TextField } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 import { API } from 'api';
 import { store } from 'store';

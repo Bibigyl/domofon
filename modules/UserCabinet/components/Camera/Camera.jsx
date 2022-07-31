@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Webcam from 'react-webcam';
-import { IconButton } from '@material-ui/core';
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import { IconButton } from '@mui/material';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 
 import { Button } from 'components';
 

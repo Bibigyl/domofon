@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import { Dialog, TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Dialog, TextField, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { Autocomplete } from '@mui/lab';
 
 import { store } from 'store';
 import { Button } from 'components';
 
 import cl from './PayButton.module.scss';
+
+const COST = 40;
 
 const textFields = [
   { label: 'Имя Фамилия', field: 'fullName', required: true },
@@ -39,6 +41,7 @@ const PayButton = observer(({ className, children }) => {
   const { addresses } = store.addressesStore;
   const [showForm, setShowForm] = useState(false);
   const [data, setData] = useState(getInitialData(toJS(user), toJS(addresses)));
+  const [months, setMonths] = useState(1);
 
   useEffect(() => {
     setData(getInitialData(toJS(user), toJS(addresses)));
@@ -50,7 +53,7 @@ const PayButton = observer(({ className, children }) => {
     try {
       const response = await fetch('/api/pay', {
         method: 'POST',
-        body: JSON.stringify({ data, returnURL: window.location.href })
+        body: JSON.stringify({ data, months, returnURL: window.location.href })
       });
 
       const result = await response.json();
@@ -78,6 +81,9 @@ const PayButton = observer(({ className, children }) => {
       <Dialog maxWidth="md" open={showForm} onClose={() => setShowForm(false)}>
         <form className={cl.form} onSubmit={handleSubmit}>
           <h2 className={cl.title}>Оплата</h2>
+          <h4 className={cl.subTitle}>
+            За использование приложения &quot;Умный домофон&quot;: {COST * (months || 1)} руб.
+          </h4>
           <div className={cl.fields}>
             {textFields.map(({ label, field, required }) => (
               <TextField
@@ -90,6 +96,28 @@ const PayButton = observer(({ className, children }) => {
                 required={!!required}
               />
             ))}
+            <div className={`${cl.field} ${cl.months}`}>
+              <FormLabel sx={{ fontSize: 12 }}>Количество месяцев</FormLabel>
+              <RadioGroup
+                row
+                name="months-radio"
+                value={months}
+                onChange={(ev) => setMonths(Number(ev.target.value))}
+              >
+                <FormControlLabel value={1} control={<Radio />} label="1" />
+                <FormControlLabel value={3} control={<Radio />} label="3" />
+                <FormControlLabel value={12} control={<Radio />} label="12" />
+              </RadioGroup>
+              <TextField
+                value={months || ''}
+                onChange={(ev) => setMonths(Number(ev.target.value))}
+                name="months"
+                type="number"
+                InputProps={{ inputProps: { min: 1, max: 60, step: 1, required: true } }}
+                size="small"
+                sx={{ width: 80 }}
+              />
+            </div>
             <Autocomplete
               freeSolo
               className={cl.field}
@@ -110,7 +138,9 @@ const PayButton = observer(({ className, children }) => {
           </div>
 
           <div className={cl.buttons}>
-            <Button type="submit">Оплатить</Button>
+            <Button type="submit">
+              Оплатить {COST * (months || 1)} <small>руб.</small>
+            </Button>
             <Button onClick={() => setShowForm(false)}>Отмена</Button>
           </div>
         </form>

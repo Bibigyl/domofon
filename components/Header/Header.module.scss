@@ -73,6 +73,10 @@
       text-decoration: none;
       color: white;
     }
+
+    .active a {
+      text-decoration: underline;
+    }
   }
 
   .userInfo {

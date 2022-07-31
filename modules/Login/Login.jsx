@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import 'firebase/auth';
 import Link from 'next/link';
-import { Card, TextField, Checkbox } from '@material-ui/core';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { Card, TextField, Checkbox } from '@mui/material';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import { CodeInput, Button, Loading } from 'components';
 import { authAPI } from 'api/authAPI';

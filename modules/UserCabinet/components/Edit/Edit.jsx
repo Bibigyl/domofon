@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
-import { TextField, IconButton, Tooltip } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
-import SaveIcon from '@material-ui/icons/Save';
-import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
+import { TextField, IconButton, Tooltip } from '@mui/material';
+import { Autocomplete } from '@mui/lab';
+import SaveIcon from '@mui/icons-material/Save';
+import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
 
 import { store } from 'store';
 import { Button } from 'components';

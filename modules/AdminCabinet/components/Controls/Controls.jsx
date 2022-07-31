@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import { IconButton, Tooltip, TextField, Dialog } from '@material-ui/core';
-import Checkbox from '@material-ui/core/Checkbox';
-import SearchIcon from '@material-ui/icons/Search';
-import ClearIcon from '@material-ui/icons/Clear';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CloseIcon from '@material-ui/icons/Close';
+import { IconButton, Tooltip, TextField, Dialog } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { Button } from 'components';
 import { UserCabinet } from 'modules';

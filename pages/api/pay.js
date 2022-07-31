@@ -1,9 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 
+const COST = 40;
+
 export default async (req, res) => {
   try {
     console.log('pay body', req.body);
-    const { data, returnURL } = JSON.parse(req.body);
+    const { data, months, returnURL } = JSON.parse(req.body);
+    const { contractNumber, fullName, address } = data;
 
     // INFO: https://yookassa.ru/developers/api#create_payment
     const response = await fetch('https://api.yookassa.ru/v3/payments', {
@@ -17,17 +20,15 @@ export default async (req, res) => {
       },
       body: JSON.stringify({
         amount: {
-          value: '40.00',
+          value: (COST * months).toFixed(2),
           currency: 'RUB'
         },
-        description: `Договор: ${data.contractNumber}; \n${data.fullName}; \n${data.address}`,
-        // description: 'За использование приложения "Умный домофон"',
+        description: `Договор: ${contractNumber}; Месяцев: ${months}; \n${fullName}; ${address}`,
         confirmation: {
           type: 'redirect',
           return_url: returnURL
         },
-        capture: true,
-        metadata: data
+        capture: true
       })
     });
 

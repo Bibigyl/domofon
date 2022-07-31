@@ -7,12 +7,16 @@
   }
 
   .title {
-    margin: 0 0 20px;
+    margin: 0 0 10px;
 
     @media (max-width: 1000px) {
       margin-bottom: 10px;
       font-size: 20px;
     }
+  }
+
+  .subTitle {
+    margin: 0 0 30px;
   }
 
   .fields {
@@ -60,6 +64,22 @@
 
     > * {
       margin: 0 10px;
+    }
+
+    small {
+      margin-top: 2px;
+      margin-left: 2px;
+    }
+  }
+
+  .field.months {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    > label {
+      width: 100%;
+      margin-top: -3px;
     }
   }
 }

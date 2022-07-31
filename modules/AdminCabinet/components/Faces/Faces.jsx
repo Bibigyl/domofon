@@ -1,8 +1,8 @@
 import React, { useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
-import { IconButton, Tooltip, Paper, Checkbox } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
+import { IconButton, Tooltip, Paper, Checkbox } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
 
 import { useForceUpdate } from 'helpers/hooks';
 import { photoURLs } from 'helpers';
