@@ -1,6 +1,6 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable } from 'mobx';
 
-import { API } from "api";
+import { API } from 'api';
 
 class AdminStore {
   admin = null;
@@ -21,9 +21,7 @@ class AdminStore {
     try {
       const users = yield API.getUsers();
       const adminsPhones = this.admins.map((admin) => admin.phone);
-      this.users = users
-        .filter((user) => !adminsPhones.includes(user.phone))
-        .sort((a, b) => (a.fullName > b.fullName ? 1 : -1));
+      this.users = users.filter((user) => !adminsPhones.includes(user.phone));
     } catch (err) {
       alert(err);
     }
@@ -46,9 +44,7 @@ class AdminStore {
 
     try {
       yield API.editUser(newUserData);
-      this.users = this.users.map((user) =>
-        user.id === userId ? newUserData : user
-      );
+      this.users = this.users.map((user) => (user.id === userId ? newUserData : user));
     } catch (err) {
       alert(err);
     }

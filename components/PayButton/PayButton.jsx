@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { Dialog, TextField } from '@material-ui/core';
@@ -7,18 +7,17 @@ import { Autocomplete } from '@material-ui/lab';
 import { store } from 'store';
 import { Button } from 'components';
 
-import { getYoukassaHtml } from './getYoukassaHtml';
 import cl from './PayButton.module.scss';
 
 const textFields = [
   { label: 'Имя Фамилия', field: 'fullName', required: true },
-  { label: 'Email', field: 'email' },
-  { label: 'Телефон', field: 'phone', required: true },
-  { label: 'Номер договора', field: 'contractNumber', required: true },
+  // { label: 'Email', field: 'email' },
+  // { label: 'Телефон', field: 'phone', required: true },
+  { label: 'Номер договора', field: 'contractNumber', required: true }
 ];
 
 const getInitialData = (user, addresses) => {
-  if (!user || !addresses) return {};
+  if (!user || addresses.length === 0) return {};
 
   const data = {};
   textFields.forEach((el) => {
@@ -40,33 +39,35 @@ const PayButton = observer(({ className, children }) => {
   const { addresses } = store.addressesStore;
   const [showForm, setShowForm] = useState(false);
   const [data, setData] = useState(getInitialData(toJS(user), toJS(addresses)));
-  const youkassaButtonRef = useRef();
 
   useEffect(() => {
     setData(getInitialData(toJS(user), toJS(addresses)));
   }, [user, addresses]);
 
-  const handleSubmit = (ev) => {
+  const handleSubmit = async (ev) => {
     ev.preventDefault();
 
-    youkassaButtonRef.current.querySelector('button').click();
+    try {
+      const response = await fetch('/api/pay', {
+        method: 'POST',
+        body: JSON.stringify({ data, returnURL: window.location.href })
+      });
 
-    // const body = {
-    //   fields: allFields.map((el) => ({ ...el, value: data[el.field] })),
-    // };
+      const result = await response.json();
+      window.open(result.confirmation.confirmation_url);
 
-    // console.log(body);
-
-    return false;
+      setShowForm(false);
+    } catch (err) {
+      alert('Произошла ошибка');
+      console.error(err);
+    }
   };
 
   const getFullUserAddress = (userAddr) =>
-    userAddr
+    userAddr && addresses.length
       ? addresses.find((addr) => addr.id === userAddr.id).fullAddress +
         (userAddr.flat && `, кв. ${userAddr.flat}`)
       : '';
-
-  const createMarkup = () => ({ __html: getYoukassaHtml(data) });
 
   return (
     <>
@@ -74,9 +75,7 @@ const PayButton = observer(({ className, children }) => {
         {children}
       </div>
 
-      <div hidden ref={youkassaButtonRef} dangerouslySetInnerHTML={createMarkup()} />
-
-      <Dialog maxWidth='md' open={showForm} onClose={() => setShowForm(false)}>
+      <Dialog maxWidth="md" open={showForm} onClose={() => setShowForm(false)}>
         <form className={cl.form} onSubmit={handleSubmit}>
           <h2 className={cl.title}>Оплата</h2>
           <div className={cl.fields}>
@@ -101,8 +100,8 @@ const PayButton = observer(({ className, children }) => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label='Адрес'
-                  name='address'
+                  label="Адрес"
+                  name="address"
                   onChange={(ev) => setData({ ...data, address: ev.target.value })}
                   required
                 />
@@ -111,7 +110,7 @@ const PayButton = observer(({ className, children }) => {
           </div>
 
           <div className={cl.buttons}>
-            <Button type='submit'>Оплатить</Button>
+            <Button type="submit">Оплатить</Button>
             <Button onClick={() => setShowForm(false)}>Отмена</Button>
           </div>
         </form>

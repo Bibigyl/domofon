@@ -98,7 +98,7 @@ const InfoRequest = observer(({ className }) => {
   };
 
   const getFullUserAddress = (userAddr) =>
-    userAddr
+    userAddr && addresses.length
       ? addresses.find((addr) => addr.id === userAddr.id).fullAddress +
         (userAddr.flat && `, кв. ${userAddr.flat}`)
       : '';

@@ -92,7 +92,7 @@ class FirebaseAPI {
       .collection('users')
       .doc(id)
       .set(params)
-      .then(() => ({ ...emptyUser, id, fullName: getFullName(data), ...data }))
+      .then(() => ({ ...emptyUser, id, ...data, fullName: getFullName(data) }))
       .catch(() => {
         throw new Error(`${errorText} Не удалось сохранить данные.`);
       });
