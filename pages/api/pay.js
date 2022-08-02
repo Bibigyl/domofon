@@ -23,7 +23,7 @@ export default async (req, res) => {
           value: (COST * months).toFixed(2),
           currency: 'RUB'
         },
-        description: `Договор: ${contractNumber}; Месяцев: ${months}; \n${fullName}; ${address}`,
+        description: `Договор: ${contractNumber}; Месяцев: ${months}; ${fullName}; ${address}`,
         confirmation: {
           type: 'redirect',
           return_url: returnURL

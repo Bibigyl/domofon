@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-import { db, storageRef } from '../firebase';
+import { db, storageRef } from 'firebase.js';
 import 'firebase/storage';
 
 const getFullName = ({ name, surname }) => {

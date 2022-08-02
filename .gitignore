@@ -36,3 +36,5 @@ yarn-error.log*
 
 .envprod
 .envstaging
+
+GOOGLE_APPLICATION_CREDENTIALS.json

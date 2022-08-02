@@ -52,13 +52,13 @@ const Header = observer(() => {
       <Container className={cl.container}>
         {process.env.NEXT_PUBLIC_MARK && <div className={cl.mark}>{process.env.NEXT_PUBLIC_MARK}</div>}
         <ul className={cl.menu}>
-          <li className={router.asPath === "/" && cl.active}>
+          <li className={router.asPath === "/" ? cl.active : undefined}>
             <Link href='/'>
               <a>Главная</a>
             </Link>
           </li>
           {hasAuth && (
-            <li className={router.asPath === "/cabinet" && cl.active}>
+            <li className={router.asPath === "/cabinet" ? cl.active : undefined}>
               <Link href='/cabinet'>
                 <a>Личный кабинет</a>
               </Link>
