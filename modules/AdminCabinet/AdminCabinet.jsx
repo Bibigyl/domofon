@@ -112,6 +112,7 @@ const AdminCabinet = observer(() => {
               <li>
                 <b>Оплачено до: </b>
                 <TextField
+                  variant='standard'
                   key={openUser.id}
                   defaultValue={openUser?.paidUntil || ''}
                   type="date"
