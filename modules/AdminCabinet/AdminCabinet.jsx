@@ -133,15 +133,15 @@ const AdminCabinet = observer(() => {
       <div className={cl.tableWrap}>
         <table className={cl.table}>
           <thead>
-            <tr onClick={handleHeaderClick}>
-              <th data-content="phone">Номер телефона</th>
-              <th data-content="fullName">Фамилия Имя</th>
-              <th data-content="contractNumber">Номер договора</th>
-              <th data-content="address">Адрес</th>
-              <th data-content="email">Email</th>
-              <th data-content="paidUntil">Оплачено до</th>
-              <th data-content="faces">Есть фото</th>
-              <th data-content="facesProcessed">Необработанные фото</th>
+            <tr className={!isSortAsk ? cl.sortDesk : ''} onClick={handleHeaderClick}>
+              <th className={sortField === "phone" ? cl.columnActive : ''} data-content="phone">Номер телефона</th>
+              <th className={sortField === "fullName" ? cl.columnActive : ''} data-content="fullName">Фамилия Имя</th>
+              <th className={sortField === "contractNumber" ? cl.columnActive : ''} data-content="contractNumber">Номер договора</th>
+              <th className={sortField === "address" ? cl.columnActive : ''} data-content="address">Адрес</th>
+              <th className={sortField === "email" ? cl.columnActive : ''} data-content="email">Email</th>
+              <th className={sortField === "paidUntil" ? cl.columnActive : ''} data-content="paidUntil">Оплачено до</th>
+              <th className={sortField === "faces" ? cl.columnActive : ''} data-content="faces">Есть фото</th>
+              <th className={sortField === "facesProcessed" ? cl.columnActive : ''} data-content="facesProcessed">Необработанные фото</th>
             </tr>
           </thead>
           <tbody>

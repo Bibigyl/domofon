@@ -76,6 +76,21 @@
     color: white;
   }
 
+  thead tr th.columnActive {
+    &:after {
+      content: '↓';
+      margin-left: 10px;
+      font-size: 24px;
+      line-height: 14px;
+    }
+  }
+
+  thead tr.sortDesk th.columnActive {
+    &:after {
+      content: '↑';
+    }
+  }
+
   tbody tr {
     background-color: white;
 
@@ -94,6 +109,10 @@
     border: 1px solid #afafaf;
     padding: 5px 10px;
     font-weight: 300;
+  }
+
+  th {
+    cursor: pointer;
   }
 
   td {
