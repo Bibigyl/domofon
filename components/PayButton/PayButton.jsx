@@ -51,16 +51,15 @@ const PayButton = observer(({ className, children }) => {
     ev.preventDefault();
 
     try {
-      const response = await fetch('/api/test', {
+      const response = await fetch('/api/pay', {
         method: 'POST',
         body: JSON.stringify({ data, months, returnURL: window.location.href })
       });
 
       const result = await response.json();
-      console.log(result);
-      // window.open(result.confirmation.confirmation_url);
+      window.open(result.confirmation.confirmation_url);
 
-      // setShowForm(false);
+      setShowForm(false);
     } catch (err) {
       alert('Произошла ошибка');
       console.error(err);
