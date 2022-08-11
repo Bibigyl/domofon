@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
@@ -147,32 +148,35 @@ const Controls = observer(({ setVisibleUsers, openUser }) => {
           <ClearIcon />
         </IconButton>
       </Tooltip>
-      <label className={cl.checkbox}>
+      {/* TODO: remove */}
+      {/* <label className={cl.checkbox}>
         <Checkbox onChange={toggleNotProcessed} checked={showNotProcessed} color='primary' />
         Только необработанные
-      </label>
+      </label> */}
 
-      <Tooltip title='Редактировать пользователя'>
-        <IconButton
-          className={`${cl.createUser} ${!openUser ? cl.disabled : ''}`}
-          onClick={editUser}
-        >
-          <EditIcon style={{ color: '#2f7491' }} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title='Удалить пользователя'>
-        <IconButton
-          className={`${cl.createUser} ${!openUser ? cl.disabled : ''}`}
-          onClick={() => setFormType(FORM.REMOVE)}
-        >
-          <DeleteIcon style={{ color: '#2f7491' }} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title='Добавить пользователя'>
-        <IconButton className={cl.createUser} onClick={createUser}>
-          <PersonAddIcon style={{ color: '#2f7491' }} />
-        </IconButton>
-      </Tooltip>
+      <div className={cl.userButtons}>
+        <Tooltip title='Редактировать пользователя'>
+          <IconButton
+            className={!openUser ? cl.disabled : ''}
+            onClick={editUser}
+          >
+            <EditIcon style={{ color: '#2f7491' }} />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title='Удалить пользователя'>
+          <IconButton
+            className={!openUser ? cl.disabled : ''}
+            onClick={() => setFormType(FORM.REMOVE)}
+          >
+            <DeleteIcon style={{ color: '#2f7491' }} />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title='Добавить пользователя'>
+          <IconButton onClick={createUser}>
+            <PersonAddIcon style={{ color: '#2f7491' }} />
+          </IconButton>
+        </Tooltip>        
+      </div>
 
       <Dialog
         fullWidth

@@ -34,19 +34,20 @@ const AdminCabinet = observer(() => {
 
   const savePaidUntil = async (ev) => {
     if (ev.code && ev.code !== 'Enter') return;
-    const paidUntil = ev.target.value;
+    let paidUntil = ev.target.value;
     const input = ev.target;
+
     if (paidUntil.length !== 10) {
-      alert('Неверный формат даты, дата не сохранена');
-      input.value = openUser.paidUntil || '';
-      input.blur();
-      return;
+      paidUntil = openUser.paidUntil || '';
+      input.value = paidUntil;
     }
-    try {
-      await API.editUser({ ...openUser, paidUntil });
-      getUsers();
-    } catch (err) {
-      alert(err);
+    if (paidUntil !== openUser.paidUntil) {
+      try {
+        await API.editUser({ ...openUser, paidUntil });
+        getUsers();
+      } catch (err) {
+        alert(err);
+      }
     }
     input.blur();
   };
@@ -77,10 +78,17 @@ const AdminCabinet = observer(() => {
     });
 
   const sortedUsers = [...visibleUsers].sort((a, b) => {
-    if (isSortAsk) {
-      return a[sortField] > b[sortField] ? -1 : 1;
+    let valA = a[sortField] || '';
+    let valB = b[sortField] || '';
+
+    if (sortField === 'facesProcessed') {
+      valA = a.faces.some((face) => !face.isProcessed);
+      valB = b.faces.some((face) => !face.isProcessed);
     }
-    return a[sortField] > b[sortField] ? 1 : -1;
+    if (isSortAsk) {
+      return valA > valB ? -1 : 1;
+    }
+    return valA > valB ? 1 : -1;
   });
 
   return (
@@ -112,7 +120,7 @@ const AdminCabinet = observer(() => {
               <li>
                 <b>Оплачено до: </b>
                 <TextField
-                  variant='standard'
+                  variant="standard"
                   key={openUser.id}
                   defaultValue={openUser?.paidUntil || ''}
                   type="date"
@@ -135,14 +143,48 @@ const AdminCabinet = observer(() => {
         <table className={cl.table}>
           <thead>
             <tr className={!isSortAsk ? cl.sortDesk : ''} onClick={handleHeaderClick}>
-              <th className={sortField === "phone" ? cl.columnActive : ''} data-content="phone">Номер телефона</th>
-              <th className={sortField === "fullName" ? cl.columnActive : ''} data-content="fullName">Фамилия Имя</th>
-              <th className={sortField === "contractNumber" ? cl.columnActive : ''} data-content="contractNumber">Номер договора</th>
-              <th className={sortField === "address" ? cl.columnActive : ''} data-content="address">Адрес</th>
-              <th className={sortField === "email" ? cl.columnActive : ''} data-content="email">Email</th>
-              <th className={sortField === "paidUntil" ? cl.columnActive : ''} data-content="paidUntil">Оплачено до</th>
-              <th className={sortField === "faces" ? cl.columnActive : ''} data-content="faces">Есть фото</th>
-              <th className={sortField === "facesProcessed" ? cl.columnActive : ''} data-content="facesProcessed">Необработанные фото</th>
+              {[
+                {
+                  field: 'phone',
+                  text: 'Номер телефона'
+                },
+                {
+                  field: 'fullName',
+                  text: 'Фамилия Имя'
+                },
+                {
+                  field: 'contractNumber',
+                  text: 'Номер договора'
+                },
+                {
+                  field: 'address',
+                  text: 'Адрес'
+                },
+                {
+                  field: 'email',
+                  text: 'Email'
+                },
+                {
+                  field: 'paidUntil',
+                  text: 'Оплачено до'
+                },
+                {
+                  field: 'faces',
+                  text: 'Есть фото'
+                },
+                {
+                  field: 'facesProcessed',
+                  text: 'Необработанные фото'
+                }
+              ].map(({ field, text }) => (
+                <th
+                  key={field}
+                  className={sortField === field ? cl.columnActive : ''}
+                  data-content={field}
+                >
+                  {text}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>

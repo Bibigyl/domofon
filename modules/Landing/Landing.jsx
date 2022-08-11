@@ -26,7 +26,7 @@ const Landing = () => (
       </Container>
     </div>
 
-    <Container>
+    {/* <Container>
       <section className={cl.about}>
         <h2 className='h2'>О нас</h2>
         <p>
@@ -57,7 +57,7 @@ const Landing = () => (
           <li>контроллеров.</li>
         </ul>
       </section>
-    </Container>
+    </Container> */}
   </Layout>
 );
 
