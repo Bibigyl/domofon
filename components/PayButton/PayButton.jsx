@@ -13,7 +13,7 @@ const COST = 40;
 
 const textFields = [
   { label: 'Имя Фамилия', field: 'fullName', required: true },
-  // { label: 'Email', field: 'email' },
+  { label: 'Email', field: 'email' },
   // { label: 'Телефон', field: 'phone', required: true },
   { label: 'Номер договора', field: 'contractNumber', required: true }
 ];
