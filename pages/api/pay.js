@@ -4,7 +4,7 @@ const COST = 40;
 
 export default async (req, res) => {
   try {
-    console.log('pay body', req.body);
+    console.log('pay body:', req.body);
     const { data, months, returnURL } = JSON.parse(req.body);
     const { contractNumber, fullName, address } = data;
 
@@ -33,10 +33,11 @@ export default async (req, res) => {
     });
 
     const result = await response.json();
+    console.log('pay result:', result);
 
     res.status(200).send(result);
   } catch (err) {
-    console.log('pay error', err);
+    console.log('pay error:', err);
     res.status(err.responseCode || 500).send(err);
   }
 };
