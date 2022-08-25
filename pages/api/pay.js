@@ -13,7 +13,7 @@ export default async (req, res) => {
         value: (COST * months).toFixed(2),
         currency: 'RUB'
       },
-      description: `Договор: ${contractNumber}; Месяцев: ${months}; ${fullName}; ${address}`,
+      description: `Договор: ${contractNumber}; Месяцев: ${months}; ${fullName}; ${address}; ${email}`,
       confirmation: {
         type: 'redirect',
         return_url: returnURL
@@ -37,7 +37,7 @@ export default async (req, res) => {
       }
     };
 
-    console.log('pay body:', req.body);
+    console.log('pay body:', body);
 
     // INFO: https://yookassa.ru/developers/api#create_payment
     const response = await fetch('https://api.yookassa.ru/v3/payments', {
