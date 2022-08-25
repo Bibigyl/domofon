@@ -13,7 +13,7 @@ const COST = 40;
 
 const textFields = [
   { label: 'Имя Фамилия', field: 'fullName', required: true },
-  { label: 'Email', field: 'email' },
+  { label: 'Email', field: 'email', required: true },
   // { label: 'Телефон', field: 'phone', required: true },
   { label: 'Номер договора', field: 'contractNumber', required: true }
 ];
@@ -118,23 +118,34 @@ const PayButton = observer(({ className, children }) => {
                 sx={{ width: 80 }}
               />
             </div>
-            <Autocomplete
-              freeSolo
-              className={cl.field}
-              defaultValue={toJS(user) && toJS(user).addresses[0]}
-              getOptionLabel={getFullUserAddress}
-              options={toJS(user) ? toJS(user).addresses : []}
-              onChange={(_, addr) => setData({ ...data, address: getFullUserAddress(addr) })}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Адрес"
-                  name="address"
-                  onChange={(ev) => setData({ ...data, address: ev.target.value })}
-                  required
-                />
-              )}
-            />
+            {toJS(user)?.addresses.length ? (
+              <Autocomplete
+                freeSolo
+                className={cl.field}
+                defaultValue={toJS(user).addresses[0]}
+                getOptionLabel={getFullUserAddress}
+                options={toJS(user).addresses}
+                onChange={(_, addr) => setData({ ...data, address: getFullUserAddress(addr) })}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Адрес"
+                    name="address"
+                    onChange={(ev) => setData({ ...data, address: ev.target.value })}
+                    required
+                  />
+                )}
+              />
+            ) : (
+              <TextField
+                className={cl.field}
+                label="Адрес"
+                value={data.address || ''}
+                onChange={(ev) => setData({ ...data, address: ev.target.value })}
+                name="address"
+                required
+              />
+            )}
           </div>
 
           <div className={cl.buttons}>
