@@ -28,7 +28,7 @@ export default async (req, res) => {
             description: 'Услуга "Умный домофон"',
             quantity: months,
             amount: {
-              value: (COST * months).toFixed(2),
+              value: COST.toFixed(2),
               currency: 'RUB'
             },
             vat_code: 1
@@ -37,7 +37,7 @@ export default async (req, res) => {
       }
     };
 
-    console.log('pay body:', body);
+    console.log('pay body:', JSON.stringify(body, null, 4));
 
     // INFO: https://yookassa.ru/developers/api#create_payment
     const response = await fetch('https://api.yookassa.ru/v3/payments', {
