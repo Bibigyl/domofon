@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-const COST = process.env.NEXT_PUBLIC_COST || 40;
+const COST = +process.env.NEXT_PUBLIC_COST || 40;
 
 export default async (req, res) => {
   try {
