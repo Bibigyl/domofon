@@ -145,6 +145,9 @@ const AdminCabinet = observer(() => {
             <tr className={!isSortAsk ? cl.sortDesk : ''} onClick={handleHeaderClick}>
               {[
                 {
+                  text: '',
+                },
+                {
                   field: 'phone',
                   text: 'Номер телефона'
                 },
@@ -188,13 +191,14 @@ const AdminCabinet = observer(() => {
             </tr>
           </thead>
           <tbody>
-            {sortedUsers.map((user) => (
+            {sortedUsers.map((user, i) => (
               <tr
                 className={openUser && openUser.id === user.id ? cl.selectedTr : ''}
                 key={user.id}
                 onClick={() => setOpenUser(user)}
                 onDoubleClick={() => setOpenUser(null)}
               >
+                <td data-content="index">{i}</td>
                 <td data-content="phone">{getText(user, 'phone')}</td>
                 <td data-content="fullName">{getText(user, 'fullName')}</td>
                 {/* <td data-content="contractNumber">{getText(user, 'contractNumber')}</td> */}

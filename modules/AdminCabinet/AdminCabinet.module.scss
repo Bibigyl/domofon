@@ -123,11 +123,19 @@
     white-space: nowrap;
   }
 
+  td[data-content='index'] {
+    width: 50px;
+  }
+
   td[data-content='fullName'],
-  td[data-content='address'],
   td[data-content='email'] {
     width: 200px;
     max-width: 250px;
+  }
+
+  td[data-content='address'] {
+    width: 250px;
+    max-width: 300px;
   }
 
   td[data-content='faces'],
