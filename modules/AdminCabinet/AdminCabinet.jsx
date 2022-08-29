@@ -85,6 +85,10 @@ const AdminCabinet = observer(() => {
       valA = a.faces.some((face) => !face.isProcessed);
       valB = b.faces.some((face) => !face.isProcessed);
     }
+    if (sortField === 'address') {
+      valA = getText(a, 'address');
+      valB = getText(a, 'address');
+    }
     if (isSortAsk) {
       return valA > valB ? -1 : 1;
     }
