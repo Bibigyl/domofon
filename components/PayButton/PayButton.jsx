@@ -140,8 +140,9 @@ const PayButton = observer(({ className, children }) => {
               />
             ) : (
               <TextField
-                className={cl.field}
-                label="Адрес"
+                className={`${cl.field} ${cl.fieldFull}`}
+                label="Полный адрес"
+                placeholder="г.Ростов-на-Дону, ул.3-я Строителей, д.25, кв.12"
                 value={data.address || ''}
                 onChange={(ev) => setData({ ...data, address: ev.target.value })}
                 name="address"
