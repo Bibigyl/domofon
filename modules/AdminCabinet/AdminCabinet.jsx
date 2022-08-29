@@ -87,7 +87,7 @@ const AdminCabinet = observer(() => {
     }
     if (sortField === 'address') {
       valA = getText(a, 'address');
-      valB = getText(a, 'address');
+      valB = getText(b, 'address');
     }
     if (isSortAsk) {
       return valA > valB ? -1 : 1;
@@ -149,7 +149,7 @@ const AdminCabinet = observer(() => {
             <tr className={!isSortAsk ? cl.sortDesk : ''} onClick={handleHeaderClick}>
               {[
                 {
-                  text: '',
+                  text: ''
                 },
                 {
                   field: 'phone',
@@ -183,9 +183,9 @@ const AdminCabinet = observer(() => {
                   field: 'facesProcessed',
                   text: 'Необработанные фото'
                 }
-              ].map(({ field, text }) => (
+              ].map(({ field, text }, i) => (
                 <th
-                  key={field}
+                  key={field || i}
                   className={sortField === field ? cl.columnActive : ''}
                   data-content={field}
                 >
