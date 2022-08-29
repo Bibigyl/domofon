@@ -28,7 +28,7 @@ const textFields = [
   { label: 'Имя Фамилия', field: 'fullName' },
   { label: 'Email', field: 'email' },
   { label: 'Телефон', field: 'phone', required: true },
-  { label: 'Номер договора', field: 'contractNumber' },
+  // { label: 'Номер договора', field: 'contractNumber' },
 ];
 
 const allFields = [

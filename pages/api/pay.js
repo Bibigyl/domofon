@@ -6,14 +6,14 @@ export default async (req, res) => {
   try {
     console.log('pay params:', req.body);
     const { data, months, returnURL } = JSON.parse(req.body);
-    const { contractNumber, fullName, address, email } = data;
+    const { fullName, address, email, phone } = data;
 
     const body = {
       amount: {
         value: (COST * months).toFixed(2),
         currency: 'RUB'
       },
-      description: `Договор: ${contractNumber}; Месяцев: ${months}; ${fullName}; ${address}; ${email}`,
+      description: `Адрес: ${address}; Месяцев: ${months}; ${fullName}; ${email}; ${phone}`,
       confirmation: {
         type: 'redirect',
         return_url: returnURL

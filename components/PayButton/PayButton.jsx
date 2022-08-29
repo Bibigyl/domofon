@@ -12,10 +12,10 @@ import cl from './PayButton.module.scss';
 const COST = 40;
 
 const textFields = [
-  { label: 'Имя Фамилия', field: 'fullName', required: true },
-  { label: 'Email', field: 'email', required: true },
-  // { label: 'Телефон', field: 'phone', required: true },
-  { label: 'Номер договора', field: 'contractNumber', required: true }
+  { label: 'Имя Фамилия', field: 'fullName', placeholder: 'Иван Иванов', required: true },
+  { label: 'Email', field: 'email', placeholder: 'ivanov@mail.com', required: true },
+  { label: 'Телефон', field: 'phone', placeholder: '+79885554433', required: true }
+  // { label: 'Номер договора', field: 'contractNumber', required: true }
 ];
 
 const getInitialData = (user, addresses) => {
@@ -85,11 +85,12 @@ const PayButton = observer(({ className, children }) => {
             За использование приложения &quot;Умный домофон&quot;: {COST * (months || 1)} руб.
           </h4>
           <div className={cl.fields}>
-            {textFields.map(({ label, field, required }) => (
+            {textFields.map(({ label, placeholder, field, required }) => (
               <TextField
                 key={field}
                 className={cl.field}
                 label={label}
+                placeholder={placeholder}
                 value={data[field] || ''}
                 onChange={(ev) => setData({ ...data, [field]: ev.target.value })}
                 name={field}
@@ -121,7 +122,7 @@ const PayButton = observer(({ className, children }) => {
             {toJS(user)?.addresses.length ? (
               <Autocomplete
                 freeSolo
-                className={cl.field}
+                className={`${cl.field} ${cl.fieldFull}`}
                 defaultValue={toJS(user).addresses[0]}
                 getOptionLabel={getFullUserAddress}
                 options={toJS(user).addresses}
@@ -129,7 +130,8 @@ const PayButton = observer(({ className, children }) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Адрес"
+                    label="Полный адрес"
+                    placeholder="г.Ростов-на-Дону, ул.3-я Строителей, д.25, кв.12"
                     name="address"
                     onChange={(ev) => setData({ ...data, address: ev.target.value })}
                     required

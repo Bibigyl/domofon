@@ -14,7 +14,7 @@ const textFields = [
   { label: 'Фамилия', field: 'surname' },
   { label: 'Email', field: 'email' },
   { label: 'Телефон', field: 'phone' },
-  { label: 'Номер договора', field: 'contractNumber' },
+  // { label: 'Номер договора', field: 'contractNumber' },
 ];
 
 const Edit = ({ onSave, onCancel }) => {

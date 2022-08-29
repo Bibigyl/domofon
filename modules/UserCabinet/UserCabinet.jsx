@@ -56,8 +56,8 @@ const UserCabinet = observer(() => {
               ))}
               {getAddresses().length === 0 && '___'}
             </dd>
-            <dt>Номер договора</dt>
-            <dd>{user.contractNumber || '___'}</dd>
+            {/* <dt>Номер договора</dt>
+            <dd>{user.contractNumber || '___'}</dd> */}
           </dl>
         </Paper>
 

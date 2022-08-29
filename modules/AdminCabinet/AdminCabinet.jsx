@@ -109,10 +109,10 @@ const AdminCabinet = observer(() => {
                 <b>Email: </b>
                 {getText(openUser, 'email')}
               </li>
-              <li>
+              {/* <li>
                 <b>Номер договора: </b>
                 {getText(openUser, 'contractNumber')}
-              </li>
+              </li> */}
               <li>
                 <b>Адресa: </b>
                 {getText(openUser, 'address')}
@@ -152,10 +152,10 @@ const AdminCabinet = observer(() => {
                   field: 'fullName',
                   text: 'Фамилия Имя'
                 },
-                {
-                  field: 'contractNumber',
-                  text: 'Номер договора'
-                },
+                // {
+                //   field: 'contractNumber',
+                //   text: 'Номер договора'
+                // },
                 {
                   field: 'address',
                   text: 'Адрес'
@@ -197,7 +197,7 @@ const AdminCabinet = observer(() => {
               >
                 <td data-content="phone">{getText(user, 'phone')}</td>
                 <td data-content="fullName">{getText(user, 'fullName')}</td>
-                <td data-content="contractNumber">{getText(user, 'contractNumber')}</td>
+                {/* <td data-content="contractNumber">{getText(user, 'contractNumber')}</td> */}
                 <td data-content="address">{getText(user, 'address')}</td>
                 <td data-content="email">{getText(user, 'email')}</td>
                 <td data-content="paidUntil">{getText(user, 'paidUntil')}</td>
