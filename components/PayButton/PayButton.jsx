@@ -58,8 +58,7 @@ const PayButton = observer(({ className, children }) => {
 
       const result = await response.json();
 
-      const windowReference = window.open('about:blank', '_blank');
-      windowReference.location = result.confirmation.confirmation_url;
+      window.location.replace(result.confirmation.confirmation_url);
 
       setShowForm(false);
     } catch (err) {
