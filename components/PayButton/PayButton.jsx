@@ -57,7 +57,9 @@ const PayButton = observer(({ className, children }) => {
       });
 
       const result = await response.json();
-      window.open(result.confirmation.confirmation_url);
+
+      const windowReference = window.open();
+      windowReference.location = result.confirmation.confirmation_url;
 
       setShowForm(false);
     } catch (err) {
