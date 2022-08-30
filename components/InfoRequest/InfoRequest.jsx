@@ -18,7 +18,7 @@ import cl from './InfoRequest.module.scss';
 const SERVICES = {
   MASTER: 'Вызов мастера',
   PAY: 'Оплата онлайн',
-  BALANCE: 'Узнать баланс счета',
+  FACE_ID: 'Заявка на Face ID',
   KEYS: 'Ключи для домофона',
   CHANGE: 'Замена трубки',
   VIDEO: 'Видеорегистрация в доме',
@@ -26,7 +26,7 @@ const SERVICES = {
 
 const textFields = [
   { label: 'Имя Фамилия', field: 'fullName' },
-  { label: 'Email', field: 'email' },
+  { label: 'Email', field: 'email', type: 'email' },
   { label: 'Телефон', field: 'phone', required: true },
   // { label: 'Номер договора', field: 'contractNumber' },
 ];
@@ -117,8 +117,8 @@ const InfoRequest = observer(({ className }) => {
 
         <Paper className={cl.card}>
           <AccountBalanceWalletIcon className={cl.icon} />
-          <h3>{SERVICES.BALANCE}</h3>
-          <Button onClick={() => setService(SERVICES.BALANCE)} className={cl.button}>
+          <h3>{SERVICES.FACE_ID}</h3>
+          <Button onClick={() => setService(SERVICES.FACE_ID)} className={cl.button}>
             Заказать
           </Button>
         </Paper>
@@ -161,11 +161,12 @@ const InfoRequest = observer(({ className }) => {
           <form className={cl.form} onSubmit={handleSubmit}>
             <h2 className={cl.title}>{service}</h2>
             <div className={cl.fields}>
-              {textFields.map(({ label, field, required }) => (
+              {textFields.map(({ label, type, field, required }) => (
                 <TextField
                   key={field}
                   className={cl.field}
                   label={label}
+                  type={type || 'text'}
                   value={data[field] || ''}
                   onChange={(ev) => setData({ ...data, [field]: ev.target.value })}
                   name={field}

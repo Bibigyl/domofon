@@ -13,7 +13,7 @@ const COST = 40;
 
 const textFields = [
   { label: 'Имя Фамилия', field: 'fullName', placeholder: 'Иван Иванов', required: true },
-  { label: 'Email', field: 'email', placeholder: 'ivanov@mail.com', required: true },
+  { label: 'Email', field: 'email', placeholder: 'ivanov@mail.com', type: 'email', required: true },
   { label: 'Телефон', field: 'phone', placeholder: '+79885554433', required: true }
   // { label: 'Номер договора', field: 'contractNumber', required: true }
 ];
@@ -87,12 +87,13 @@ const PayButton = observer(({ className, children }) => {
             За использование приложения &quot;Умный домофон&quot;: {COST * (months || 1)} руб.
           </h4>
           <div className={cl.fields}>
-            {textFields.map(({ label, placeholder, field, required }) => (
+            {textFields.map(({ label, placeholder, type, field, required }) => (
               <TextField
                 key={field}
                 className={cl.field}
                 label={label}
                 placeholder={placeholder}
+                type={type || 'text'}
                 value={data[field] || ''}
                 onChange={(ev) => setData({ ...data, [field]: ev.target.value })}
                 name={field}
