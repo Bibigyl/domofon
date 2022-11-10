@@ -33,7 +33,8 @@ export default async (req, res) => {
             },
             vat_code: 1
           }
-        ]
+        ],
+        tax_system_code: 6
       }
     };
 
